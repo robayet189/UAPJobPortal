@@ -15,4 +15,7 @@ urlpatterns = [
     path('login/companylogin/', views.companylogin, name='comlog'),
     path('login/adminlogin/', views.adminlogin, name='adminlog'),
     path("success/", views.success, name="success"),
+    path('browseoppurtunity/', views.browse_opportunities, name='browse_opportunities'),
+    path('api/search_jobs/', views.search_jobs, name='search_jobs'),
+    path('browseoppurtunity/job_id/', views.job_id, name='job_id'),
 ]
