@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+{% load static %}
+     <style>
+
+body {
+    margin: 0;
+    line-height: normal;
+}
+
+
+:root {
+
+    /* Color */
+    --color-gray-100: #fefefe;
+    --color-gray-200: rgba(255, 255, 255, 0.5);
+    --color-navy: #061889;
+    --color-darkslateblue-200: #46479d;
+    --color-darkslateblue-300: #383790;
+    --color-black: #000;
+    --color-forestgreen: #078035;
+    --color-lightsteelblue: #969dc9;
+    --color-snow: #fffcfc;
+    --color-white: #fff;
+    --color-darkslateblue-100: #6d68ab;
+    --color-midnightblue-100: #21287d;
+    --color-midnightblue-200: rgba(33, 40, 125, 0.2);
+    --color-gainsboro: #d9d9d9;
+
+    /* Padding */
+    --padding-10: 10px;
+
+    /* BorderRadius */
+    --br-6: 6px;
+    --br-14: 14px;
+
+    /* Font */
+    --font-roboto: Roboto;
+    --font-inter: Inter;
+    --font-poppins: Poppins;
+    --font-lato: Lato;
+
+    /* FontSize */
+    --font-size-16: 16px;
+    --font-size-20: 20px;
+    --font-size-22: 22px;
+    --font-size-24: 24px;
+    --font-size-30: 30px;
+    --font-size-32: 32px;
+
+}
+
+.browse-opportunities {
+    width: 100%;
+    position: relative;
+    background: linear-gradient(180deg, rgba(48, 58, 149, 0.2), rgba(118, 25, 125, 0.2) 25%, rgba(173, 0, 107, 0.2) 66%), linear-gradient(rgba(14, 82, 150, 0.2), rgba(14, 82, 150, 0.2)), #303a95;
+    height: 2500px;
+    overflow: visible;
+    text-align: left;
+    font-size: var(--font-size-20);
+    color: var(--color-white);
+    font-family: var(--font-roboto);
+}
+.footer-section {
+    position: absolute;
+    top: 2203px;
+    left: 0px;
+    background: linear-gradient(-51.63deg, #363795 19.62%);
+    border: 2px solid var(--color-darkslateblue-100);
+    box-sizing: border-box;
+    width: 1920px;
+    height: 297px;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 34px 135px;
+    gap: 26px 194px;
+    font-size: var(--font-size-24);
+}
+.cse-job-portal {
+    width: 571.5px;
+    position: relative;
+    height: 93px;
+}
+.browse-opportunities-cse-job-portal {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+    width: 303px;
+}
+.connecting-cse-students {
+    position: absolute;
+    top: 47px;
+    left: 0px;
+    font-size: var(--font-size-20);
+    font-weight: 300;
+    display: inline-block;
+    width: 300px;
+}
+.quick-links {
+    width: 241px;
+    position: relative;
+    height: 163px;
+    font-size: var(--font-size-20);
+}
+.browse-opportunities-quick-links {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: var(--font-size-24);
+    display: inline-block;
+    width: 241px;
+}
+.home {
+    position: absolute;
+    top: 44px;
+    left: 3.44px;
+    font-weight: 300;
+    display: inline-block;
+    width: 93px;
+    text-decoration: none;
+    color: white;
+}
+.jobs {
+    position: absolute;
+    top: 76px;
+    left: 3.44px;
+    font-weight: 300;
+    display: inline-block;
+    width: 75.7px;
+    text-decoration: none;
+    color: white;
+}
+.login {
+    position: absolute;
+    top: 108px;
+    left: 6.89px;
+    font-weight: 300;
+    display: inline-block;
+    width: 84.4px;
+    text-decoration: none;
+    color: white;
+}
+.register {
+    position: absolute;
+    top: 140px;
+    left: 6.89px;
+    font-weight: 300;
+    display: inline-block;
+    width: 125.7px;
+    text-decoration: none;
+    color: white;
+}
+.contact-us {
+    width: 388.4px;
+    position: relative;
+    height: 101px;
+    font-size: var(--font-size-22);
+}
+.browse-opportunities-contact-us {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: var(--font-size-24);
+    display: inline-block;
+    width: 234.1px;
+}
+.div {
+    position: absolute;
+    top: 36px;
+    left: 28.44px;
+    font-weight: 300;
+    color: var(--color-snow);
+    display: inline-block;
+    width: 141px;
+}
+.cse-jobsuap-bdedu {
+    position: absolute;
+    top: 73px;
+    left: 28.44px;
+    font-weight: 300;
+    display: inline-block;
+    width: 360px;
+    height: 24px;
+}
+.frame-icon {
+    position: absolute;
+    top: 38px;
+    left: 0.44px;
+    width: 25px;
+    height: 25px;
+}
+.browse-opportunities-frame-icon {
+    position: absolute;
+    top: 76px;
+    left: 0.44px;
+    width: 25px;
+    height: 25px;
+}
+.copyright {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 20px;
+    font-family: var(--font-inter);
+}
+.frame-parent {
+    width: 669.7px;
+    height: 22px;
+    display: flex;
+    align-items: flex-end;
+}
+.frame-icon2 {
+    width: 21px;
+    position: relative;
+    height: 21px;
+}
+.frame-icon22 {
+    position: absolute;
+    top: 4px;
+    left: 119px;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+
+}
+
+.cse-department-job {
+    position: relative;
+    font-weight: 600;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: white;
+}
+.browse-opportunities-browse-opportunities {
+    position: absolute;
+    top: 226px;
+    left: 111px;
+    font-size: 36px;
+    font-family: var(--font-poppins);
+}
+.find-the-perfect {
+    position: absolute;
+    top: 280px;
+    left: 111px;
+    font-size: var(--font-size-32);
+    font-weight: 300;
+    display: inline-block;
+    width: 800px;
+    height: 47px;
+}
+.new-job-postings-matching-your-parent {
+    position: absolute;
+    top: 360px;
+    left: 107px;
+    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+    border-radius: var(--br-6);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 1228px;
+    height: 186px;
+    overflow: hidden;
+    font-size: var(--font-size-24);
+}
+.new-job-postings {
+    position: absolute;
+    top: 23px;
+    left: 71px;
+    font-weight: 300;
+    display: none;
+}
+.frame-child {
+    position: absolute;
+    top: 114px;
+    left: 66px;
+    border-top: 1px solid var(--color-gray-200);
+    box-sizing: border-box;
+    width: 1095px;
+    height: 2px;
+}
+.new-job-postings-matching-your-group {
+    position: absolute;
+    top: 40px;
+    left: 65px;
+    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+    border-radius: var(--br-6);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 330px;
+    height: 40px;
+    overflow: hidden;
+}
+.search-jobs-companies {
+    position: absolute;
+    top: 7px;
+    left: 55px;
+    font-size: var(--font-size-16);
+    font-weight: 100;
+    display: inline-block;
+    width: 254px;
+    height: 23px;
+}
+.search-icon {
+    position: absolute;
+    top: 47px;
+    left: 86px;
+    width: 24px;
+    height: 24px;
+}
+.new-job-postings-matching-your-container {
+    position: absolute;
+    top: 40px;
+    left: 479px;
+    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+    border-radius: var(--br-6);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    box-sizing: border-box;
+    width: 172px;
+    height: 40px;
+    overflow: hidden;
+}
+.new-job-postings-matching-your-container select{
+    width: 100%;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  appearance: none;
+  background: transparent;
+  color: white;
+  font-family: var(--font-poppins);
+  font-size: var(--font-size-16);
+  font-weight: 600;
+}
+.job-type {
+    position: absolute;
+    top: 7px;
+    left: 37px;
+    font-size: var(--font-size-16);
+    font-weight: 600;
+    display: inline-block;
+    width: 70px;
+    height: 23px;
+}
+.frame-icon3 {
+    position: absolute;
+    top: 4px;
+    left: 123px;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+}
+.frame-div {
+    position: absolute;
+    top: 40px;
+    left: 716px;
+    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+    border-radius: var(--br-6);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 172px;
+    height: 40px;
+    overflow: hidden;
+}
+.frame-div select{
+    width: 100%;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  appearance: none;
+  background: transparent;
+  color: white;
+  font-family: var(--font-poppins);
+  font-size: var(--font-size-16);
+  font-weight: 600;
+}
+option{
+  color: black;
+}
+.new-job-postings-matching-your-wrapper {
+    position: absolute;
+    top: -1px;
+    left: 225px;
+    border-radius: var(--br-6);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 172px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.location {
+    position: absolute;
+    top: 7px;
+    left: 41px;
+    font-size: var(--font-size-16);
+    font-weight: 600;
+    display: inline-block;
+    width: 70px;
+    height: 23px;
+}
+.frame-icon4 {
+    position: absolute;
+    top: 4px;
+    left: 119px;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+}
+.browse-opportunities-new-job-postings-matching-your-parent {
+    position: absolute;
+    top: 40px;
+    left: 942px;
+    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+    border-radius: var(--br-6);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 172px;
+    height: 40px;
+    overflow: hidden;
+}
+.browse-opportunities-new-job-postings-matching-your-parent select{
+    width: 100%;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  appearance: none;
+  background: transparent;
+  color: white;
+  font-family: var(--font-poppins);
+  font-size: var(--font-size-16);
+  font-weight: 600;
+}
+.data-posted {
+    position: absolute;
+    top: 7px;
+    left: 22px;
+    font-size: var(--font-size-16);
+    font-weight: 600;
+    display: inline-block;
+    width: 93px;
+    height: 23px;
+}
+.frame-icon5 {
+    position: absolute;
+    top: 4px;
+    left: 128px;
+    width: 30px;
+    height: 30px;
+}
+.showing-3-result {
+    position: absolute;
+    top: 142px;
+    left: 67px;
+    font-size: var(--font-size-16);
+    font-weight: 300;
+}
+.job-type-options {
+    position: absolute;
+    top: 83px;
+    left: 484px;
+    width: 170px;
+    height: 94px;
+    font-size: var(--font-size-16);
+    color: var(--color-black);
+    font-family: var(--font-lato);
+}
+.job-type-options-child {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: var(--color-white);
+    width: 170px;
+    height: 94px;
+}
+.full-time {
+    position: absolute;
+    top: 4px;
+    left: 44px;
+    font-weight: 600;
+    display: inline-block;
+    width: 64px;
+}
+.part-time {
+    position: absolute;
+    top: 31px;
+    left: 44px;
+    font-weight: 600;
+    display: inline-block;
+    width: 69px;
+}
+.internship {
+    position: absolute;
+    top: 55px;
+    left: 44px;
+    font-weight: 600;
+    display: inline-block;
+    width: 72px;
+}
+.job-type-options-item {
+    position: absolute;
+    top: 0px;
+    left: 3px;
+    width: 0px;
+    height: 94px;
+}
+.frame-group {
+    position: absolute;
+    top: 600px;
+    left: 108px;
+    width: 1226px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: var(--font-lato);
+}
+.frame-wrapper {
+    align-self: stretch;
+    position: relative;
+    border-radius: var(--br-14);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    height: 196px;
+    overflow: hidden;
+    flex-shrink: 0;
+    z-index: 0;
+    font-size: var(--font-size-16);
+}
+.new-wrapper {
+    position: absolute;
+    top: 0px;
+    left: 1174px;
+    border-radius: 0px 9px 0px 0px;
+    background-color: var(--color-forestgreen);
+    width: 52px;
+    height: 29px;
+    overflow: hidden;
+}
+.new {
+    position: absolute;
+    top: 5px;
+    left: 6px;
+    font-weight: 600;
+    display: inline-block;
+    width: 39px;
+    height: 19px;
+}
+.deadline-august-2 {
+    width: 220px;
+    position: absolute;
+    margin: 0 !important;
+    top: 145px;
+    left: 937px;
+    font-weight: 300;
+    display: inline-block;
+    height: 24px;
+    flex-shrink: 0;
+    z-index: 1;
+}
+.frame-icon6 {
+    width: 24px;
+    position: absolute;
+    margin: 0 !important;
+    top: 149px;
+    left: 96px;
+    height: 24px;
+    z-index: 2;
+}
+.posted-10 {
+    width: 189px;
+    position: absolute;
+    margin: 0 !important;
+    top: 149px;
+    left: 126px;
+    font-weight: 300;
+    display: inline-block;
+    height: 24px;
+    flex-shrink: 0;
+    z-index: 3;
+}
+.frame-icon7 {
+    width: 24px;
+    position: absolute;
+    margin: 0 !important;
+    top: 116px;
+    left: 96px;
+    height: 24px;
+    z-index: 4;
+}
+.dhakabd {
+    width: 88px;
+    position: absolute;
+    margin: 0 !important;
+    top: 113px;
+    left: 126px;
+    font-weight: 300;
+    display: inline-block;
+    height: 24px;
+    flex-shrink: 0;
+    z-index: 5;
+}
+.image-3-icon {
+    width: 58px;
+    position: absolute;
+    margin: 0 !important;
+    top: 32px;
+    left: 19px;
+    max-height: 100%;
+    object-fit: cover;
+    z-index: 6;
+}
+.disystem {
+    width: 150px;
+    position: absolute;
+    margin: 0 !important;
+    top: 66px;
+    left: 102px;
+    font-size: var(--font-size-30);
+    font-weight: 300;
+    font-family: var(--font-roboto);
+    color: var(--color-gray-100);
+    display: inline-block;
+    height: 35px;
+    flex-shrink: 0;
+    z-index: 7;
+}
+.junior-backend-developer {
+    width: 696px;
+    position: absolute;
+    margin: 0 !important;
+    top: 24px;
+    left: 102px;
+    font-size: var(--font-size-32);
+    font-weight: 600;
+    display: inline-block;
+    height: 38px;
+    flex-shrink: 0;
+    z-index: 8;
+}
+.frame-container {
+    position: absolute;
+    top: 849px;
+    left: 108px;
+    width: 1226px;
+    height: 194px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0px;
+    font-family: var(--font-lato);
+}
+.image-4-icon {
+    position: absolute;
+    top: 30px;
+    left: 18px;
+    width: 58px;
+    height: 58px;
+    object-fit: cover;
+}
+.deadline-july-31 {
+    width: 220px;
+    position: absolute;
+    margin: 0 !important;
+    top: 149px;
+    left: 954px;
+    font-weight: 300;
+    display: inline-block;
+    height: 24px;
+    flex-shrink: 0;
+    z-index: 1;
+}
+.workspace-infotec-limited {
+    width: 376px;
+    position: absolute;
+    margin: 0 !important;
+    top: 66px;
+    left: 102px;
+    font-size: var(--font-size-30);
+    font-weight: 300;
+    font-family: var(--font-roboto);
+    color: var(--color-gray-100);
+    display: inline-block;
+    height: 35px;
+    flex-shrink: 0;
+    z-index: 6;
+}
+.wordpress-developer {
+    width: 496px;
+    position: absolute;
+    margin: 0 !important;
+    top: 24px;
+    left: 102px;
+    font-size: var(--font-size-32);
+    font-weight: 600;
+    display: inline-block;
+    height: 38px;
+    flex-shrink: 0;
+    z-index: 7;
+}
+.frame-parent2 {
+    position: absolute;
+    top: calc(50% + 215.5px);
+    left: 108px;
+    width: 1226px;
+    height: 194px;
+    font-family: var(--font-lato);
+}
+.frame-parent3 {
+    position: absolute;
+    top: 10px;
+    left: -1px;
+    border-radius: var(--br-14);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 1228px;
+    height: 196px;
+    overflow: hidden;
+    font-size: var(--font-size-16);
+}
+.dhakabd2 {
+    position: absolute;
+    top: 111px;
+    left: 131px;
+    font-size: var(--font-size-20);
+    font-weight: 300;
+    display: inline-block;
+    width: 88px;
+    height: 24px;
+}
+.frame-icon10 {
+    position: absolute;
+    top: 111px;
+    left: 97px;
+    width: 24px;
+    height: 24px;
+}
+.frame-item {
+    position: absolute;
+    top: 19px;
+    left: 24px;
+    background-color: var(--color-darkslateblue-300);
+    border: 1px solid var(--color-white);
+    box-sizing: border-box;
+    width: 58px;
+    height: 58px;
+    opacity: 0.5;
+}
+.ra {
+    position: absolute;
+    top: 31px;
+    left: 34px;
+    font-size: 28px;
+    font-weight: 900;
+}
+.vector-icon {
+    position: absolute;
+    height: 10.31%;
+    width: 1.63%;
+    top: 74.74%;
+    right: 90.38%;
+    bottom: 14.95%;
+    left: 7.99%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.browse-opportunities-deadline-august-2 {
+    position: absolute;
+    top: 144px;
+    left: 960px;
+    font-weight: 300;
+    display: inline-block;
+    width: 220px;
+    height: 24px;
+}
+.posted-july {
+    position: absolute;
+    top: 154px;
+    left: 129px;
+    font-weight: 300;
+    display: inline-block;
+    width: 194px;
+    height: 24px;
+}
+.cse-department-university-ca {
+    position: absolute;
+    top: 73px;
+    left: 99px;
+    font-size: var(--font-size-24);
+    font-weight: 300;
+    font-family: var(--font-roboto);
+    color: var(--color-gray-100);
+    display: inline-block;
+    width: 498px;
+    height: 35px;
+}
+.research-assistant- {
+    position: absolute;
+    top: 32px;
+    left: 99px;
+    font-size: var(--font-size-32);
+    font-weight: 600;
+    display: inline-block;
+    width: 540px;
+}
+.frame {
+    position: absolute;
+    top: 154px;
+    left: 71px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+}
+.home-parent {
+    position: absolute;
+    top: 97px;
+    left: 802px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    font-size: var(--font-size-30);
+    font-family: var(--font-lato);
+}
+.browse-opportunities-home {
+    position: relative;
+}
+.dashboard-wrapper {
+    width: 197px;
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-200);
+    border: 6px solid var(--color-midnightblue-100);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-10) 3px var(--padding-10) var(--padding-10);
+}
+.dashboard {
+    width: 149px;
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.logo-parent {
+    position: absolute;
+    top: 82px;
+    left: 109px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    font-size: var(--font-size-30);
+    color: var(--color-darkslateblue-200);
+}
+.logo {
+    width: 87px;
+    position: relative;
+    height: 85px;
+}
+.ellipse {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+    background-color: var(--color-gainsboro);
+    width: 87px;
+    height: 85px;
+    opacity: 0.9;
+}
+.cse {
+    position: absolute;
+    top: 24px;
+    left: 12px;
+    font-weight: 600;
+    display: inline-block;
+    width: 63px;
+    height: 23px;
+}
+.job-portal {
+    position: relative;
+    font-weight: 600;
+    color: var(--color-white);
+}
+
+input{
+    width: 100%;         /* Take full width of the parent div */
+    height: 100%;        /* Take full height of the parent div */
+    border: none;        /* Remove default input border */
+    background: transparent; /* Match parent background */
+    font-size: 14px;  /* Inherit font size from parent */
+    padding: 0;          /* Remove extra padding if needed */
+    color: white;
+}
+#results {
+    position: absolute !important;
+    top: 600px !important;
+    left: 108px !important;
+    width: 1226px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    z-index: 100 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+}
+
+
+     </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+
+
+    <link rel="stylesheet" href="./global.css" />
+    <link rel="stylesheet"  href="./index.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+
+    <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
+    <script src="{% static 'myapp/js/script.js' %}"></script>
+
+
+</head>
+<body>
+
+    <div class="browse-opportunities">
+           <div class="footer-section">
+              <div class="cse-job-portal">
+                     <b class="browse-opportunities-cse-job-portal">CSE Job Portal</b>
+                     <div class="connecting-cse-students">Connecting CSE students and alumni with career opportunities in the industry.</div>
+              </div>
+              <div class="quick-links">
+                     <b class="browse-opportunities-quick-links">Quick Links</b>
+                     <a href="{% url 'home' %}" class="home">Home </a>
+                     <div class="jobs">Jobs</div>
+                    <a href="{% url 'login' %}" class="login">Login</a>
+                     <a href="{% url 'register' %}" class="register">Register</a>
+              </div>
+              <div class="contact-us">
+                     <b class="browse-opportunities-contact-us">Contact Us</b>
+                     <div class="div">02-58157091</div>
+                     <div class="cse-jobsuap-bdedu">cse-jobs@uap-bd.edu</div>
+                                         <div class="frame-icon">
+                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+  <path d="M6.36556 7.6821C7.302 9.3288 8.6712 10.698 10.3179 11.6344L11.2024 10.3961C11.4965 9.9845 12.0516 9.8573 12.4956 10.0998C13.9024 10.8683 15.4571 11.3353 17.0789 11.4637C17.599 11.5049 18 11.9389 18 12.4606V16.9234C18 17.4361 17.6122 17.8657 17.1022 17.9181C16.5723 17.9726 16.0377 18 15.5 18C6.93959 18 0 11.0604 0 2.5C0 1.96227 0.0274201 1.42771 0.0818901 0.89776C0.1343 0.38775 0.56394 0 1.07665 0H5.53942C6.0611 0 6.49513 0.40104 6.5363 0.92109C6.66467 2.54288 7.1317 4.09764 7.9002 5.50444C8.1427 5.9484 8.0155 6.50354 7.6039 6.79757L6.36556 7.6821ZM3.84425 7.0252L5.7442 5.66809C5.20547 4.50514 4.83628 3.27183 4.64727 2H2.00907C2.00303 2.16632 2 2.333 2 2.5C2 9.9558 8.0442 16 15.5 16C15.667 16 15.8337 15.997 16 15.9909V13.3527C14.7282 13.1637 13.4949 12.7945 12.3319 12.2558L10.9748 14.1558C10.4258 13.9425 9.8956 13.6915 9.3874 13.4061L9.3293 13.373C7.3697 12.2587 5.74134 10.6303 4.627 8.6707L4.59394 8.6126C4.30849 8.1044 4.05754 7.5742 3.84425 7.0252Z" fill="white"/>
+</svg>
+                                         </div>
+
+
+
+                                         <div class="browse-opportunities-frame-icon">
+                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM12.0606 11.6829L5.64722 6.2377L4.35278 7.7623L12.0731 14.3171L19.6544 7.75616L18.3456 6.24384L12.0606 11.6829Z" fill="white"/>
+</svg>
+                                         </div>
+
+
+              </div>
+              <div class="copyright">
+                     <div class="frame-parent">
+
+                        <div class="cse-department-job">&copy;2025 CSE Department Job Portal.All rights reserved.</div>
+                     </div>
+              </div>
+           </div>
+           <b class="browse-opportunities-browse-opportunities">Browse Opportunities</b>
+           <div class="find-the-perfect">Find the perfect job or internship for your career</div>
+           <div class="new-job-postings-matching-your-parent">
+              <div class="new-job-postings">Search for jobs, companies or keywords...</div>
+              <div class="frame-child">
+              </div>
+              <div class="new-job-postings-matching-your-group">
+                     <div class="new-job-postings">Search for jobs, companies or keywords...</div>
+                     <div class="search-jobs-companies">
+                      <input type="text" id="search" placeholder="Search for jobs, companies or keywords">
+                   </div>
+              </div>
+             <div class="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+  <path d="M7 0C3.14585 0 0 3.14585 0 7C0 10.8541 3.14585 14 7 14C8.748 14 10.345 13.348 11.5742 12.2812L12 12.707V14L18 20L20 18L14 12H12.707L12.2812 11.5742C13.348 10.345 14 8.748 14 7C14 3.14585 10.8541 0 7 0ZM7 2C9.77327 2 12 4.22673 12 7C12 9.77327 9.77327 12 7 12C4.22673 12 2 9.77327 2 7C2 4.22673 4.22673 2 7 2Z" fill="white"/>
+</svg>
+             </div>
+
+              <div class="new-job-postings-matching-your-container">
+
+                     <select id="jobType">
+    <option value="">Job Type</option>
+    <option value="full">Full Time</option>
+    <option value="part">Part Time</option>
+    <option value="intern">Internship</option>
+  </select>
+                                         <div class="frame-icon22">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+  <path d="M14.9998 16.4645L21.1871 10.2773L22.9548 12.0451L14.9998 20.0001L7.04492 12.0451L8.81268 10.2773L14.9998 16.4645Z" fill="white"/>
+</svg></div>
+
+              </div>
+              <div class="frame-div">
+
+                      <select id="locationSelect">
+    <option value="">Select Location</option>
+    <option value="dhaka">Dhaka</option>
+    <option value="chittagong">Chittagong</option>
+    <option value="rajshahi">Rajshahi</option>
+  </select>
+
+                                        <div class="frame-icon3">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" align="right" viewBox="0 0 16 10" fill="none">
+  <path d="M7.99981 6.46449L14.1871 0.277344L15.9548 2.04511L7.99981 10.0001L0.0449219 2.04511L1.81268 0.277344L7.99981 6.46449Z" fill="white"/>
+</svg></div>
+
+              </div>
+              <div class="browse-opportunities-new-job-postings-matching-your-parent">
+                     <select id="dataPost">
+    <option value="">Data Posted</option>
+    <option value="today">Today</option>
+    <option value="week">This Week</option>
+    <option value="month">This Month</option>
+    <option value="anytime">Anytime</option>
+  </select>
+                                        <div class="frame-icon4">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" align="right" viewBox="0 0 16 10" fill="none">
+  <path d="M7.99981 6.46449L14.1871 0.277344L15.9548 2.04511L7.99981 10.0001L0.0449219 2.04511L1.81268 0.277344L7.99981 6.46449Z" fill="white"/>
+</svg></div>
+
+
+              </div>
+              <div class="showing-3-result">Showing 3 result</div>
+
+           </div>
+
+           <div class="home-parent">
+              <b class="browse-opportunities-home">Home</b>
+              <b class="browse-opportunities-home">Jobs</b>
+              <b class="browse-opportunities-home">About</b>
+              <div class="dashboard-wrapper">
+                     <b class="dashboard">Dashboard</b>
+              </div>
+           </div>
+           <div class="logo-parent">
+              <div class="logo">
+                     <div class="ellipse">
+                     </div>
+                     <div class="cse">CSE</div>
+              </div>
+   <div class="job-portal">Job Portal</div>
+           </div>
+    </div>
+
+<div id="results"></div>
+
+<script>
+const searchInput = document.getElementById('search');
+const jobTypeSelect = document.getElementById('jobType');
+const locationSelect = document.getElementById('locationSelect');
+const postedSelect = document.getElementById('dataPost');
+const resultsDiv = document.getElementById('results');
+
+// First, let's make sure the results container is visible and properly positioned
+console.log('Initializing job search...');
+console.log('Results div found:', !!resultsDiv);
+
+// Add some CSS to ensure results are visible
+if (resultsDiv) {
+    resultsDiv.style.cssText = `
+        position: absolute;
+        top: 600px;
+        left: 108px;
+        width: 1226px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        z-index: 100;
+        visibility: visible !important;
+        opacity: 1 !important;
+    `;
+}
+
+const mockJobs = [
+    {
+        id: 1,
+        title: "WordPress Developer",
+        company: "Workspace Infotec Limited",
+        location: "Dhaka, BD",
+        posted: "16 hours ago",
+        deadline: "July 31, 2025",
+        is_new: true,
+        job_type: "full"
+    },
+    {
+        id: 2,
+        title: "Junior Backend Developer (Laravel)",
+        company: "DISYSTEM",
+        location: "Dhaka, BD",
+        posted: "10 days ago",
+        deadline: "August 2, 2025",
+        is_new: true,
+        job_type: "full"
+    },
+    {
+        id: 3,
+        title: "Research Assistant",
+        company: "CSE Department University",
+        location: "Dhaka, BD",
+        posted: "July 15, 2024",
+        deadline: "August 10, 2024",
+        is_new: false,
+        job_type: "part"
+    },
+    {
+        id: 4,
+        title: "Frontend Intern",
+        company: "Tech Solutions Ltd",
+        location: "Chittagong, BD",
+        posted: "2 days ago",
+        deadline: "August 15, 2025",
+        is_new: true,
+        job_type: "intern"
+    },
+    {
+        id: 5,
+        title: "Data Analyst",
+        company: "Analytics Pro",
+        location: "Rajshahi, BD",
+        posted: "5 hours ago",
+        deadline: "August 5, 2025",
+        is_new: true,
+        job_type: "full"
+    }
+];
+
+// Function to handle job title click for Junior Backend Developer only
+function handleJuniorBackendClick() {
+    console.log('Junior Backend Developer clicked - navigating to next page');
+
+    // Navigate to the next page - choose one method below:
+
+    // Method 1: Simple redirect
+    //window.location.href = '/job_id?id=2&title=Junior+Backend+Developer';
+
+    // Method 2: Or use this alternative
+     window.location.href = '/browseoppurtunity/job_id/';
+
+    // Method 3: Or if you want to use a different page name
+    // window.location.href = '/backend-job-details.html';
+}
+
+function renderJobs(jobs) {
+    console.log('renderJobs called with', jobs?.length, 'jobs');
+
+    if (!resultsDiv) {
+        console.error('ERROR: resultsDiv not found!');
+        return;
+    }
+
+    // Clear previous results
+    resultsDiv.innerHTML = '';
+
+    if (!jobs || jobs.length === 0) {
+        resultsDiv.innerHTML = `
+            <div style="
+                border: 2px solid #969dc9;
+                border-radius: 14px;
+                padding: 50px;
+                text-align: center;
+                color: white;
+                font-size: 20px;
+                background: rgba(0,0,0,0.3);
+            ">
+                No jobs found. Try broadening your search criteria.
+            </div>
+        `;
+        console.log('No jobs to display');
+        return;
+    }
+
+    console.log('Rendering', jobs.length, 'jobs');
+
+    jobs.forEach((job, index) => {
+        const jobCard = document.createElement('div');
+        jobCard.style.cssText = `
+            position: relative;
+            width: 1226px;
+            height: 196px;
+            margin-bottom: 20px;
+            border: 2px solid #969dc9;
+            border-radius: 14px;
+            background: transparent;
+            overflow: hidden;
+        `;
+
+        // Check if this is the Junior Backend Developer job
+        const isJuniorBackend = job.title === "Junior Backend Developer (Laravel)";
+
+        jobCard.innerHTML = `
+            <!-- NEW Badge -->
+            <div style="
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: #078035;
+                color: white;
+                padding: 5px 15px;
+                border-radius: 0 12px 0 0;
+                font-weight: 600;
+                font-size: 16px;
+                display: ${job.is_new ? 'block' : 'none'};
+                z-index: 10;
+            ">NEW</div>
+
+            <!-- Company Logo -->
+            <div style="
+                position: absolute;
+                top: 30px;
+                left: 18px;
+                width: 58px;
+                height: 58px;
+                background: #383790;
+                border: 1px solid white;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                color: white;
+                font-size: 20px;
+                opacity: 0.8;
+            ">${job.company ? job.company.charAt(0).toUpperCase() : 'C'}</div>
+
+            <!-- Job Title - Only clickable for Junior Backend Developer -->
+            <div id="job-title-${job.id}" style="
+                position: absolute;
+                top: 24px;
+                left: 102px;
+                font-size: 32px;
+                font-weight: 600;
+                color: white;
+                font-family: 'Lato', sans-serif;
+                ${isJuniorBackend ? 'cursor: pointer; transition: color 0.2s ease;' : ''}
+            ">${job.title || 'No Title'}</div>
+
+            <!-- Company Name -->
+            <div style="
+                position: absolute;
+                top: 66px;
+                left: 102px;
+                font-size: 30px;
+                font-weight: 300;
+                color: #fefefe;
+                font-family: 'Roboto', sans-serif;
+            ">${job.company || 'No Company'}</div>
+
+            <!-- Location -->
+            <div style="
+                position: absolute;
+                top: 113px;
+                left: 126px;
+                font-size: 20px;
+                font-weight: 300;
+                color: white;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            ">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
+                </svg>
+                ${job.location || 'Location not specified'}
+            </div>
+
+            <!-- Posted Date -->
+            <div style="
+                position: absolute;
+                top: 149px;
+                left: 126px;
+                font-size: 16px;
+                font-weight: 300;
+                color: white;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            ">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                    <path d="M19 3H18V1H16V3H8V1H6V3H5C3.89 3 3.01 3.9 3.01 5L3 19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V8H19V19Z"/>
+                    <path d="M7 10H11V14H7V10Z"/>
+                </svg>
+                Posted: ${job.posted || 'Date not specified'}
+            </div>
+
+            <!-- Deadline -->
+            <div style="
+                position: absolute;
+                top: 145px;
+                right: 20px;
+                font-size: 16px;
+                font-weight: 300;
+                color: white;
+            ">
+                Deadline: ${job.deadline || 'Not specified'}
+            </div>
+        `;
+
+        resultsDiv.appendChild(jobCard);
+
+        // Add click event listener ONLY for Junior Backend Developer
+        if (isJuniorBackend) {
+            const jobTitleElement = document.getElementById(`job-title-${job.id}`);
+            if (jobTitleElement) {
+                jobTitleElement.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent event bubbling
+                    handleJuniorBackendClick();
+                });
+
+                // Add hover effects only for Junior Backend Developer
+                jobTitleElement.addEventListener('mouseenter', () => {
+                    jobTitleElement.style.color = '#4fc3f7'; // Light blue color on hover
+                    jobTitleElement.style.textDecoration = 'underline';
+                });
+
+                jobTitleElement.addEventListener('mouseleave', () => {
+                    jobTitleElement.style.color = 'white';
+                    jobTitleElement.style.textDecoration = 'none';
+                });
+            }
+        }
+
+        console.log('Job card', index + 1, 'added:', job.title, '- Clickable:', isJuniorBackend);
+    });
+
+    console.log('All jobs rendered successfully');
+}
+
+function fetchJobs() {
+    console.log('fetchJobs called');
+
+    const query = searchInput ? searchInput.value.toLowerCase() : '';
+    const jobType = jobTypeSelect ? jobTypeSelect.value : '';
+    const location = locationSelect ? locationSelect.value.toLowerCase() : '';
+    const posted = postedSelect ? postedSelect.value : '';
+
+    console.log('Filter criteria:', { query, jobType, location, posted });
+
+    // First filter mock data based on search criteria
+    let filteredJobs = mockJobs.filter(job => {
+        let matches = true;
+
+        // Search query filter (title and company)
+        if (query) {
+            const titleMatch = job.title.toLowerCase().includes(query);
+            const companyMatch = job.company.toLowerCase().includes(query);
+            matches = matches && (titleMatch || companyMatch);
+        }
+
+        // Job type filter
+        if (jobType && job.job_type) {
+            matches = matches && (job.job_type === jobType);
+        }
+
+        // Location filter
+        if (location) {
+            matches = matches && job.location.toLowerCase().includes(location);
+        }
+
+        // Posted date filter (simplified for mock data)
+        if (posted) {
+            // This is a simple implementation for mock data
+            // You would need more complex logic for real dates
+            if (posted === 'today') {
+                matches = matches && job.posted.includes('hour') || job.posted.includes('today');
+            } else if (posted === 'week') {
+                matches = matches && (job.posted.includes('day') && parseInt(job.posted) <= 7);
+            }
+            // Add more date logic as needed
+        }
+
+        return matches;
+    });
+
+    console.log('Filtered jobs:', filteredJobs.length);
+
+    // Show filtered mock data
+    renderJobs(filteredJobs);
+
+    // Then try API call with actual filters
+    try {
+        const params = new URLSearchParams();
+        if (query) params.append('q', query);
+        if (jobType) params.append('job_type', jobType);
+        if (location) params.append('location', location);
+        if (posted) params.append('posted', posted);
+
+        const url = `/api/search_jobs/?${params.toString()}`;
+        console.log('API URL:', url);
+
+        fetch(url)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
+            .then(apiJobs => {
+                console.log('API response:', apiJobs);
+
+                // Handle different API response formats
+                let jobsFromAPI = apiJobs;
+                if (apiJobs && apiJobs.jobs) jobsFromAPI = apiJobs.jobs;
+                if (apiJobs && apiJobs.results) jobsFromAPI = apiJobs.results;
+
+                if (jobsFromAPI && jobsFromAPI.length > 0) {
+                    console.log('Using API data:', jobsFromAPI.length, 'jobs');
+                    renderJobs(jobsFromAPI);
+                } else {
+                    console.log('No API results, keeping filtered mock data');
+                }
+            })
+            .catch(error => {
+                console.log('API call failed, using filtered mock data:', error);
+                // We already showed filtered mock data, so no need to do anything
+            });
+
+    } catch (error) {
+        console.log('API call error:', error);
+        // We already showed filtered mock data
+    }
+}
+
+// Event listeners
+if (searchInput) {
+    searchInput.addEventListener('input', fetchJobs);
+    console.log('Search input listener added');
+}
+
+if (jobTypeSelect) {
+    jobTypeSelect.addEventListener('change', fetchJobs);
+    console.log('Job type listener added');
+}
+
+if (locationSelect) {
+    locationSelect.addEventListener('change', fetchJobs);
+    console.log('Location listener added');
+}
+
+if (postedSelect) {
+    postedSelect.addEventListener('change', fetchJobs);
+    console.log('Posted date listener added');
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+    console.log('Results div position:', resultsDiv ? {
+        top: resultsDiv.offsetTop,
+        left: resultsDiv.offsetLeft,
+        width: resultsDiv.offsetWidth,
+        height: resultsDiv.offsetHeight
+    } : 'Not found');
+
+    // Show jobs immediately
+    setTimeout(() => {
+        console.log('Initializing job display...');
+        fetchJobs();
+    }, 100);
+});
+
+// Also try initializing if DOM is already loaded
+if (document.readyState === 'loading') {
+    console.log('Document still loading...');
+} else {
+    console.log('Document already ready, initializing...');
+    setTimeout(() => {
+        fetchJobs();
+    }, 100);
+}
+</script>
+</body>
+</html>

@@ -105,6 +105,8 @@ body {
 }
 .register {
     position: relative;
+    text-decoration: none;
+    color: white;
 }
 .hero-section-child {
     position: absolute;
@@ -498,7 +500,7 @@ body {
               <div class="your-gateway-to">Your Gateway to</div>
            </div>
            <div class="browse-opportunity-wrapper" id="frameContainer5">
-              <b class="register">Browse Opportunity</b>
+              <a href="{% url 'browse_opportunities' %}" class="register">Browse Opportunity</a>
            </div>
            <div class="frame-parent">
 

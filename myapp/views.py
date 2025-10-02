@@ -230,3 +230,53 @@ def adminlogin(request):
             return redirect("adminlog")
 
     return render(request, "myapp/adminlogin.html")
+
+from django.http import JsonResponse
+from django.shortcuts import render
+from .models import Job
+
+def browse_opportunities(request):
+    # Fetch all jobs (or apply filters as needed)
+    jobs = Job.objects.all()
+
+    # Pass jobs to the template
+    context = {
+        'jobs': jobs,
+    }
+    return render(request, 'myapp/browseoppurtunity.html', context)
+
+def search_jobs(request):
+    query = request.GET.get('q', '')
+    job_type = request.GET.get('job_type', '')
+    location = request.GET.get('location', '')
+    posted = request.GET.get('posted', '')
+
+    jobs = Job.objects.all()
+
+    if query:
+        jobs = jobs.filter(title__icontains=query) | jobs.filter(company__icontains=query)
+    if job_type:
+        jobs = jobs.filter(job_type=job_type)
+    if location:
+        jobs = jobs.filter(location__icontains=location)
+    if posted :
+        jobs = jobs.filter(posted__icontains=posted)
+
+
+    jobs_data = [
+        {
+            'title': job.title,
+            'company': job.company,
+            'location': job.location,
+            'posted': job.posted,
+            'deadline': job.deadline.strftime('%B %d, %Y'),
+            'is_new': job.is_new,
+        }
+        for job in jobs
+    ]
+
+    return JsonResponse(jobs_data, safe=False)
+
+
+def job_id(request):
+    return render(request, 'myapp/job_id.html')
