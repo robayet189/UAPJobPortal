@@ -70,3 +70,22 @@ class Administrator(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+
+from django.db import models
+
+class Job(models.Model):
+    title = models.CharField(max_length=200)
+    company = models.CharField(max_length=200)
+    location = models.CharField(max_length=100)
+    posted = models.CharField(max_length=50,default="Anytime")
+    deadline = models.DateField()
+    is_new = models.BooleanField(default=False)
+    job_type = models.CharField(max_length=50, choices=[
+        ('full', 'Full Time'),
+        ('part', 'Part Time'),
+        ('intern', 'Internship'),
+    ])
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.title
