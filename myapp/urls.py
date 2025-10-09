@@ -18,4 +18,5 @@ urlpatterns = [
     path('browseoppurtunity/', views.browse_opportunities, name='browse_opportunities'),
     path('api/search_jobs/', views.search_jobs, name='search_jobs'),
     path('browseoppurtunity/job_id/', views.job_id, name='job_id'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

@@ -124,7 +124,6 @@ def studentlogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("stdlog")
 
-        # ✅ Check the password
         if check_password(password, student.password):
             # store session info
             request.session["student_id"] = student.id
@@ -148,7 +147,6 @@ def alumnilogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("almlog")
 
-        # ✅ Check the password
         if check_password(password, alumni.password):
             # store session info
             request.session["alumni_id"] = alumni.id
@@ -171,7 +169,6 @@ def facultylogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("fcltlog")
 
-        # ✅ Check the password
         if check_password(password, faculty.password):
             # store session info
             request.session["faculty_id"] = faculty.id
@@ -195,7 +192,6 @@ def companylogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("comlog")
 
-        # ✅ Check the password
         if check_password(password, company.password):
             # store session info
             request.session["company_id"] = company.id
@@ -219,7 +215,6 @@ def adminlogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("adminlog")
 
-        # ✅ Check the password
         if check_password(password, admin.password):
             # store session info
             request.session["admin_id"] = admin.id
@@ -280,3 +275,8 @@ def search_jobs(request):
 
 def job_id(request):
     return render(request, 'myapp/job_id.html')
+
+from django.http import JsonResponse
+
+def dashboard(request):
+    return render(request, 'myapp/studentdashboard.html')
