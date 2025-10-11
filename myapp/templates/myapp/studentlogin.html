@@ -169,13 +169,27 @@ body {
   	font-weight: 300;
 }
 .forgot-password {
-  	position: absolute;
-  	top: 1060px;
-  	left: 1393px;
-  	font-size: var(--font-size-40);
-  	font-weight: 800;
-  	color: var(--color-gray);
+  margin-top: 10px;
+  margin-left: 1240px;
+  text-align: left;
+  font-size: var(--font-size-32);
+  font-weight: 800;
+  color: var(--color-white);
+  width: 100%;
+  position: static;       /* makes sure it sits inside the form normally */
 }
+
+.forgot-password a {
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+
+
 .login-wrapper {
   	position: absolute;
   	top: 688px;
@@ -396,6 +410,9 @@ body {
                 <div class="email-address">Password *</div>
                 <div class="frame-child">
                     <input type="password" name="password" value="" required />
+                </div>
+				<div class="forgot-password">
+                    <a href="{% url 'stdreg' %}">Forgot Password?</a>
                 </div>
             </div>
 
