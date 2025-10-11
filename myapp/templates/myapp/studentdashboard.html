@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+
+body {
+  	margin: 0;
+  	line-height: normal;
+}
+
+
+:root {
+
+  	/* Common Style Variables */
+
+  	/* Color */
+  	--color-darkslateblue-100: #6d68ab;
+  	--color-darkslateblue-200: #46479d;
+  	--color-forestgreen: #078035;
+  	--color-gainsboro: #d9d9d9;
+  	--color-gold: #f2d203;
+  	--color-gray: #fefefe;
+  	--color-lightsteelblue: #969dc9;
+  	--color-midnightblue-100: #21287d;
+  	--color-midnightblue-200: #131a73;
+  	--color-midnightblue-300: rgba(33, 40, 125, 0.2);
+  	--color-silver: #d9c3c3;
+  	--color-skyblue: #90d1f1;
+  	--color-snow: #fffcfc;
+  	--color-white: #fff;
+
+  	/* Gap */
+  	--gap-3: 3px;
+  	--gap-10: 10px;
+
+  	/* Padding */
+  	--padding-3: 3px;
+  	--padding-10: 10px;
+
+  	/* BorderRadius */
+  	--br-0: 0px;
+  	--br-6: 6px;
+  	--br-14: 14px;
+
+  	/* Font */
+  	--font-inter: Inter;
+  	--font-lato: Lato;
+  	--font-roboto: Roboto;
+
+  	/* FontSize */
+  	--fs-15: 15px;
+  	--fs-16: 16px;
+  	--fs-20: 20px;
+  	--fs-22: 22px;
+  	--fs-24: 24px;
+  	--fs-30: 30px;
+  	--fs-32: 32px;
+
+  	/* Borders */
+  	--border-1: 2px solid var(--color-lightsteelblue);
+
+  	/* Shadows */
+  	--text-shadow-1: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	--text-shadow-2: 0px 4px 4px rgba(0, 0, 0, 0.2);
+
+  	/* WidthHeights */
+  	--height-1: 1px;
+  	--height-2: 2px;
+  	--height-18: 18px;
+  	--height-19: 19px;
+  	--height-24: 24px;
+  	--height-48: 48px;
+  	--width-18: 18px;
+  	--width-24: 24px;
+  	--width-48: 48px;
+  	--width-1230: 1230px;
+
+}
+        .student-dashboard {
+  	width: 100%;
+  	position: relative;
+  	background: linear-gradient(180deg, rgba(48, 58, 149, 0.2), rgba(118, 25, 125, 0.2) 25%, rgba(173, 0, 107, 0.2) 66%), linear-gradient(rgba(14, 82, 150, 0.2), rgba(14, 82, 150, 0.2)), #303a95;
+  	height: 2024px;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: var(--fs-16);
+  	color: var(--color-white);
+  	font-family: var(--font-roboto);
+}
+.logo-parent {
+  	position: absolute;
+  	top: 52px;
+  	left: 102px;
+  	display: flex;
+  	align-items: center;
+  	gap: 6px;
+  	text-align: center;
+  	font-size: var(--fs-30);
+  	color: var(--color-darkslateblue-200);
+}
+.logo {
+  	width: 87px;
+  	position: relative;
+  	height: 85px;
+}
+.ellipse {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	border-radius: 50%;
+  	background-color: var(--color-gainsboro);
+  	width: 87px;
+  	height: 85px;
+  	opacity: 0.9;
+}
+.cse {
+  	position: absolute;
+  	top: 24px;
+  	left: 12px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 63px;
+  	height: 23px;
+}
+.job-portal {
+  	position: relative;
+  	font-weight: 600;
+  	color: var(--color-white);
+}
+.home-parent {
+  	position: absolute;
+  	top: 78px;
+  	left: 1543px;
+  	display: flex;
+  	align-items: center;
+  	gap: 48px;
+  	font-size: var(--fs-30);
+}
+.home {
+  	position: relative;
+}
+.dashboard-wrapper {
+  	width: 197px;
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-300);
+  	border: 6px solid var(--color-midnightblue-100);
+  	box-sizing: border-box;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
+  	text-decoration: none;
+  	color: white;
+}
+.dashboard {
+  	width: 149px;
+  	position: relative;
+  	display: inline-block;
+  	align-items: center;
+  	flex-shrink: 0;
+  	text-shadow: var(--text-shadow-1);
+}
+.student-dashboard-student-dashboard {
+  	position: absolute;
+  	top: 187px;
+  	left: 114px;
+  	font-size: 36px;
+}
+.welcome-back-mashrur {
+  	position: absolute;
+  	top: 241px;
+  	left: 114px;
+  	font-size: var(--fs-32);
+  	font-weight: 600;
+}
+.new-job-postings-matching-your-parent {
+  	position: absolute;
+  	top: 337px;
+  	left: 121px;
+  	border-radius: var(--br-6);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	width: 1678px;
+  	height: 76px;
+  	font-size: var(--fs-24);
+}
+.new-job-postings {
+  	position: absolute;
+  	top: 23px;
+  	left: 71px;
+  	font-weight: 300;
+}
+.view-all {
+  	position: absolute;
+  	top: 23px;
+  	left: 1547px;
+}
+.frame-icon {
+  	position: absolute;
+  	top: 25px;
+  	left: 30px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+}
+.new-job-postings-matching-your-group {
+  	position: absolute;
+  	top: 460px;
+  	left: 121px;
+  	border-radius: var(--br-6);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	width: 1226px;
+  	height: 76px;
+  	overflow: hidden;
+  	font-size: var(--fs-24);
+}
+.student-dashboard-view-all {
+  	position: absolute;
+  	top: 22px;
+  	left: 1085px;
+  	display: none;
+  	font-family: var(--font-lato);
+}
+.student-dashboard-frame-icon {
+  	position: absolute;
+  	top: 25px;
+  	left: 30px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+  	display: none;
+}
+.frame-icon2 {
+  	position: absolute;
+  	top: 486px;
+  	left: 148px;
+  	width: 24.3px;
+  	height: 24.3px;
+}
+.student-dashboard-child {
+  	position: absolute;
+  	top: 460px;
+  	left: 1417px;
+  	border-radius: var(--br-6);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	width: 382px;
+  	height: 529px;
+  	overflow: hidden;
+}
+.update-resume-wrapper {
+  	position: absolute;
+  	top: 937px;
+  	left: 1535px;
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-300);
+  	border: 4px solid var(--color-midnightblue-100);
+  	box-sizing: border-box;
+  	width: 157px;
+  	height: 33px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
+  	text-align: center;
+}
+.view-all-details-wrapper {
+  	position: absolute;
+  	top: 1348px;
+  	left: 1521px;
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-300);
+  	border: 4px solid var(--color-midnightblue-100);
+  	box-sizing: border-box;
+  	width: 157px;
+  	height: 33px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
+}
+.skills {
+  	position: absolute;
+  	top: 810px;
+  	left: 1448px;
+}
+.student-dashboard-item {
+  	position: absolute;
+  	top: 927px;
+  	left: 1438px;
+  	filter: drop-shadow(5px 4px 4px rgba(0, 0, 0, 0.25));
+  	border-top: 1px solid var(--color-white);
+  	box-sizing: border-box;
+  	width: 342px;
+  	height: var(--height-2);
+  	opacity: 0.5;
+}
+.july-2027 {
+  	position: absolute;
+  	top: 780px;
+  	left: 1670px;
+  	font-weight: 300;
+}
+.july-2023 {
+  	position: absolute;
+  	top: 753px;
+  	left: 1670px;
+  	font-weight: 300;
+}
+.div {
+  	position: absolute;
+  	top: 727px;
+  	left: 1670px;
+  	font-weight: 300;
+}
+.student-dashboard-div {
+  	position: absolute;
+  	top: 675px;
+  	left: 1670px;
+  	font-weight: 300;
+}
+.phone-number {
+  	position: absolute;
+  	top: 721px;
+  	left: 1448px;
+}
+.enrollment-date {
+  	position: absolute;
+  	top: 747px;
+  	left: 1448px;
+}
+.batch {
+  	position: absolute;
+  	top: 695px;
+  	left: 1448px;
+}
+.expected-graduation {
+  	position: absolute;
+  	top: 773px;
+  	left: 1448px;
+}
+.uap-bdedu {
+  	position: absolute;
+  	top: 597px;
+  	left: 1557px;
+}
+.edit {
+  	position: absolute;
+  	top: 491px;
+  	left: 1706px;
+  	font-size: var(--fs-24);
+}
+.my-profile {
+  	position: absolute;
+  	top: 488px;
+  	left: 1448px;
+  	font-size: var(--fs-24);
+}
+.student-dashboard-inner {
+  	position: absolute;
+  	top: 540.97px;
+  	left: 1417px;
+  	filter: drop-shadow(5px 4px 4px rgba(0, 0, 0, 0.25));
+  	border-top: 1px solid var(--color-white);
+  	box-sizing: border-box;
+  	width: 382px;
+  	height: var(--height-2);
+  	opacity: 0.5;
+}
+.ellipse-icon {
+  	position: absolute;
+  	top: 560px;
+  	left: 1448px;
+  	border-radius: 50%;
+  	width: 80px;
+  	height: 80px;
+  	object-fit: cover;
+}
+.mashrur-rahman-masfi {
+  	position: absolute;
+  	top: 573px;
+  	left: 1557px;
+}
+.id {
+  	position: absolute;
+  	top: 668px;
+  	left: 1448px;
+}
+.recursion-53 {
+  	position: absolute;
+  	top: 702px;
+  	left: 1670px;
+  	font-weight: 300;
+}
+.upcoming-deadlines {
+  	position: absolute;
+  	top: 1009px;
+  	left: 1418px;
+  	width: 380px;
+  	height: 398px;
+}
+.upcoming-deadlines-child {
+  	position: absolute;
+  	top: -1px;
+  	left: -1px;
+  	border-radius: var(--br-6);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	width: 382px;
+  	height: 400px;
+  	overflow: hidden;
+}
+.student-dashboard-upcoming-deadlines {
+  	position: absolute;
+  	top: 15px;
+  	left: 45px;
+  	font-size: var(--fs-24);
+  	text-align: center;
+}
+.frame-parent {
+  	position: absolute;
+  	top: 209px;
+  	left: 26px;
+  	display: flex;
+  	align-items: flex-start;
+  	gap: var(--gap-10);
+}
+.frame-child {
+  	height: var(--height-48);
+  	width: var(--width-48);
+  	border-radius: 29.5px;
+}
+.wordpress-developer-parent {
+  	width: 230px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: var(--gap-3);
+}
+.wordpress-developer {
+  	width: 178px;
+  	position: relative;
+  	text-align: center;
+  	display: inline-block;
+}
+.workspace-infotech-limited {
+  	align-self: stretch;
+  	position: relative;
+  	font-weight: 100;
+}
+.deadline-october-25 {
+  	align-self: stretch;
+  	position: relative;
+  	color: var(--color-gold);
+}
+.frame-group {
+  	position: absolute;
+  	top: 84px;
+  	left: 26px;
+  	display: flex;
+  	align-items: flex-start;
+  	gap: var(--gap-10);
+}
+.junior-developer-as {
+  	align-self: stretch;
+  	position: relative;
+}
+.collabhero {
+  	align-self: stretch;
+  	position: relative;
+  	color: var(--color-gray);
+}
+.student-dashboard-collabhero {
+  	font-weight: 100;
+}
+.span {
+  	font-weight: 300;
+}
+.deadline-july-28 {
+  	align-self: stretch;
+  	position: relative;
+  	color: var(--color-gold);
+  	text-shadow: var(--text-shadow-2);
+}
+.group-parent {
+  	position: absolute;
+  	top: 840px;
+  	left: 1688px;
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-200);
+  	width: 76px;
+  	height: 29px;
+  	text-align: center;
+  	font-size: var(--fs-15);
+  	font-family: var(--font-inter);
+}
+.group-icon {
+  	position: absolute;
+  	height: 82.76%;
+  	width: 26.32%;
+  	top: 6.9%;
+  	right: 67.11%;
+  	bottom: 10.34%;
+  	left: 6.58%;
+  	max-width: 100%;
+  	overflow: hidden;
+  	max-height: 100%;
+}
+.c {
+  	position: absolute;
+  	top: 5.5px;
+  	left: 27.78px;
+}
+.student-dashboard-group-icon {
+  	position: absolute;
+  	height: 32.41%;
+  	width: 12.37%;
+  	top: 34.48%;
+  	right: 6.05%;
+  	bottom: 33.1%;
+  	left: 81.58%;
+  	max-width: 100%;
+  	overflow: hidden;
+  	max-height: 100%;
+}
+.frame-container {
+  	position: absolute;
+  	top: 877px;
+  	left: 1448px;
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-200);
+  	width: 101px;
+  	height: 29px;
+  	display: flex;
+  	align-items: center;
+  	gap: var(--gap-3);
+  	text-align: center;
+  	font-size: var(--fs-15);
+  	font-family: var(--font-inter);
+}
+.frame-icon3 {
+  	width: var(--width-24);
+  	position: relative;
+  	height: var(--height-24);
+}
+.group-icon2 {
+  	width: 9.4px;
+  	position: relative;
+  	height: 9.4px;
+}
+.frame-div {
+  	position: absolute;
+  	top: 840px;
+  	left: 1448px;
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-200);
+  	width: 121px;
+  	height: 29px;
+  	display: flex;
+  	align-items: center;
+  	gap: var(--gap-3);
+  	text-align: center;
+  	font-size: var(--fs-15);
+  	font-family: var(--font-inter);
+}
+.frame-icon4 {
+  	width: var(--width-24);
+  	position: relative;
+  	max-height: 100%;
+}
+.frame-icon5 {
+  	width: var(--width-18);
+  	position: relative;
+  	height: var(--height-18);
+}
+.student-dashboard-frame-parent {
+  	position: absolute;
+  	top: 839px;
+  	left: 1577px;
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-200);
+  	width: 95px;
+  	height: 29px;
+  	display: flex;
+  	align-items: center;
+  	text-align: center;
+  	font-size: var(--fs-15);
+  	font-family: var(--font-inter);
+}
+.job {
+  	position: absolute;
+  	top: 582px;
+  	left: 122px;
+  	width: var(--width-1230);
+  	height: 797px;
+  	font-size: var(--fs-20);
+}
+.post-row {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: var(--width-1230);
+  	height: 54px;
+  	font-size: var(--fs-24);
+  	color: var(--color-skyblue);
+}
+.recommended-jobs {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+}
+.applied-jobs {
+  	position: absolute;
+  	top: 0px;
+  	left: 345px;
+  	color: var(--color-silver);
+}
+.post-row-child {
+  	position: absolute;
+  	top: 54px;
+  	left: 0px;
+  	border-top: 1px solid var(--color-white);
+  	box-sizing: border-box;
+  	width: 1231px;
+  	height: var(--height-1);
+}
+.post-row-item {
+  	position: absolute;
+  	top: 54px;
+  	left: 2px;
+  	max-height: 100%;
+  	width: 219px;
+}
+.top-job-picks {
+  	position: absolute;
+  	top: 96px;
+  	left: 0px;
+  	font-size: var(--fs-32);
+  	font-weight: 600;
+  	font-family: var(--font-lato);
+}
+.jobs-found {
+  	position: absolute;
+  	top: 108px;
+  	left: 1142px;
+  	font-size: var(--fs-16);
+  	font-weight: 300;
+}
+.frame-parent2 {
+  	position: absolute;
+  	top: 386px;
+  	left: 0px;
+  	width: var(--width-1230);
+  	height: 194px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-end;
+  	justify-content: space-between;
+  	gap: 0px;
+}
+.image-4-parent {
+  	align-self: stretch;
+  	position: relative;
+  	border-radius: var(--br-14);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	height: 196px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	z-index: 0;
+  	font-size: var(--fs-16);
+  	font-family: var(--font-lato);
+}
+.image-4-icon {
+  	position: absolute;
+  	top: 30px;
+  	left: 18px;
+  	width: 58px;
+  	height: 58px;
+  	object-fit: cover;
+}
+.new-wrapper {
+  	position: absolute;
+  	top: 0px;
+  	left: 1174px;
+  	border-radius: var(--br-0) 9px var(--br-0) var(--br-0);
+  	background-color: var(--color-forestgreen);
+  	width: 56px;
+  	height: 37px;
+  	overflow: hidden;
+}
+.new {
+  	position: absolute;
+  	top: 9px;
+  	left: 8px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 39px;
+  	height: var(--height-19);
+}
+.deadline-july-31 {
+  	width: 220px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 145px;
+  	left: 954px;
+  	font-weight: 300;
+  	display: inline-block;
+  	height: var(--height-24);
+  	flex-shrink: 0;
+  	z-index: 1;
+}
+.frame-icon8 {
+  	width: var(--width-24);
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 149px;
+  	left: 96px;
+  	height: var(--height-24);
+  	z-index: 2;
+}
+.posted-16 {
+  	width: 209px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 149px;
+  	left: 126px;
+  	font-weight: 300;
+  	display: inline-block;
+  	height: var(--height-24);
+  	flex-shrink: 0;
+  	z-index: 3;
+}
+.frame-icon9 {
+  	width: var(--width-24);
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 116px;
+  	left: 96px;
+  	height: var(--height-24);
+  	z-index: 4;
+}
+.dhakabd {
+  	width: 88px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 113px;
+  	left: 126px;
+  	font-weight: 300;
+  	display: inline-block;
+  	height: var(--height-24);
+  	flex-shrink: 0;
+  	z-index: 5;
+}
+.workspace-infotec-limited {
+  	width: 376px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 66px;
+  	left: 102px;
+  	font-size: var(--fs-30);
+  	font-weight: 300;
+  	color: var(--color-gray);
+  	display: inline-block;
+  	height: 35px;
+  	flex-shrink: 0;
+  	z-index: 6;
+}
+.student-dashboard-wordpress-developer {
+  	width: 496px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 24px;
+  	left: 102px;
+  	font-size: var(--fs-32);
+  	font-weight: 600;
+  	display: inline-block;
+  	height: 38px;
+  	flex-shrink: 0;
+  	z-index: 7;
+}
+.frame-parent3 {
+  	position: absolute;
+  	top: 173px;
+  	left: 0px;
+  	width: var(--width-1230);
+  	height: 194px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-end;
+  	justify-content: space-between;
+  	gap: 0px;
+}
+.new-container {
+  	position: absolute;
+  	top: 0px;
+  	left: 1174px;
+  	border-radius: var(--br-0) 9px var(--br-0) var(--br-0);
+  	background-color: var(--color-forestgreen);
+  	width: 56px;
+  	height: 35px;
+  	overflow: hidden;
+}
+.student-dashboard-new {
+  	position: absolute;
+  	top: 8px;
+  	left: 8px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 39px;
+  	height: var(--height-19);
+}
+.posted-10 {
+  	width: 194px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 149px;
+  	left: 126px;
+  	font-weight: 300;
+  	display: inline-block;
+  	height: var(--height-24);
+  	flex-shrink: 0;
+  	z-index: 3;
+}
+.image-3-icon {
+  	width: 58px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 32px;
+  	left: 19px;
+  	max-height: 100%;
+  	object-fit: cover;
+  	z-index: 6;
+}
+.disystem {
+  	width: 150px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 66px;
+  	left: 102px;
+  	font-size: var(--fs-30);
+  	font-weight: 300;
+  	color: var(--color-gray);
+  	display: inline-block;
+  	height: 35px;
+  	flex-shrink: 0;
+  	z-index: 7;
+}
+.junior-backend-developer {
+  	width: 496px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 24px;
+  	left: 102px;
+  	font-size: var(--fs-32);
+  	font-weight: 600;
+  	font-family: var(--font-lato);
+  	display: inline-block;
+  	height: 38px;
+  	flex-shrink: 0;
+  	z-index: 8;
+}
+.frame-parent4 {
+  	position: absolute;
+  	top: 603px;
+  	left: 0px;
+  	width: var(--width-1230);
+  	height: 194px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-end;
+  	justify-content: space-between;
+  	gap: 0px;
+}
+.image-5-icon {
+  	position: absolute;
+  	top: 32px;
+  	left: 21px;
+  	width: 58px;
+  	height: 58px;
+  	object-fit: cover;
+}
+.student-dashboard-deadline-july-28 {
+  	width: 220px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 149px;
+  	left: 954px;
+  	font-weight: 300;
+  	display: inline-block;
+  	height: var(--height-24);
+  	flex-shrink: 0;
+  	z-index: 1;
+}
+.posted-1 {
+  	width: 189px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 149px;
+  	left: 126px;
+  	font-weight: 300;
+  	display: inline-block;
+  	height: var(--height-24);
+  	flex-shrink: 0;
+  	z-index: 3;
+}
+.house-no-237-container {
+  	width: 625px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 113px;
+  	left: 126px;
+  	font-weight: 300;
+  	display: inline-block;
+  	height: var(--height-24);
+  	flex-shrink: 0;
+  	z-index: 5;
+}
+.house-no-237 {
+  	margin: 0;
+}
+.collabhero2 {
+  	width: 148px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 66px;
+  	left: 102px;
+  	font-size: var(--fs-30);
+  	font-weight: 300;
+  	color: var(--color-gray);
+  	display: inline-block;
+  	height: 35px;
+  	flex-shrink: 0;
+  	z-index: 6;
+}
+.footer-section {
+  	position: absolute;
+  	top: 1727px;
+  	left: 2px;
+  	background: linear-gradient(-51.63deg, #363795 19.62%);
+  	border: 2px solid var(--color-darkslateblue-100);
+  	box-sizing: border-box;
+  	width: 1916px;
+  	height: 297px;
+  	display: flex;
+  	align-items: flex-start;
+  	flex-wrap: wrap;
+  	align-content: flex-start;
+  	padding: 34px 135px;
+  	gap: 26px 450px;
+  	font-size: var(--fs-24);
+}
+.cse-job-portal {
+  	width: 332px;
+  	position: relative;
+  	height: 116px;
+}
+.connecting-cse-students {
+  	position: absolute;
+  	top: 47px;
+  	left: 0px;
+  	font-size: var(--fs-20);
+  	font-weight: 300;
+  	display: inline-block;
+  	width: 332px;
+}
+.quick-links {
+  	width: 126px;
+  	position: relative;
+  	height: 163px;
+  	font-size: var(--fs-20);
+}
+.student-dashboard-quick-links {
+    width: 226px;
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	font-size: var(--fs-24);
+}
+.student-dashboard-home {
+  	position: absolute;
+  	top: 44px;
+  	left: 2px;
+  	font-weight: 300;
+  	text-decoration: none;
+  	color: white;
+}
+.student-dashboard-jobs {
+  	position: absolute;
+  	top: 76px;
+  	left: 2px;
+  	font-weight: 300;
+  	text-decoration: none;
+  	color: white;
+}
+.login {
+  	position: absolute;
+  	top: 108px;
+  	left: 4px;
+  	font-weight: 300;
+  	text-decoration: none;
+  	color: white;
+}
+.register {
+  	position: absolute;
+  	top: 140px;
+  	left: 4px;
+  	font-weight: 300;
+}
+.contact-us {
+  	width: 246px;
+  	position: relative;
+  	height: 102px;
+  	font-size: var(--fs-22);
+}
+.div2 {
+  	position: absolute;
+  	top: 41px;
+  	left: 37px;
+  	font-weight: 300;
+  	color: var(--color-snow);
+  	display: inline-block;
+  	width: 135px;
+}
+.cse-jobsuap-bdedu {
+  	position: absolute;
+  	top: 76px;
+  	left: 37px;
+  	font-weight: 300;
+}
+.frame-icon14 {
+  	position: absolute;
+  	top: 43px;
+  	left: 7px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+}
+.frame-icon15 {
+  	position: absolute;
+  	top: 78px;
+  	left: 10px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+}
+.copyright {
+  	width: 1618px;
+  	position: relative;
+  	height: 43px;
+  	font-size: var(--fs-15);
+}
+.cse-department-job-portalall-wrapper {
+  	position: absolute;
+  	top: 21px;
+  	left: 633px;
+  	width: 389px;
+  	height: 22px;
+  	display: flex;
+  	align-items: flex-end;
+}
+.cse-department-job {
+  	position: relative;
+  	font-weight: 300;
+}
+.copyright-child {
+  	position: absolute;
+  	top: -0.5px;
+  	left: -0.5px;
+  	border-top: 1px solid var(--color-white);
+  	box-sizing: border-box;
+  	width: 1619px;
+  	height: var(--height-1);
+  	transform:  rotate(0.2deg);
+  	transform-origin: 0 0;
+}
+
+
+        .job-cards-container {
+            position: absolute;
+            top: 150px;
+            left: 0px;
+            width: 1230px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .job-card {
+            position: relative;
+            width: 100%;
+            height: 196px;
+        }
+
+        .job-card-content {
+            position: relative;
+            border-radius: var(--br-14);
+            border: var(--border-1);
+            box-sizing: border-box;
+            height: 100%;
+            overflow: hidden;
+            font-size: var(--fs-16);
+            font-family: var(--font-lato);
+            background: transparent;
+        }
+    </style>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+
+    <link rel="stylesheet" href="./global.css" />
+    <link rel="stylesheet"  href="./index.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+</head>
+<body>
+    <div class="student-dashboard">
+        <!-- Header Section -->
+        <div class="logo-parent">
+            <div class="logo">
+                <div class="ellipse"></div>
+                <div class="cse">CSE</div>
+            </div>
+            <div class="job-portal">Job Portal</div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="home-parent">
+            <!--<b class="home" id="homeNav">Home</b>
+            <b class="home" id="jobsNav">Jobs</b>
+            <b class="home" id="aboutNav">About</b>-->
+
+            <a href="{% url 'stdlog' %}" class="dashboard-wrapper">
+               Back
+            </a>
+        </div>
+
+        <!-- Dashboard Header -->
+        <b class="student-dashboard-student-dashboard">Student Dashboard</b>
+        <div class="welcome-back-mashrur">Welcome back, <span id="studentName">Mashrur Rahman Masfi</span></div>
+
+        <!-- Job Notifications -->
+        <div class="new-job-postings-matching-your-parent">
+            <div class="new-job-postings" id="jobNotification">New job postings matching your profile are available!</div>
+            <div class="frame-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22" fill="none">
+  <path d="M2 16H16V9.0314C16 5.14806 12.866 2 9 2C5.13401 2 2 5.14806 2 9.0314V16ZM9 0C13.9706 0 18 4.04348 18 9.0314V18H0V9.0314C0 4.04348 4.02944 0 9 0ZM6.5 19H11.5C11.5 20.3807 10.3807 21.5 9 21.5C7.6193 21.5 6.5 20.3807 6.5 19Z" fill="white"/>
+</svg>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="new-job-postings-matching-your-group">
+            <div class="new-job-postings">
+                <input type="text" id="jobSearch" placeholder="Search for jobs, companies or keywords..." style="
+                    width: 400px;
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    color: white;
+                    font-size: 20px;
+                    padding: 10px;
+                ">
+            </div>
+            <b class="student-dashboard-view-all">View All</b>
+            <img class="student-dashboard-frame-icon" alt="">
+        </div>
+
+        <!-- Profile Section -->
+        <div class="student-dashboard-child"></div>
+        <div class="update-resume-wrapper">
+            <div class="home" id="updateResumeBtn">Update Resume</div>
+        </div>
+        <div class="view-all-details-wrapper">
+            <div class="home" id="viewAllDetailsBtn">View All Details</div>
+        </div>
+
+        <!-- Skills Section -->
+        <b class="skills">Skills :</b>
+        <div class="student-dashboard-item"></div>
+        <div class="july-2027" id="graduationDate">July, 2027</div>
+        <div class="july-2023" id="enrollmentDate">July, 2023</div>
+        <div class="div" id="phoneNumber">01327379287</div>
+        <div class="student-dashboard-div" id="studentId">23101182</div>
+        <b class="phone-number">Phone number :</b>
+        <b class="enrollment-date">Enrollment Date :</b>
+        <b class="batch">Batch :</b>
+        <b class="expected-graduation">Expected Graduation :</b>
+        <div class="uap-bdedu" id="studentEmail">23101182@uap-bd.edu</div>
+        <b class="edit" id="editProfileBtn">Edit</b>
+        <b class="my-profile">My Profile</b>
+        <div class="student-dashboard-inner"></div>
+        <img class="ellipse-icon" alt="" id="profileImage">
+        <b class="mashrur-rahman-masfi" id="fullName">Mashrur Rahman Masfi</b>
+        <b class="id">ID :</b>
+        <div class="recursion-53" id="batchInfo">Recursion 53</div>
+
+        <!-- Skills Tags -->
+        <div class="group-parent" id="cppSkill">
+            <img class="group-icon" alt="">
+            <div class="c">C++</div>
+            <img class="student-dashboard-group-icon" alt="">
+        </div>
+        <div class="frame-container" id="htmlSkill">
+            <img class="frame-icon3" alt="">
+            <div class="home">HTML5</div>
+            <img class="group-icon2" alt="">
+        </div>
+        <div class="frame-div" id="jsSkill">
+            <img class="frame-icon4" alt="">
+            <div class="home">Javascript</div>
+            <img class="frame-icon5" alt="">
+        </div>
+        <div class="student-dashboard-frame-parent" id="pythonSkill">
+            <img class="frame-icon4" alt="">
+            <div class="home">Python</div>
+            <img class="frame-icon5" alt="">
+        </div>
+
+                <!-- Upcoming Deadlines -->
+        <div class="upcoming-deadlines">
+            <div class="upcoming-deadlines-child"></div>
+            <b class="student-dashboard-upcoming-deadlines">Upcoming Deadlines</b>
+            <div id="deadlinesContainer" style="position: absolute; top: 60px; left: 26px; width: 328px; display: flex; flex-direction: column; gap: 20px;">
+                <!-- Dynamic deadlines will be inserted here -->
+
+            </div>
+        </div>
+
+        <!-- Job Listings Section - Clean container for dynamic content -->
+        <div class="job">
+            <div class="post-row">
+                <div class="recommended-jobs" id="recommendedTab" style="cursor: pointer;">Recommended Jobs</div>
+                <div class="applied-jobs" id="appliedTab" style="cursor: pointer;">Applied Jobs</div>
+                <div class="post-row-child"></div>
+                <img class="post-row-item" alt="">
+            </div>
+            <div class="top-job-picks">Top job picks for you</div>
+            <div class="jobs-found" id="jobsCount">Loading jobs...</div>
+
+            <!-- Clean Job Cards Container with Flexbox -->
+            <div id="jobCardsContainer" class="job-cards-container">
+                <!-- Dynamic job cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-section">
+            <div class="cse-job-portal">
+                <b class="recommended-jobs">CSE Job Portal</b>
+                <div class="connecting-cse-students">Connecting CSE students and alumni with career opportunities in the industry.</div>
+            </div>
+            <div class="quick-links">
+                <b class="student-dashboard-quick-links">Quick Links</b>
+                <a href="{% url 'home' %}" class="student-dashboard-home" id="footerHome">Home </a>
+                <a href="{% url 'login' %}" class="student-dashboard-jobs" id="footerJobs">Login </a>
+                <a href="{% url 'register' %}" class="login" id="footerLogin">Register </a>
+                <!--<div class="register" id="footerRegister">Register</div>-->
+            </div>
+            <div class="contact-us">
+                <b class="student-dashboard-quick-links">Contact Us</b>
+                <div class="div2">02-58157091</div>
+                <div class="cse-jobsuap-bdedu">cse-jobs@uap-bd.edu</div>
+                <div class="frame-icon14">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+  <path d="M6.36556 7.6821C7.302 9.3288 8.6712 10.698 10.3179 11.6344L11.2024 10.3961C11.4965 9.9845 12.0516 9.8573 12.4956 10.0998C13.9024 10.8683 15.4571 11.3353 17.0789 11.4637C17.599 11.5049 18 11.9389 18 12.4606V16.9234C18 17.4361 17.6122 17.8657 17.1022 17.9181C16.5723 17.9726 16.0377 18 15.5 18C6.93959 18 0 11.0604 0 2.5C0 1.96227 0.0274201 1.42771 0.0818901 0.89776C0.1343 0.38775 0.56394 0 1.07665 0H5.53942C6.0611 0 6.49513 0.40104 6.5363 0.92109C6.66467 2.54288 7.1317 4.09764 7.9002 5.50444C8.1427 5.9484 8.0155 6.50354 7.6039 6.79757L6.36556 7.6821ZM3.84425 7.0252L5.7442 5.66809C5.20547 4.50514 4.83628 3.27183 4.64727 2H2.00907C2.00303 2.16632 2 2.333 2 2.5C2 9.9558 8.0442 16 15.5 16C15.667 16 15.8337 15.997 16 15.9909V13.3527C14.7282 13.1637 13.4949 12.7945 12.3319 12.2558L10.9748 14.1558C10.4258 13.9425 9.8956 13.6915 9.3874 13.4061L9.3293 13.373C7.3697 12.2587 5.74134 10.6303 4.627 8.6707L4.59394 8.6126C4.30849 8.1044 4.05754 7.5742 3.84425 7.0252Z" fill="white"/>
+</svg>
+                </div>
+                <div class="frame-icon15">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM12.0606 11.6829L5.64722 6.2377L4.35278 7.7623L12.0731 14.3171L19.6544 7.75616L18.3456 6.24384L12.0606 11.6829Z" fill="white"/>
+</svg>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="cse-department-job-portalall-wrapper">
+                    <div class="cse-department-job">&copy;2025 CSE Department Job Portal.All rights reserved.</div>
+                </div>
+                <div class="copyright-child"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced mock data with more realistic information
+        const studentData = {
+            name: "Mashrur Rahman Masfi",
+            id: "23101182",
+            email: "23101182@uap-bd.edu",
+            phone: "01327379287",
+            enrollmentDate: "July, 2023",
+            graduationDate: "July, 2027",
+            batch: "Recursion 53",
+            profileImage: "https://via.placeholder.com/80",
+            skills: [
+                { name: "C++", level: "Advanced", id: "cppSkill" },
+                { name: "HTML5", level: "Intermediate", id: "htmlSkill" },
+                { name: "Javascript", level: "Intermediate", id: "jsSkill" },
+                { name: "Python", level: "Advanced", id: "pythonSkill" }
+            ]
+        };
+
+        const mockJobs = [
+            {
+                id: 1,
+                title: "WordPress Developer",
+                company: "Workspace Infotec Limited",
+                location: "Dhaka, BD",
+                posted: "16 hours ago",
+                deadline: "July 31, 2025",
+                is_new: true,
+                type: "Full-time",
+                salary: "৳45,000 - ৳60,000",
+                description: "Looking for an experienced WordPress developer to join our team. Must have 2+ years of experience with WordPress theme and plugin development.",
+                requirements: ["PHP", "WordPress", "JavaScript", "CSS"],
+                applied: false
+            },
+            {
+                id: 2,
+                title: "Junior Backend Developer (Laravel)",
+                company: "DISYSTEM",
+                location: "Dhaka, BD",
+                posted: "10 hours ago",
+                deadline: "August 2, 2025",
+                is_new: true,
+                type: "Full-time",
+                salary: "৳35,000 - ৳50,000",
+                description: "Entry-level backend developer position with Laravel framework. Great opportunity for fresh graduates.",
+                requirements: ["PHP", "Laravel", "MySQL", "REST API"],
+                applied: true
+            },
+            {
+                id: 3,
+                title: "Junior Developer as Intern (Paid)",
+                company: "CollabHero",
+                location: "House no 237, Lane 3, Baridhara, Dhaka Division, bd",
+                posted: "1 day ago",
+                deadline: "July 28, 2025",
+                is_new: true,
+                type: "Internship",
+                salary: "৳15,000 - ৳20,000",
+                description: "Paid internship for junior developers looking to gain experience in a fast-paced startup environment.",
+                requirements: ["JavaScript", "React", "Node.js", "MongoDB"],
+                applied: false
+            }
+        ];
+
+        const upcomingDeadlines = [
+            {
+                id: 1,
+                title: "Wordpress Developer",
+                company: "Workspace InfoTech Limited",
+                deadline: "October 25, 2025",
+                daysLeft: 45
+            },
+            {
+                id: 2,
+                title: "Junior Developer as Intern",
+                company: "Collabhero",
+                deadline: "July 28, 2025",
+                daysLeft: 3
+            }
+        ];
+
+        // Current view state
+        let currentView = 'recommended';
+        let filteredJobs = [...mockJobs];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing Enhanced Student Dashboard...');
+
+            // Populate student data
+            populateStudentData();
+
+            // Render job cards
+            renderJobCards(filteredJobs);
+
+            // Render upcoming deadlines
+            renderUpcomingDeadlines();
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Initialize view
+            updateActiveTab();
+        });
+
+        // Populate student profile data
+        function populateStudentData() {
+            document.getElementById('studentName').textContent = studentData.name;
+            document.getElementById('studentId').textContent = studentData.id;
+            document.getElementById('studentEmail').textContent = studentData.email;
+            document.getElementById('phoneNumber').textContent = studentData.phone;
+            document.getElementById('enrollmentDate').textContent = studentData.enrollmentDate;
+            document.getElementById('graduationDate').textContent = studentData.graduationDate;
+            document.getElementById('batchInfo').textContent = studentData.batch;
+            document.getElementById('fullName').textContent = studentData.name;
+            document.getElementById('profileImage').src = studentData.profileImage;
+        }
+
+        // Render job cards dynamically - FIXED VERSION with proper spacing
+        function renderJobCards(jobs) {
+            const container = document.getElementById('jobCardsContainer');
+            container.innerHTML = '';
+
+            // Update jobs count
+            document.getElementById('jobsCount').textContent = `${jobs.length} jobs found`;
+
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue); font-size: var(--fs-20);">
+                        No jobs found matching your criteria.
+                    </div>
+                `;
+                return;
+            }
+
+            jobs.forEach((job) => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+
+                jobCard.innerHTML = `
+                    <div class="job-card-content">
+
+                             <div style="
+                                position: absolute;
+                                top: 30px;
+                                left: 18px;
+                                width: 58px;
+                                height: 58px;
+                                background: #383790;
+                                border: 1px solid white;
+                                border-radius: 8px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-weight: bold;
+                                color: white;
+                                font-size: 20px;
+                                opacity: 0.8;
+                            ">${job.company ? job.company.charAt(0).toUpperCase() : 'C'}</div>
+
+                        <div class="new-wrapper" style="${job.is_new ? '' : 'display: none'}">
+                            <div class="new">NEW</div>
+                        </div>
+
+                        ${job.applied ? '<div style="position: absolute; top: 40px; left: 1174px; background: var(--color-darkslateblue-200); color: white; padding: 2px 0px; border-radius: 4px; font-size: 12px;">APPLIED</div>' : ''}
+
+                        <!-- Job Details -->
+                        <div style="position: absolute; top: 145px; left: 954px; font-weight: 300; width: 220px;">
+                            Deadline: ${job.deadline}
+                        </div>
+
+                        <div class="frame-icon8" alt="" style="position: absolute; top: 149px; left: 96px; width: 24px; height: 24px;">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+  <path d="M10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20ZM10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM11 10H15V12H9V5H11V10Z" fill="white"/>
+</svg>
+                        </div>
+
+                        <div style="position: absolute; top: 149px; left: 126px; font-weight: 300; width: 209px;">
+                            Posted : ${job.posted}
+                        </div>
+
+                        <div class="frame-icon9" alt="" style="position: absolute; top: 116px; left: 96px; width: 24px; height: 24px;">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995L16.9497 15.9497ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z" fill="white"/>
+</svg>
+                        </div>
+
+                        <div style="position: absolute; top: 113px; left: 126px; font-weight: 300; width: 600px;">
+                            ${job.location}
+                        </div>
+
+                        <div style="position: absolute; top: 66px; left: 102px; font-size: var(--fs-30); font-weight: 300; color: var(--color-gray); width: 376px;">
+                            ${job.company}
+                        </div>
+
+                        <div style="position: absolute; top: 24px; left: 102px; font-size: var(--fs-32); font-weight: 600; width: 596px;">
+                            ${job.title}
+                        </div>
+
+
+                    </div>
+                `;
+
+                // Add hover effect
+                jobCard.style.cursor = 'pointer';
+                jobCard.style.transition = 'transform 0.2s ease';
+
+                jobCard.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+
+                jobCard.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+
+                // Add click event to job card
+                jobCard.addEventListener('click', function() {
+                    viewJobDetails(job.id);
+                });
+
+                container.appendChild(jobCard);
+            });
+        }
+
+                // Render upcoming deadlines - FIXED VERSION
+// Render upcoming deadlines - FIXED VERSION
+function renderUpcomingDeadlines() {
+    const container = document.getElementById('deadlinesContainer');
+    container.innerHTML = '';
+
+    upcomingDeadlines.forEach(deadline => {
+        const deadlineElement = document.createElement('div');
+        deadlineElement.style.cssText = 'display: flex; align-items: flex-start; gap: 10px;';
+        deadlineElement.style.cursor = 'pointer';
+        deadlineElement.innerHTML = `
+            <div style="height: 48px; width: 48px; border-radius: 29.5px; background: #383790; display: flex; align-items: center; justify-content: center;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.9 1 3 1.9 3 3V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V9H19V9ZM15 15V17H7V15H15ZM17 11V13H7V11H17Z" fill="white"/>
+                </svg>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 3px; width: 230px;">
+                <div class="wordpress-developer">${deadline.title}</div>
+                <div class="workspace-infotech-limited">${deadline.company}</div>
+                <div class="deadline-october-25">Deadline: ${deadline.deadline}</div>
+                <div style="color: ${deadline.daysLeft <= 7 ? '#ff6b6b' : '#f2d203'}; font-size: 12px; margin-top: 2px;">
+                    ${deadline.daysLeft} days left
+                </div>
+            </div>
+        `;
+
+        deadlineElement.addEventListener('click', function() {
+            viewJobDetails(deadline.id);
+        });
+
+        container.appendChild(deadlineElement);
+    });
+}
+
+        // Update active tab styling
+        function updateActiveTab() {
+            const recommendedTab = document.getElementById('recommendedTab');
+            const appliedTab = document.getElementById('appliedTab');
+
+            if (currentView === 'recommended') {
+                recommendedTab.style.color = 'var(--color-skyblue)';
+                appliedTab.style.color = 'var(--color-silver)';
+            } else {
+                appliedTab.style.color = 'var(--color-skyblue)';
+                recommendedTab.style.color = 'var(--color-silver)';
+            }
+        }
+
+        // Filter jobs based on current view and search
+        function filterJobs() {
+            const searchQuery = document.getElementById('jobSearch').value.toLowerCase();
+
+            filteredJobs = mockJobs.filter(job => {
+                // Filter by search query
+                const matchesSearch = searchQuery === '' ||
+                    job.title.toLowerCase().includes(searchQuery) ||
+                    job.company.toLowerCase().includes(searchQuery) ||
+                    (job.requirements && job.requirements.some(req => req.toLowerCase().includes(searchQuery)));
+
+                // Filter by view type
+                const matchesView = currentView === 'recommended' ||
+                    (currentView === 'applied' && job.applied);
+
+                return matchesSearch && matchesView;
+            });
+
+            renderJobCards(filteredJobs);
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('jobSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', filterJobs);
+            }
+
+            // Tab switching
+            const recommendedTab = document.getElementById('recommendedTab');
+            const appliedTab = document.getElementById('appliedTab');
+
+            if (recommendedTab && appliedTab) {
+                recommendedTab.addEventListener('click', function() {
+                    currentView = 'recommended';
+                    updateActiveTab();
+                    filterJobs();
+                });
+
+                appliedTab.addEventListener('click', function() {
+                    currentView = 'applied';
+                    updateActiveTab();
+                    filterJobs();
+                });
+            }
+
+            // View All Jobs button
+            const viewAllJobs = document.getElementById('viewAllJobs');
+            if (viewAllJobs) {
+                viewAllJobs.addEventListener('click', function() {
+                    // Reset search and show all jobs
+                    document.getElementById('jobSearch').value = '';
+                    currentView = 'recommended';
+                    updateActiveTab();
+                    filteredJobs = [...mockJobs];
+                    renderJobCards(filteredJobs);
+                });
+            }
+        }
+
+                // View job details in modal - MODIFIED VERSION
+        function viewJobDetails(jobId) {
+            const job = mockJobs.find(j => j.id === jobId) ||
+                       upcomingDeadlines.find(d => d.id === jobId);
+
+            if (job) {
+                // Special case: Junior Backend Developer navigates to job description page
+                if (job.title === "Junior Backend Developer (Laravel)") {
+                    // Navigate to your job description page
+                    window.location.href = '/browseoppurtunity/job_id/';
+                    return;
+                }
+
+                // For all other jobs, show the modal as before
+                const jobDetails = `
+                    <div style="max-width: 500px; padding: 20px;">
+                        <h2 style="color: var(--color-skyblue); margin-bottom: 10px;">${job.title}</h2>
+                        <h3 style="color: var(--color-gray); margin-bottom: 15px;">${job.company}</h3>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong>Location:</strong> ${job.location}<br>
+                            <strong>Type:</strong> ${job.type}<br>
+                            <strong>Salary:</strong> ${job.salary}<br>
+                            <strong>Deadline:</strong> ${job.deadline}<br>
+                            <strong>Posted:</strong> ${job.posted}
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <strong>Description:</strong><br>
+                            ${job.description}
+                        </div>
+
+                        ${job.requirements ? `
+                        <div style="margin-bottom: 20px;">
+                            <strong>Requirements:</strong><br>
+                            ${job.requirements.map(req => `• ${req}`).join('<br>')}
+                        </div>
+                        ` : ''}
+
+                        <div style="text-align: center;">
+                            <button style="background: var(--color-forestgreen); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;" onclick="applyToJob(${job.id})">
+                                ${job.applied ? 'Already Applied' : 'Apply Now'}
+                            </button>
+                            <button style="background: var(--color-darkslateblue-200); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;" onclick="saveJob(${job.id})">
+                                Save Job
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Create modal
+                showModal(jobDetails);
+            }
+        }
+        // Navigate to job description page
+function navigateToJobPage(jobId) {
+    // For the Junior Backend Developer (Laravel) job (ID: 2), navigate to job detail page
+    if (jobId === 2) {
+        // Navigate to the job detail page with the specific job ID
+        window.location.href = '/browseoppurtunity/job_id/';
+    } else {
+        // For other jobs, show modal
+        const job = mockJobs.find(j => j.id === jobId) ||
+                   upcomingDeadlines.find(d => d.id === jobId);
+
+        if (job) {
+            // ... existing modal code ...
+        }
+    }
+}
+
+        // Show modal function
+        function showModal(content) {
+            // Remove existing modal if any
+            const existingModal = document.getElementById('jobModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            const modal = document.createElement('div');
+            modal.id = 'jobModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: linear-gradient(135deg, #303a95, #46479d);
+                border: 2px solid var(--color-lightsteelblue);
+                border-radius: 10px;
+                padding: 0;
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+                color: white;
+                position: relative;
+            `;
+
+            modalContent.innerHTML = content + `
+                <button onclick="closeModal()" style="
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 20px;
+                    cursor: pointer;
+                ">✕</button>
+            `;
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Close modal function
+        function closeModal() {
+            const modal = document.getElementById('jobModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Apply to job function
+        function applyToJob(jobId) {
+            const job = mockJobs.find(j => j.id === jobId);
+            if (job && !job.applied) {
+                job.applied = true;
+                alert(`Successfully applied to ${job.title} at ${job.company}!`);
+                closeModal();
+                filterJobs(); // Refresh the view
+            }
+        }
+
+        // Save job function
+        function saveJob(jobId) {
+            const job = mockJobs.find(j => j.id === jobId);
+            if (job) {
+                alert(`Job "${job.title}" has been saved to your favorites!`);
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
