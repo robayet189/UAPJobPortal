@@ -18,4 +18,13 @@ urlpatterns = [
     path('browseoppurtunity/', views.browse_opportunities, name='browse_opportunities'),
     path('api/search_jobs/', views.search_jobs, name='search_jobs'),
     path('browseoppurtunity/job_id/', views.job_id, name='job_id'),
+
+    path('forgotpassword/<str:source>/', views.forgotpassword, name='forgotpass'),
+    path('sendrecoverycode/<str:source>/', views.sendrecoverycode, name='sendrecoverycode'),
+    path('tryanotheremail/<str:source>/', views.tryanotheremail, name='tryanotheremail'),
+    path('sendcodenewmail/<str:source>/', views.sendcodenewmail, name='sendcodenewmail'),
+    path('resetpassword/<str:source>/', views.resetpassword, name='resetpassword'),
+    path('resetpasswordsuccess/<str:source>/', views.resetpasswordsuccess, name='resetpasswordsuccess'),
+    path('verify-code/<str:source>/', views.verify_code, name='verify_code'),
+
 ]
