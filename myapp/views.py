@@ -124,7 +124,6 @@ def studentlogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("stdlog")
 
-        # ✅ Check the password
         if check_password(password, student.password):
             # store session info
             request.session["student_id"] = student.id
@@ -148,7 +147,6 @@ def alumnilogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("almlog")
 
-        # ✅ Check the password
         if check_password(password, alumni.password):
             # store session info
             request.session["alumni_id"] = alumni.id
@@ -171,7 +169,6 @@ def facultylogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("fcltlog")
 
-        # ✅ Check the password
         if check_password(password, faculty.password):
             # store session info
             request.session["faculty_id"] = faculty.id
@@ -195,7 +192,6 @@ def companylogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("comlog")
 
-        # ✅ Check the password
         if check_password(password, company.password):
             # store session info
             request.session["company_id"] = company.id
@@ -219,7 +215,6 @@ def adminlogin(request):
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("adminlog")
 
-        # ✅ Check the password
         if check_password(password, admin.password):
             # store session info
             request.session["admin_id"] = admin.id
@@ -230,6 +225,9 @@ def adminlogin(request):
             return redirect("adminlog")
 
     return render(request, "myapp/adminlogin.html")
+
+
+
 
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -280,3 +278,192 @@ def search_jobs(request):
 
 def job_id(request):
     return render(request, 'myapp/job_id.html')
+
+<<<<<<< HEAD
+
+
+
+
+
+
+
+def forgotpassword(request, source):
+    # Map source to login URL names
+    login_urls = {
+        'student': 'stdlog',
+        'alumni': 'almlog',
+        'faculty': 'fcltlog',
+        'company': 'comlog',
+        'admin': 'adminlog',
+    }
+
+    back_to_login = login_urls.get(source, 'login')
+
+    return render(request, 'myapp/forgetpassword.html', {
+        'back_to_login': back_to_login,
+        'source': source
+    })
+
+
+def sendrecoverycode(request, source):
+    login_urls = {
+        'student': 'stdlog',
+        'alumni': 'almlog',
+        'faculty': 'fcltlog',
+        'company': 'comlog',
+        'admin': 'adminlog',
+    }
+
+    back_to_login = login_urls.get(source, 'login')
+
+    # ADD THIS ENTIRE BLOCK ↓
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        model_map = {
+            'student': Student,
+            'alumni': Alumni,
+            'faculty': Faculty,
+            'company': Company,
+            'admin': Administrator,
+        }
+
+        model = model_map.get(source)
+
+        if model:
+            try:
+                user = model.objects.get(email=email)
+                request.session['recovery_email'] = email
+                request.session['recovery_source'] = source
+
+                messages.success(request, "Verification code sent to your email!")
+                return render(request, 'myapp/sendrecoverycode.html', {
+                    'back_to_login': back_to_login,
+                    'source': source
+                })
+
+            except model.DoesNotExist:
+                messages.error(request, "Email not found. Please register first or try a different email.")
+                return redirect('forgotpass', source=source)
+        else:
+            messages.error(request, "Invalid user type.")
+            return redirect('forgotpass', source=source)
+    # ADD BLOCK ENDS HERE ↑
+
+    return render(request, 'myapp/sendrecoverycode.html', {
+        'back_to_login': back_to_login,
+        'source': source
+    })
+
+
+def tryanotheremail(request, source):
+    login_urls = {
+        'student': 'stdlog',
+        'alumni': 'almlog',
+        'faculty': 'fcltlog',
+        'company': 'comlog',
+        'admin': 'adminlog',
+    }
+
+    back_to_login = login_urls.get(source, 'login')
+
+    return render(request, 'myapp/tryanotheremail.html', {
+        'back_to_login': back_to_login,
+        'source': source
+    })
+
+
+
+def sendcodenewmail(request, source):
+    login_urls = {
+        'student': 'stdlog',
+        'alumni': 'almlog',
+        'faculty': 'fcltlog',
+        'company': 'comlog',
+        'admin': 'adminlog',
+    }
+
+    back_to_login = login_urls.get(source, 'login')
+
+    return render(request, 'myapp/send_code_to_new_mail.html', {
+        'back_to_login': back_to_login,
+        'source': source
+    })
+
+
+def resetpassword(request, source):
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        # Check if passwords match (frontend also validates, but double-check on backend)
+        if new_password and confirm_password and new_password == confirm_password:
+            # TODO: Add your password update logic here
+            # Example:
+            # email = request.session.get('verified_email')
+            # user = YourModel.objects.get(email=email)
+            # user.password = make_password(new_password)
+            # user.save()
+
+            # Redirect to success page
+            return redirect('resetpasswordsuccess', source=source)
+        else:
+            messages.error(request, "Passwords do not match!")
+            return redirect('resetpassword', source=source)
+
+    login_urls = {
+        'student': 'stdlog',
+        'alumni': 'almlog',
+        'faculty': 'fcltlog',
+        'company': 'comlog',
+        'admin': 'adminlog',
+    }
+
+    back_to_login = login_urls.get(source, 'login')
+
+    return render(request, 'myapp/resetpassword.html', {
+        'back_to_login': back_to_login,
+        'source': source
+    })
+
+
+def resetpasswordsuccess(request, source):
+    login_urls = {
+        'student': 'stdlog',
+        'alumni': 'almlog',
+        'faculty': 'fcltlog',
+        'company': 'comlog',
+        'admin': 'adminlog',
+    }
+
+    back_to_login = login_urls.get(source, 'login')
+
+    return render(request, 'myapp/RecoverPasswordSuccesfully.html', {
+        'back_to_login': back_to_login,
+        'source': source
+    })
+
+
+def verify_code(request, source):
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+
+        # TODO: Add your OTP verification logic here
+        # Example:
+        # if otp == request.session.get('recovery_code'):
+        #     request.session['otp_verified'] = True
+        #     return redirect('resetpassword', source=source)
+        # else:
+        #     messages.error(request, "Invalid verification code!")
+        #     return redirect('sendrecoverycode', source=source)
+
+        # For now, just redirect to reset password
+        return redirect('resetpassword', source=source)
+
+    return redirect('sendrecoverycode', source=source)
+=======
+from django.http import JsonResponse
+
+def dashboard(request):
+    return render(request, 'myapp/studentdashboard.html')
+>>>>>>> 7d380c34a20211d592a2c4a254a06c38875c1d9d
