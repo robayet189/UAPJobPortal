@@ -27,4 +27,3 @@ urlpatterns = [
     path('verify-code/<str:source>/', views.verify_code, name='verify_code'),
     path('dashboard/', views.dashboard, name='dashboard'),
 ]
->>>>>>> 7d380c34a20211d592a2c4a254a06c38875c1d9d
