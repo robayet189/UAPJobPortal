@@ -835,6 +835,7 @@ option{
 }
 .dashboard-wrapper {
     width: 197px;
+    margin-left: 300px;
     border-radius: var(--br-6);
     background-color: var(--color-midnightblue-200);
     border: 6px solid var(--color-midnightblue-100);
@@ -843,13 +844,17 @@ option{
     align-items: center;
     justify-content: center;
     padding: var(--padding-10) 3px var(--padding-10) var(--padding-10);
+
 }
 .dashboard {
     width: 149px;
+    left: 30px;
     position: relative;
     display: inline-block;
     flex-shrink: 0;
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    color: white;
 }
 .logo-parent {
     position: absolute;
@@ -944,9 +949,9 @@ input{
               <div class="quick-links">
                      <b class="browse-opportunities-quick-links">Quick Links</b>
                      <a href="{% url 'home' %}" class="home">Home </a>
-                     <div class="jobs">Jobs</div>
-                    <a href="{% url 'login' %}" class="login">Login</a>
-                     <a href="{% url 'register' %}" class="register">Register</a>
+
+                    <a href="{% url 'login' %}" class="jobs">Login</a>
+                     <a href="{% url 'register' %}" class="login">Register</a>
               </div>
               <div class="contact-us">
                      <b class="browse-opportunities-contact-us">Contact Us</b>
@@ -1042,11 +1047,9 @@ input{
            </div>
 
            <div class="home-parent">
-              <b class="browse-opportunities-home">Home</b>
-              <b class="browse-opportunities-home">Jobs</b>
-              <b class="browse-opportunities-home">About</b>
+
               <div class="dashboard-wrapper">
-                     <b class="dashboard">Dashboard</b>
+                     <a href="{% url 'home' %}" class="dashboard">Back</a>
               </div>
            </div>
            <div class="logo-parent">

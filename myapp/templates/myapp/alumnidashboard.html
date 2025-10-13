@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-black: #000;
+            --color-darkgreen: #1b6700;
+            --color-darkslateblue-100: #6d68ab;
+            --color-darkslateblue-200: #46479d;
+            --color-firebrick: #a31e1e;
+            --color-gainsboro: #d9d9d9;
+            --color-gray: #fefefe;
+            --color-honeydew: #d1f0d2;
+            --color-lightgreen: #51d784;
+            --color-lightsteelblue-100: #a3b9e9;
+            --color-lightsteelblue-200: #969dc9;
+            --color-midnightblue-100: #21287d;
+            --color-midnightblue-200: #131a73;
+            --color-midnightblue-300: rgba(33, 40, 125, 0.2);
+            --color-plum: #d5b6f0;
+            --color-silver: #d9c3c3;
+            --color-skyblue: #90d1f1;
+            --color-snow: #fffcfc;
+            --color-white: #fff;
+
+            /* Font Sizes */
+            --fs-10: 10px;
+            --fs-16: 16px;
+            --fs-20: 20px;
+            --fs-22: 22px;
+            --fs-24: 24px;
+            --fs-26: 26px;
+            --fs-30: 30px;
+            --fs-32: 32px;
+            --fs-64: 64px;
+
+            /* Border Radius */
+            --br-6: 6px;
+            --br-10: 10px;
+            --br-14: 14px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, rgba(48, 58, 149, 0.2), rgba(118, 25, 125, 0.2) 25%, rgba(173, 0, 107, 0.2) 66%),
+                        linear-gradient(rgba(14, 82, 150, 0.2), rgba(14, 82, 150, 0.2)), #303a95;
+            color: var(--color-white);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .dashboard-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--color-gainsboro);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--color-darkslateblue-200);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            font-size: 20px;
+        }
+
+        .nav-links a {
+            color: var(--color-white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-skyblue);
+        }
+
+        .dashboard-btn {
+            background-color: var(--color-midnightblue-300);
+            border: 4px solid var(--color-midnightblue-100);
+            border-radius: var(--br-6);
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text {
+            font-size: 28px;
+        }
+
+        .welcome-text span {
+            font-weight: 600;
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: var(--br-10);
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.applicants {
+            background-color: var(--color-honeydew);
+            color: var(--color-black);
+        }
+
+        .stat-card.jobs {
+            background-color: var(--color-lightsteelblue-100);
+            color: var(--color-black);
+        }
+
+        .stat-card.hired {
+            background-color: var(--color-plum);
+            color: var(--color-black);
+        }
+
+        .stat-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .stat-subtitle {
+            text-align: center;
+            font-size: 18px;
+        }
+
+        /* Job Listings Section */
+        .job-listings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .post-job-btn {
+            background-color: var(--color-midnightblue-200);
+            border: none;
+            border-radius: var(--br-6);
+            padding: 15px 25px;
+            color: var(--color-white);
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-job-btn:hover {
+            background-color: var(--color-darkslateblue-200);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: flex-start;
+            gap: 600px;
+        }
+
+        .tab {
+            padding: 12px 0;
+            cursor: pointer;
+            font-size: 20px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .tab.active {
+            color: var(--color-skyblue);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-skyblue);
+        }
+
+        /* Job Cards */
+        .job-cards-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .job-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--color-lightsteelblue-200);
+            border-radius: var(--br-14);
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .job-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .job-company {
+            font-size: 24px;
+            color: var(--color-gray);
+            margin-bottom: 15px;
+        }
+
+        .job-status {
+            background-color: var(--color-lightgreen);
+            color: var(--color-darkgreen);
+            padding: 5px 12px;
+            border-radius: var(--br-10);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .job-details {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .job-tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: var(--br-10);
+            font-size: 14px;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: var(--br-6);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .view-applicants {
+            background-color: var(--color-midnightblue-200);
+            color: var(--color-white);
+        }
+
+        .edit-job {
+            background-color: var(--color-midnightblue-300);
+            color: var(--color-white);
+            border: 2px solid var(--color-midnightblue-100);
+        }
+
+        .close-job {
+            background-color: transparent;
+            color: var(--color-white);
+            border: 2px solid var(--color-firebrick);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(-51.63deg, #363795 19.62%);
+            border-top: 2px solid var(--color-darkslateblue-100);
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--color-white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-skyblue);
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #303a95, #46479d);
+            border: 2px solid var(--color-lightsteelblue-200);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: white;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--color-skyblue);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--br-6);
+            border: 1px solid var(--color-lightsteelblue-200);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--color-white);
+            font-size: 16px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: var(--br-6);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--color-lightgreen);
+            color: var(--color-darkgreen);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-silver);
+            color: var(--color-black);
+        }
+
+        .btn-cancel {
+            background-color: transparent;
+            color: var(--color-white);
+            border: 1px solid var(--color-white);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .stats-container {
+                flex-direction: column;
+            }
+
+            .job-actions {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .tabs {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">CSE</div>
+                <div class="logo-text">Job Portal</div>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'almlog' %}" class="dashboard-btn">
+               Back
+            </a>
+            </div>
+        </header>
+
+        <!-- Dashboard Header -->
+        <section class="dashboard-header">
+            <h1 class="dashboard-title">Alumni Dashboard</h1>
+            <p class="welcome-text">Welcome back, <span id="alumniName">Robayet Ismum</span></p>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-container">
+            <div class="stat-card applicants" id="applicantsCard">
+                <h3 class="stat-title">Total Applicants</h3>
+                <div class="stat-value" id="totalApplicants">20</div>
+                <p class="stat-subtitle">Pending Reviews</p>
+            </div>
+            <div class="stat-card jobs" id="jobsCard">
+                <h3 class="stat-title">Job Posted</h3>
+                <div class="stat-value" id="totalJobs">5</div>
+                <p class="stat-subtitle">Active Listings</p>
+            </div>
+            <div class="stat-card hired" id="hiredCard">
+                <h3 class="stat-title">Hired</h3>
+                <div class="stat-value" id="totalHired">3</div>
+                <p class="stat-subtitle">Recently Employed</p>
+            </div>
+        </section>
+
+        <!-- Job Listings Section -->
+        <section class="job-listings">
+            <div class="job-listings-header">
+                <h2 class="section-title">Your Job Listings</h2>
+                <button class="post-job-btn" id="postNewJobBtn">+ Post New Job</button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab active" id="postedTab">Posted Jobs</div>
+                    <div class="tab" id="draftedTab">Drafted</div>
+                    <div class="tab" id="closedTab">Closed Jobs</div>
+                </div>
+            </div>
+
+            <!-- Job Cards -->
+            <div id="jobCardsContainer" class="job-cards-container">
+                <!-- Job cards will be dynamically inserted here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>CSE Job Portal</h3>
+                <p>Connecting CSE students and alumni with career opportunities in the industry.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="alumni_home">Home</a></li>
+                    <li><a href="alumni_login">Login</a></li>
+                    <li><a href="alumni_register">Register</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+    <h3>Contact Us</h3>
+    <div class="contact-info">
+        <svg class="frame-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6.36556 7.6821C7.302 9.3288 8.6712 10.698 10.3179 11.6344L11.2024 10.3961C11.4965 9.9845 12.0516 9.8573 12.4956 10.0998C13.9024 10.8683 15.4571 11.3353 17.0789 11.4637C17.599 11.5049 18 11.9389 18 12.4606V16.9234C18 17.4361 17.6122 17.8657 17.1022 17.9181C16.5723 17.9726 16.0377 18 15.5 18C6.93959 18 0 11.0604 0 2.5C0 1.96227 0.0274201 1.42771 0.0818901 0.89776C0.1343 0.38775 0.56394 0 1.07665 0H5.53942C6.0611 0 6.49513 0.40104 6.5363 0.92109C6.66467 2.54288 7.1317 4.09764 7.9002 5.50444C8.1427 5.9484 8.0155 6.50354 7.6039 6.79757L6.36556 7.6821ZM3.84425 7.0252L5.7442 5.66809C5.20547 4.50514 4.83628 3.27183 4.64727 2H2.00907C2.00303 2.16632 2 2.333 2 2.5C2 9.9558 8.0442 16 15.5 16C15.667 16 15.8337 15.997 16 15.9909V13.3527C14.7282 13.1637 13.4949 12.7945 12.3319 12.2558L10.9748 14.1558C10.4258 13.9425 9.8956 13.6915 9.3874 13.4061L9.3293 13.373C7.3697 12.2587 5.74134 10.6303 4.627 8.6707L4.59394 8.6126C4.30849 8.1044 4.05754 7.5742 3.84425 7.0252Z" fill="white"/>
+        </svg>
+        <span>02-58157091</span>
+    </div>
+    <div class="contact-info">
+        <svg class="alumni-dashboardposted-jobs-frame-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM12.0606 11.6829L5.64722 6.2377L4.35278 7.7623L12.0731 14.3171L19.6544 7.75616L18.3456 6.24384L12.0606 11.6829Z" fill="white"/>
+        </svg>
+        <span>cse-jobs@uap-bd.edu</span>
+    </div>
+</div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 CSE Department Job Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- Job Details Modal -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Post Job Modal -->
+    <div id="postJobModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <h2 class="modal-title">Post New Job</h2>
+            <form id="newJobForm">
+                <div class="form-group">
+                    <label for="jobTitle">Job Title</label>
+                    <input type="text" id="jobTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="jobCompany">Company</label>
+                    <input type="text" id="jobCompany" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="jobDescription">Job Description</label>
+                    <textarea id="jobDescription" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobType">Job Type</label>
+                        <select id="jobType" class="form-control" required>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Internship">Internship</option>
+                            <option value="Contract">Contract</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobSalary">Salary Range</label>
+                        <input type="text" id="jobSalary" class="form-control" placeholder="৳50,000 - ৳80,000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="jobDeadline">Application Deadline</label>
+                    <input type="date" id="jobDeadline" class="form-control" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Post Job</button>
+                    <button type="button" class="btn btn-secondary" onclick="saveAsDraft()">Save as Draft</button>
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+    // Mock data for the alumni dashboard (personal info can stay)
+    const alumniData = {
+        name: "Abir Hossain Shupto",
+        email: "abir.shupto@techinnovate.com",
+        graduationYear: "2022",
+        currentPosition: "Senior Software Engineer, TechInnovate",
+        jobsPosted: 5,
+        totalHired: 3,
+        totalApplicants: 20
+    };
+
+    const recentActivities = [
+        {
+            id: 1,
+            applicant: "Rupayon Barua",
+            job: "Cybersecurity Analyst",
+            time: "6 hours ago"
+        },
+        {
+            id: 2,
+            applicant: "Md Hafiz Tamim",
+            job: "Software Developer",
+            time: "2 hours ago"
+        }
+    ];
+
+    // Current view state
+    let currentView = 'posted';
+    let filteredJobs = [];
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Initializing Alumni Dashboard...');
+
+        // Populate alumni data
+        populateAlumniData();
+
+        // Load real jobs from API
+        loadAlumniJobs();
+
+        // Render activity list
+        renderActivityList();
+
+        // Set up event listeners
+        setupEventListeners();
+
+        // Initialize view
+        updateActiveTab();
+    });
+
+    // Populate alumni profile data
+    function populateAlumniData() {
+        document.getElementById('alumniName').textContent = alumniData.name;
+        document.getElementById('totalApplicants').textContent = alumniData.totalApplicants;
+        document.getElementById('totalJobs').textContent = alumniData.jobsPosted;
+        document.getElementById('totalHired').textContent = alumniData.totalHired;
+    }
+
+    // CSRF token helper
+    function getCSRFToken() {
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Load real jobs from API for alumni
+    async function loadAlumniJobs() {
+        try {
+            const response = await fetch('/api/jobs/alumni/');
+            const jobs = await response.json();
+            filteredJobs = jobs;
+            renderJobCards(filteredJobs);
+
+            // Update stats
+            updateAlumniStats(jobs);
+        } catch (error) {
+            console.error('Error loading alumni jobs:', error);
+            renderJobCards([]);
+        }
+    }
+
+    // Update alumni statistics based on real data
+    function updateAlumniStats(jobs) {
+        const totalJobs = jobs.length;
+        const activeJobs = jobs.filter(job => job.status === 'active').length;
+        const draftJobs = jobs.filter(job => job.status === 'draft').length;
+        const closedJobs = jobs.filter(job => job.status === 'closed').length;
+        const totalApplicants = jobs.reduce((sum, job) => sum + (job.applicants_count || 0), 0);
+
+        // Update the displayed stats
+        document.getElementById('totalJobs').textContent = totalJobs;
+        document.getElementById('totalApplicants').textContent = totalApplicants;
+        // You might want to update other stats as needed
+    }
+
+// Render job cards dynamically - SIMPLIFIED VERSION
+function renderJobCards(jobs) {
+    const container = document.getElementById('jobCardsContainer');
+    container.innerHTML = '';
+
+    if (jobs.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue-200); font-size: var(--fs-20);">
+                No jobs found in this category.
+            </div>
+        `;
+        return;
+    }
+
+    jobs.forEach((job) => {
+        // SPECIAL CASE: Junior Backend Developer (Laravel)
+        if (job.title && job.title.trim().toLowerCase() === 'junior backend developer (laravel)') {
+            const jobCard = document.createElement('div');
+            jobCard.className = 'job-card special-laravel-card';
+            jobCard.setAttribute('data-job-id', job.id);
+
+            jobCard.innerHTML = `
+                <div class="job-card-content" style="position: relative; height: 100%;">
+                    <!-- Status Badge -->
+                    ${job.status === 'active' ? `
+                    <div style="position: absolute; top: 20px; right: 20px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                        Active
+                    </div>
+                    ` : job.status === 'draft' ? `
+                    <div style="position: absolute; top: 20px; right: 20px; background: var(--color-silver); color: var(--color-black); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                        Draft
+                    </div>
+                    ` : `
+                    <div style="position: absolute; top: 20px; right: 20px; background: var(--color-firebrick); color: white; padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                        Closed
+                    </div>
+                    `}
+
+                    <!-- Featured Ribbon -->
+                    <div style="position:absolute; left:-10px; top:-30px; background: linear-gradient(135deg, #8b5cf6, #ec4899); padding:6px 12px; border-radius: 0 var(--br-10) var(--br-10) 0; font-weight:700; color:white;">
+                        Featured
+                    </div>
+
+                    <!-- Special Title & Company -->
+                    <div class="job-header" style="margin-top: 10px;">
+                        <div>
+                            <h3 class="job-title" style="font-size: 28px;">${job.title}</h3>
+                            <p class="job-company" style="font-size: 20px; color: var(--color-gray);">${job.company}</p>
+                        </div>
+                    </div>
+
+                    <!-- Job Details -->
+                    <div class="job-details">
+                        <div><strong>Location:</strong> ${job.location}</div>
+                        <div><strong>Type:</strong> ${job.job_type}</div>
+                        <div><strong>Applicants:</strong> ${job.applicants_count || 0}</div>
+                    </div>
+
+                    <!-- Meta -->
+                    <div class="job-meta">
+                        <div><strong>Posted:</strong> ${job.posted}</div>
+                        <div><strong>Deadline:</strong> ${job.deadline}</div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="job-meta">
+                        <div class="job-tag">${job.job_type}</div>
+                        <div class="job-tag">${job.location}</div>
+                        <div class="job-tag">Laravel</div>
+                    </div>
+
+                    <!-- Action Buttons (same as others) -->
+                    <div class="job-actions">
+                        <button class="action-btn view-applicants" onclick="event.stopPropagation(); viewApplicants(${job.id})">
+                            View Applicants (${job.applicants_count || 0})
+                        </button>
+                        <button class="action-btn edit-job" onclick="event.stopPropagation(); editJob(${job.id})">
+                            Edit Listing
+                        </button>
+                        <button class="action-btn close-job" onclick="event.stopPropagation(); ${job.status === 'active' ? 'closeJob' : 'deleteJob'}(${job.id})">
+                            ${job.status === 'active' ? 'Close Job' : 'Delete'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Clicking this SPECIAL card (not buttons) opens the Laravel description page
+            jobCard.addEventListener('click', function(e) {
+                if (!e.target.closest('.job-actions')) {
+                    window.location.href = '/browseoppurtunity/job_id/';
+                }
+            });
+
+            container.appendChild(jobCard);
+            return; // skip normal rendering for this one
+        }
+
+        // NORMAL JOB CARD (unchanged)
+        const jobCard = document.createElement('div');
+        jobCard.className = 'job-card';
+        jobCard.setAttribute('data-job-id', job.id);
+
+        jobCard.innerHTML = `
+            <div class="job-card-content" style="position: relative; height: 100%;">
+                ${job.status === 'active' ? `
+                <div style="position: absolute; top: 20px; right: 20px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                    Active
+                </div>
+                ` : job.status === 'draft' ? `
+                <div style="position: absolute; top: 20px; right: 20px; background: var(--color-silver); color: var(--color-black); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                    Draft
+                </div>
+                ` : `
+                <div style="position: absolute; top: 20px; right: 20px; background: var(--color-firebrick); color: white; padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                    Closed
+                </div>
+                `}
+
+                <div class="job-header">
+                    <div>
+                        <h3 class="job-title">${job.title}</h3>
+                        <p class="job-company">${job.company}</p>
+                    </div>
+                </div>
+
+                <div class="job-details">
+                    <div><strong>Location:</strong> ${job.location}</div>
+                    <div><strong>Type:</strong> ${job.job_type}</div>
+                    <div><strong>Applicants:</strong> ${job.applicants_count || 0}</div>
+                </div>
+
+                <div class="job-meta">
+                    <div><strong>Posted:</strong> ${job.posted}</div>
+                    <div><strong>Deadline:</strong> ${job.deadline}</div>
+                </div>
+
+                <div class="job-meta">
+                    <div class="job-tag">${job.job_type}</div>
+                    <div class="job-tag">${job.location}</div>
+                </div>
+
+                <div class="job-actions">
+                    <button class="action-btn view-applicants" onclick="event.stopPropagation(); viewApplicants(${job.id})">
+                        View Applicants (${job.applicants_count || 0})
+                    </button>
+                    <button class="action-btn edit-job" onclick="event.stopPropagation(); editJob(${job.id})">
+                        Edit Listing
+                    </button>
+                    <button class="action-btn close-job" onclick="event.stopPropagation(); ${job.status === 'active' ? 'closeJob' : 'deleteJob'}(${job.id})">
+                        ${job.status === 'active' ? 'Close Job' : 'Delete'}
+                    </button>
+                </div>
+            </div>
+        `;
+
+        jobCard.addEventListener('click', function(e) {
+            if (!e.target.closest('.job-actions')) {
+                viewJobDetails(job.id);
+            }
+        });
+
+        container.appendChild(jobCard);
+    });
+}
+
+
+
+    // Render activity list
+    function renderActivityList() {
+        const container = document.getElementById('activityList');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        recentActivities.forEach(activity => {
+            const activityItem = document.createElement('div');
+            activityItem.className = 'activity-item';
+
+            activityItem.innerHTML = `
+                <div class="activity-header">
+                    <span class="activity-applicant">${activity.applicant}</span>
+                    <span class="activity-time">${activity.time}</span>
+                </div>
+                <div class="activity-job">Applied to ${activity.job}</div>
+            `;
+
+            container.appendChild(activityItem);
+        });
+    }
+
+    // Filter jobs based on current view
+    function filterJobs() {
+        switch(currentView) {
+            case 'posted':
+                filteredJobs = filteredJobs.filter(job => job.status === 'active');
+                break;
+            case 'drafted':
+                filteredJobs = filteredJobs.filter(job => job.status === 'draft');
+                break;
+            case 'closed':
+                filteredJobs = filteredJobs.filter(job => job.status === 'closed');
+                break;
+        }
+        renderJobCards(filteredJobs);
+    }
+
+    // Update active tab styling
+    function updateActiveTab() {
+        const postedTab = document.getElementById('postedTab');
+        const draftedTab = document.getElementById('draftedTab');
+        const closedTab = document.getElementById('closedTab');
+
+        // Remove active class from all tabs
+        [postedTab, draftedTab, closedTab].forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Add active class to current tab
+        document.getElementById(currentView + 'Tab').classList.add('active');
+    }
+
+    // Set up event listeners
+    function setupEventListeners() {
+        // Tab switching
+        const postedTab = document.getElementById('postedTab');
+        const draftedTab = document.getElementById('draftedTab');
+        const closedTab = document.getElementById('closedTab');
+
+        postedTab.addEventListener('click', function() {
+            currentView = 'posted';
+            updateActiveTab();
+            filterJobs();
+        });
+
+        draftedTab.addEventListener('click', function() {
+            currentView = 'drafted';
+            updateActiveTab();
+            filterJobs();
+        });
+
+        closedTab.addEventListener('click', function() {
+            currentView = 'closed';
+            updateActiveTab();
+            filterJobs();
+        });
+
+        // Post new job button
+        const postNewJobBtn = document.getElementById('postNewJobBtn');
+        postNewJobBtn.addEventListener('click', function() {
+            openPostJobModal();
+        });
+
+        // Edit profile button
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        if (editProfileBtn) {
+            editProfileBtn.addEventListener('click', function() {
+                editProfile();
+            });
+        }
+
+        // View all activity button
+        const viewAllActivityBtn = document.getElementById('viewAllActivityBtn');
+        if (viewAllActivityBtn) {
+            viewAllActivityBtn.addEventListener('click', function() {
+                viewAllActivity();
+            });
+        }
+
+        // Statistics cards
+        const applicantsCard = document.getElementById('applicantsCard');
+        const jobsCard = document.getElementById('jobsCard');
+        const hiredCard = document.getElementById('hiredCard');
+
+        applicantsCard.addEventListener('click', function() {
+            showApplicantsOverview();
+        });
+
+        jobsCard.addEventListener('click', function() {
+            showJobsOverview();
+        });
+
+        hiredCard.addEventListener('click', function() {
+            showHiredOverview();
+        });
+
+        // New job form submission
+        const newJobForm = document.getElementById('newJobForm');
+        if (newJobForm) {
+            newJobForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitNewJob();
+            });
+        }
+    }
+
+    // Modal functions
+    function showModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function closeModal() {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            modal.style.display = 'none';
+        });
+    }
+
+    function openPostJobModal() {
+        showModal('postJobModal');
+    }
+
+    // Job management functions
+    function viewJobDetails(jobId) {
+        const job = filteredJobs.find(j => j.id === jobId);
+        if (job) {
+            const jobDetails = `
+                <h2 class="modal-title">${job.title}</h2>
+                <h3 style="color: var(--color-gray); margin-bottom: 15px;">${job.company}</h3>
+
+                <div style="margin-bottom: 15px;">
+                    <strong>Location:</strong> ${job.location}<br>
+                    <strong>Type:</strong> ${job.job_type}<br>
+                    <strong>Salary:</strong> ${job.salary || 'Not specified'}<br>
+                    <strong>Deadline:</strong> ${job.deadline}<br>
+                    <strong>Posted:</strong> ${job.posted}<br>
+                    <strong>Applicants:</strong> ${job.applicants_count || 0}<br>
+                    <strong>Status:</strong> ${job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <strong>Description:</strong><br>
+                    ${job.description}
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <strong>Requirements:</strong><br>
+                    ${job.requirements ? job.requirements.map(req => `• ${req}`).join('<br>') : 'No specific requirements listed'}
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" onclick="editJob(${job.id})">Edit Job</button>
+                    <button class="btn btn-cancel" onclick="${job.status === 'active' ? 'closeJob' : 'deleteJob'}(${job.id})">
+                        ${job.status === 'active' ? 'Close Job' : 'Delete Job'}
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('modalContent').innerHTML = jobDetails;
+            showModal('jobModal');
+        }
+    }
+
+    function viewApplicants(jobId) {
+        const job = filteredJobs.find(j => j.id === jobId);
+        if (job) {
+            const applicantsContent = `
+                <h2 class="modal-title">Applicants for ${job.title}</h2>
+                <h3 style="color: var(--color-gray); margin-bottom: 15px;">${job.applicants_count || 0} Applicants</h3>
+
+                <div style="margin-bottom: 20px;">
+                    <strong>Recent Applicants:</strong><br><br>
+                    ${recentActivities.map(activity => `
+                        <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                            <strong>${activity.applicant}</strong><br>
+                            Applied to: ${activity.job}<br>
+                            <small>${activity.time}</small>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" onclick="closeModal()">View All Applicants</button>
+                </div>
+            `;
+
+            document.getElementById('modalContent').innerHTML = applicantsContent;
+            showModal('jobModal');
+        }
+    }
+
+    function editJob(jobId) {
+        const job = filteredJobs.find(j => j.id === jobId);
+        alert(`Editing job: ${job.title}`);
+        closeModal();
+    }
+
+    async function closeJob(jobId) {
+        const job = filteredJobs.find(j => j.id === jobId);
+        if (job && confirm(`Are you sure you want to close "${job.title}"?`)) {
+            try {
+                // Update job status via API
+                const response = await fetch(`/api/jobs/${jobId}/update/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                    body: JSON.stringify({ status: 'closed' })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    job.status = 'closed';
+                    alert(`Job "${job.title}" has been closed.`);
+                    closeModal();
+                    filterJobs();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error closing job:', error);
+                alert('Failed to close job. Please try again.');
+            }
+        }
+    }
+
+    async function deleteJob(jobId) {
+        const job = filteredJobs.find(j => j.id === jobId);
+        if (job && confirm(`Are you sure you want to delete "${job.title}"? This action cannot be undone.`)) {
+            try {
+                const response = await fetch(`/api/jobs/${jobId}/delete/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(`Job "${job.title}" has been deleted.`);
+                    closeModal();
+                    loadAlumniJobs(); // Reload all jobs
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error deleting job:', error);
+                alert('Failed to delete job. Please try again.');
+            }
+        }
+    }
+
+    async function submitNewJob() {
+        const form = document.getElementById('newJobForm');
+        const formData = new FormData(form);
+
+        const jobData = {
+            title: document.getElementById('jobTitle').value,
+            company: document.getElementById('jobCompany').value,
+            location: 'Dhaka, BD',
+            deadline: document.getElementById('jobDeadline').value,
+            job_type: document.getElementById('jobType').value,
+            description: document.getElementById('jobDescription').value,
+            salary: document.getElementById('jobSalary').value,
+            requirements: [],
+            status: 'active'
+        };
+
+        try {
+            const response = await fetch('/api/jobs/post/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: JSON.stringify(jobData)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('Job posted successfully!');
+                closeModal();
+                loadAlumniJobs(); // Refresh the job list
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error posting job:', error);
+            alert('Failed to post job. Please try again.');
+        }
+    }
+
+    function saveAsDraft() {
+        alert('Job saved as draft!');
+        closeModal();
+    }
+
+    function editProfile() {
+        const editProfileContent = `
+            <h2 class="modal-title">Edit Profile</h2>
+
+            <form id="editProfileForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="form-group">
+                    <label>Full Name:</label>
+                    <input type="text" value="${alumniData.name}" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" value="${alumniData.email}" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Current Position:</label>
+                    <input type="text" value="${alumniData.currentPosition}" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Graduation Year:</label>
+                    <input type="text" value="${alumniData.graduationYear}" class="form-control" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        `;
+
+        document.getElementById('modalContent').innerHTML = editProfileContent;
+        showModal('jobModal');
+
+        document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Profile updated successfully!');
+            closeModal();
+        });
+    }
+
+    function viewAllActivity() {
+        const activityContent = `
+            <h2 class="modal-title">All Recent Activity</h2>
+
+            <div style="max-height: 400px; overflow-y: auto;">
+                ${recentActivities.map(activity => `
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 5px; margin-bottom: 10px;">
+                        <strong>${activity.applicant}</strong><br>
+                        Applied to: ${activity.job}<br>
+                        <small>${activity.time}</small>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="closeModal()">Close</button>
+            </div>
+        `;
+
+        document.getElementById('modalContent').innerHTML = activityContent;
+        showModal('jobModal');
+    }
+
+    function showApplicantsOverview() {
+        const content = `
+            <h2 class="modal-title">Applicants Overview</h2>
+
+            <div style="margin-bottom: 20px;">
+                <strong>Total Applicants:</strong> ${alumniData.totalApplicants}<br>
+                <strong>Pending Reviews:</strong> 8<br>
+                <strong>Interviews Scheduled:</strong> 5<br>
+                <strong>Rejected:</strong> 7
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="closeModal()">View Detailed Report</button>
+            </div>
+        `;
+
+        document.getElementById('modalContent').innerHTML = content;
+        showModal('jobModal');
+    }
+
+    function showJobsOverview() {
+        const content = `
+            <h2 class="modal-title">Jobs Overview</h2>
+
+            <div style="margin-bottom: 20px;">
+                <strong>Total Jobs Posted:</strong> ${alumniData.jobsPosted}<br>
+                <strong>Active Listings:</strong> 2<br>
+                <strong>Draft Listings:</strong> 1<br>
+                <strong>Closed Listings:</strong> 1
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="closeModal()">Manage All Jobs</button>
+            </div>
+        `;
+
+        document.getElementById('modalContent').innerHTML = content;
+        showModal('jobModal');
+    }
+
+    function showHiredOverview() {
+        const content = `
+            <h2 class="modal-title">Hiring Overview</h2>
+
+            <div style="margin-bottom: 20px;">
+                <strong>Total Hired:</strong> ${alumniData.totalHired}<br>
+                <strong>Recently Hired:</strong> 1<br>
+                <strong>Offer Pending:</strong> 2<br>
+                <strong>Success Rate:</strong> 15%
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="closeModal()">View Hiring Analytics</button>
+            </div>
+        `;
+
+        document.getElementById('modalContent').innerHTML = content;
+        showModal('jobModal');
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    });
+
+  // Get CSRF token helper (so Django accepts your POST requests)
+  function getCSRFToken() {
+    const name = 'csrftoken';
+    const cookie = document.cookie.split('; ').find(row => row.startsWith(name + '='));
+    return cookie ? cookie.split('=')[1] : '';
+  }
+
+  //  Close job (marks it as closed in the DB)
+  async function closeJob(jobId) {
+    try {
+      const response = await fetch(`/api/jobs/${jobId}/update/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify({ status: 'closed' })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('Job closed successfully!');
+        location.reload(); // refresh the dashboard
+      } else {
+        alert('Error: ' + result.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Failed to close job.');
+    }
+  }
+
+  //  Delete job (completely removes it from DB)
+  async function deleteJob(jobId) {
+    if (!confirm('Are you sure you want to delete this job? This cannot be undone.')) return;
+
+    try {
+      const response = await fetch(`/api/jobs/${jobId}/delete/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken(),
+        }
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('Job deleted successfully!');
+        location.reload(); // refresh dashboard
+      } else {
+        alert('Error: ' + result.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Failed to delete job.');
+    }
+  }
+</script>
+</body>
+</html>
+
+</script>
+</body>
+</html>
