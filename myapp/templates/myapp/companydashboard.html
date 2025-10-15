@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+     <style>
+
+body {
+  	margin: 0;
+  	line-height: normal;
+}
+
+
+:root {
+
+  	/* Common Style Variables */
+
+  	/* Color */
+  	--color-black: #000;
+  	--color-darkslateblue-100: #6d68ab;
+  	--color-darkslateblue-200: #46479d;
+  	--color-gainsboro: #d9d9d9;
+  	--color-gray: #fefefe;
+  	--color-honeydew: #dcfce7;
+  	--color-lightsteelblue-100: #a3b9e9;
+  	--color-lightsteelblue-200: #969dc9;
+  	--color-midnightblue-100: #21287d;
+  	--color-midnightblue-200: #131a73;
+  	--color-midnightblue-300: rgba(33, 40, 125, 0.2);
+  	--color-palegoldenrod: #f8eeb1;
+  	--color-palegreen: #9af082;
+  	--color-red: #ff0000;
+  	--color-skyblue: #90d1f1;
+  	--color-snow-100: #fffcfc;
+  	--color-snow-200: rgba(255, 248, 248, 0.5);
+  	--color-white: #fff;
+
+  	/* Gap */
+  	--gap-10: 10px;
+
+  	/* Padding */
+  	--padding-0: 0px;
+  	--padding-3: 3px;
+  	--padding-10: 10px;
+
+  	/* BorderRadius */
+  	--br-6: 6px;
+  	--br-10: 10px;
+  	--br-14: 14px;
+  	--br-20: 20px;
+
+  	/* Font */
+  	--font-inter: Inter;
+  	--font-lato: Lato;
+  	--font-poppins: Poppins;
+  	--font-roboto: Roboto;
+
+  	/* FontSize */
+  	--fs-10: 10px;
+  	--fs-16: 16px;
+  	--fs-20: 20px;
+  	--fs-22: 22px;
+  	--fs-24: 24px;
+  	--fs-30: 30px;
+  	--fs-32: 32px;
+  	--fs-36: 36px;
+
+  	/* Borders */
+  	--border-1: 4px solid var(--color-midnightblue-100);
+
+  	/* Shadows */
+  	--shadow-drop: 0px 4px 4px rgba(242, 210, 3, 0.2);
+  	--shadow-drop-1: 5px 4px 4px rgba(0, 0, 0, 0.25);
+  	--text-shadow-1: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+  	/* Gradients */
+  	--gradient-1: linear-gradient(180deg, rgba(48, 58, 149, 0.2) 17%, rgba(48, 58, 149, 0.2) 36%, rgba(159, 39, 168, 0.2) 50%, rgba(154, 27, 137, 0.2) 60%, rgba(148, 12, 96, 0.2) 69%), #3c4699;
+
+  	/* WidthHeights */
+  	--height-12: 12px;
+  	--height-18: 18px;
+  	--height-19: 19px;
+  	--height-20: 20px;
+  	--height-22: 22px;
+  	--height-24: 24px;
+  	--height-32: 32px;
+  	--height-37: 37px;
+  	--height-40: 40px;
+  	--height-60: 60px;
+  	--height-100: 100px;
+  	--width-18: 18px;
+  	--width-24: 24px;
+  	--width-60: 60px;
+  	--width-88: 88px;
+  	--width-100: 100px;
+  	--width-140: 140px;
+
+}
+.company-dashboard {
+  	width: 100%;
+  	height: 2024px;
+  	position: relative;
+  	background: linear-gradient(180deg, rgba(48, 58, 149, 0.2), rgba(118, 25, 125, 0.2) 25%, rgba(173, 0, 107, 0.2) 66%), linear-gradient(rgba(14, 82, 150, 0.2), rgba(14, 82, 150, 0.2)), #303a95;
+  	text-align: left;
+  	font-size: var(--fs-24);
+  	color: var(--color-white);
+  	font-family: var(--font-roboto);
+}
+.logo-parent {
+  	position: absolute;
+  	top: 62px;
+  	left: 105px;
+  	display: flex;
+  	align-items: center;
+  	gap: 6px;
+  	text-align: center;
+  	font-size: var(--fs-30);
+  	color: var(--color-darkslateblue-200);
+}
+.logo {
+  	height: 85px;
+  	width: 87px;
+  	position: relative;
+}
+.ellipse {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	border-radius: 50%;
+  	background-color: var(--color-gainsboro);
+  	width: 87px;
+  	height: 85px;
+  	opacity: 0.9;
+}
+.cse {
+  	position: absolute;
+  	top: 24px;
+  	left: 12px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 63px;
+  	height: 23px;
+}
+.job-portal {
+  	position: relative;
+  	font-weight: 600;
+  	color: var(--color-white);
+}
+.home-parent {
+  	position: absolute;
+  	top: 82px;
+  	left: 1223px;
+  	display: flex;
+  	align-items: center;
+  	gap: 48px;
+  	font-size: var(--fs-30);
+  	font-family: var(--font-lato);
+}
+.home {
+  	position: relative;
+}
+.dashboard-wrapper {
+  	width: 197px;
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-300);
+  	border: 6px solid var(--color-midnightblue-100);
+  	box-sizing: border-box;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
+}
+.dashboard {
+  	width: 149px;
+  	position: relative;
+  	display: inline-block;
+  	flex-shrink: 0;
+  	text-shadow: var(--text-shadow-1);
+}
+.company-dashboard-company-dashboard {
+  	position: absolute;
+  	top: 180px;
+  	left: 105px;
+  	font-size: var(--fs-36);
+  	font-family: var(--font-poppins);
+}
+.welcome-back-technoeven-container {
+  	position: absolute;
+  	top: 234px;
+  	left: 105px;
+  	font-size: var(--fs-32);
+  	font-family: var(--font-poppins);
+}
+.welcome-back {
+  	font-weight: 600;
+}
+.technoeven-company-ltd {
+  	font-weight: 600;
+  	font-family: var(--font-lato);
+}
+.billboard {
+  	position: absolute;
+  	top: 307px;
+  	left: 377px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	gap: 60px;
+  	font-size: 50px;
+  	color: var(--color-black);
+}
+.frame-parent {
+  	height: 125px;
+  	width: 369px;
+  	position: relative;
+  	box-shadow: var(--shadow-drop);
+  	border-radius: var(--br-10);
+  	background-color: var(--color-lightsteelblue-100);
+  	opacity: 0.9;
+}
+.frame-child {
+  	position: absolute;
+  	top: 0px;
+  	left: -38px;
+  	border-radius: var(--br-10);
+  	width: 215px;
+  	height: 133px;
+}
+.frame-group {
+  	position: absolute;
+  	top: 0px;
+  	left: -16px;
+  	width: 199px;
+  	height: var(--height-100);
+}
+.frame-item {
+  	position: absolute;
+  	top: 20px;
+  	left: 40px;
+  	border-radius: 29.5px;
+  	width: var(--width-60);
+  	height: var(--height-60);
+}
+.div {
+  	position: absolute;
+  	top: 25px;
+  	left: 122px;
+  	font-weight: 500;
+  	display: inline-block;
+  	width: 28px;
+  	height: 45px;
+}
+.active-jobs {
+  	position: absolute;
+  	top: 72px;
+  	left: 122px;
+  	font-size: var(--fs-30);
+  	font-weight: 300;
+  	font-family: var(--font-poppins);
+  	display: inline-block;
+  	width: 202px;
+  	height: var(--height-22);
+}
+.frame-container {
+  	height: 125px;
+  	width: 369px;
+  	position: relative;
+  	box-shadow: var(--shadow-drop);
+  	border-radius: var(--br-10);
+  	background-color: var(--color-palegoldenrod);
+  	opacity: 0.9;
+  	text-align: center;
+  	font-size: var(--fs-30);
+  	font-family: var(--font-poppins);
+}
+.frame-wrapper {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	border-radius: var(--br-10);
+  	width: var(--width-140);
+  	height: 133px;
+}
+.frame-inner {
+  	position: absolute;
+  	top: 17px;
+  	left: 23px;
+  	border-radius: 29.5px;
+  	width: var(--width-60);
+  	height: var(--height-60);
+}
+.pending-approval-parent {
+  	position: absolute;
+  	top: 16px;
+  	left: 70px;
+  	width: 172px;
+  	height: var(--height-100);
+}
+.pending-approval {
+  	position: absolute;
+  	top: 55px;
+  	left: 5px;
+  	font-weight: 300;
+  	display: inline-block;
+  	width: 285px;
+}
+.company-dashboard-div {
+  	position: absolute;
+  	top: 0px;
+  	left: 23px;
+  	font-size: 50px;
+  	font-weight: 500;
+  	font-family: var(--font-roboto);
+  	text-align: left;
+  	display: inline-block;
+  	width: 25px;
+  	height: 47px;
+}
+.frame-div {
+  	height: 125px;
+  	width: 369px;
+  	position: relative;
+  	box-shadow: var(--shadow-drop);
+  	border-radius: var(--br-10);
+  	background-color: var(--color-honeydew);
+  	opacity: 0.9;
+}
+.company-dashboard-frame-parent {
+  	position: absolute;
+  	top: 16px;
+  	left: -32px;
+  	width: 172px;
+  	height: var(--height-100);
+}
+.frame-icon {
+  	position: absolute;
+  	top: 0px;
+  	left: 56px;
+  	border-radius: 29.5px;
+  	width: var(--width-60);
+  	height: var(--height-60);
+}
+.div2 {
+  	position: absolute;
+  	top: -5px;
+  	left: 141px;
+  	font-weight: 500;
+  	display: inline-block;
+  	width: 31px;
+  	height: 47px;
+}
+.total-applicants {
+  	position: absolute;
+  	top: 71px;
+  	left: 101px;
+  	font-size: var(--fs-30);
+  	font-weight: 300;
+  	font-family: var(--font-poppins);
+  	text-align: center;
+  	display: inline-block;
+  	width: 255px;
+}
+.group-div {
+  	position: absolute;
+  	top: 692px;
+  	left: 1319px;
+  	width: 440px;
+  	height: 53px;
+  	text-align: center;
+  	font-size: 25px;
+  	font-family: var(--font-inter);
+}
+.search-jobs-parent {
+  	position: absolute;
+  	top: -1px;
+  	left: -1px;
+  	border-radius: var(--br-6);
+  	border: 1px solid var(--color-snow-200);
+  	box-sizing: border-box;
+  	width: 195px;
+  	height: 55px;
+}
+.search-jobs {
+  	position: absolute;
+  	top: 11px;
+  	left: 34px;
+  	font-weight: 100;
+}
+.company-dashboard-frame-icon {
+  	position: absolute;
+  	top: 14px;
+  	left: 6px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+}
+.all-jobs-parent {
+  	position: absolute;
+  	top: -1px;
+  	left: 240px;
+  	border-radius: var(--br-6);
+  	border: 1px solid var(--color-gray);
+  	box-sizing: border-box;
+  	width: 201px;
+  	height: 55px;
+  	font-size: var(--fs-30);
+}
+.all-jobs {
+  	position: absolute;
+  	top: 8px;
+  	left: 29px;
+  	font-weight: 500;
+}
+.frame-icon2 {
+  	position: absolute;
+  	top: 8px;
+  	left: 153px;
+  	width: 40px;
+  	height: var(--height-40);
+  	object-fit: contain;
+  	cursor: pointer;
+}
+.frame-parent2 {
+  	position: absolute;
+  	top: calc(50% - 213px);
+  	left: 193px;
+  	width: 1580px;
+  	height: 191px;
+  	font-size: var(--fs-10);
+  	font-family: var(--font-lato);
+}
+.rectangle-parent {
+  	position: absolute;
+  	top: -1px;
+  	left: -88px;
+  	border-radius: var(--br-14);
+  	border: 2px solid var(--color-lightsteelblue-200);
+  	box-sizing: border-box;
+  	width: 1669px;
+  	height: 193px;
+  	overflow: hidden;
+  	font-size: var(--fs-16);
+  	font-family: var(--font-inter);
+}
+.rectangle-div {
+  	position: absolute;
+  	top: 119px;
+  	left: 495px;
+  	border-radius: var(--br-20);
+  	background-color: var(--color-palegreen);
+  	width: var(--width-100);
+  	height: var(--height-20);
+}
+.group-wrapper {
+  	position: absolute;
+  	top: 32px;
+  	left: 1169px;
+  	width: 416px;
+  	height: var(--height-37);
+}
+.view-parent {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 416px;
+  	height: var(--height-37);
+}
+.view {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: var(--width-88);
+  	height: var(--height-37);
+  	text-align: center;
+}
+.view-group {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-10);
+  	background-color: var(--color-midnightblue-200);
+  	width: var(--width-88);
+  	height: var(--height-37);
+}
+.company-dashboard-view {
+  	position: absolute;
+  	top: 9px;
+  	left: 32px;
+}
+.frame-icon3 {
+  	position: absolute;
+  	top: 9px;
+  	left: 10px;
+  	width: var(--width-18);
+  	height: var(--height-18);
+}
+.edit {
+  	position: absolute;
+  	top: 2px;
+  	left: 281px;
+  	width: var(--width-88);
+  	height: var(--height-32);
+}
+.edit-inner {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-300);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	width: 96px;
+  	height: var(--height-40);
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
+}
+.frame-parent3 {
+  	display: flex;
+  	align-items: center;
+  	gap: var(--gap-10);
+}
+.frame-icon4 {
+  	height: var(--height-18);
+  	width: var(--width-18);
+  	position: relative;
+}
+.company-dashboard-edit {
+  	position: relative;
+  	font-weight: 600;
+}
+.edit2 {
+  	position: absolute;
+  	top: 2px;
+  	left: 115px;
+  	width: 139px;
+  	height: var(--height-32);
+}
+.vector-parent {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-300);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	width: 147px;
+  	height: var(--height-40);
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
+  	gap: var(--gap-10);
+}
+.vector-icon {
+  	height: var(--height-20);
+  	width: 17px;
+  	position: relative;
+}
+.applicants-wrapper {
+  	height: var(--height-19);
+  	width: 83px;
+  	position: relative;
+}
+.applicants {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	font-weight: 600;
+}
+.frame-icon5 {
+  	position: absolute;
+  	top: 5px;
+  	left: 392px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+}
+.frame {
+  	position: absolute;
+  	top: 105px;
+  	left: 102px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+  	overflow: hidden;
+}
+.software-developer-backend {
+  	position: absolute;
+  	top: 24px;
+  	left: -18px;
+  	font-size: var(--fs-32);
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 440px;
+  	height: 38px;
+}
+.frame-parent4 {
+  	position: absolute;
+  	top: 72px;
+  	left: 15px;
+  	width: 169px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	font-size: var(--fs-20);
+}
+.frame-icon6 {
+  	height: var(--height-22);
+  	width: var(--width-24);
+  	position: relative;
+  	flex-shrink: 0;
+}
+.posted-by {
+  	width: 223px;
+  	position: relative;
+  	font-weight: 300;
+  	white-space: pre-wrap;
+  	display: inline-block;
+  	flex-shrink: 0;
+}
+.options-parent {
+  	position: absolute;
+  	top: 120px;
+  	left: -18px;
+  	width: 61px;
+  	height: var(--height-20);
+  	font-family: var(--font-roboto);
+}
+.options {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-10);
+  	background: var(--gradient-1);
+  	width: 61px;
+  	height: var(--height-20);
+  	display: flex;
+  	align-items: center;
+  	padding: var(--padding-0) var(--padding-0) var(--padding-0) 75px;
+  	box-sizing: border-box;
+}
+.full-time {
+  	position: absolute;
+  	top: 5px;
+  	left: 12px;
+}
+.posted {
+  	position: absolute;
+  	top: 121px;
+  	left: 69px;
+  	width: 141.2px;
+  	height: var(--height-20);
+  	text-align: center;
+}
+.posted-august {
+  	position: absolute;
+  	top: 4px;
+  	left: 8px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 125px;
+  	height: var(--height-12);
+}
+.posted-child {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-10);
+  	background-color: var(--color-gainsboro);
+  	width: 141.2px;
+  	height: var(--height-20);
+  	opacity: 0.2;
+}
+.company-dashboard-posted {
+  	position: absolute;
+  	top: 121px;
+  	left: 230px;
+  	width: 262px;
+  	height: var(--height-20);
+  	text-align: center;
+  	color: var(--color-black);
+}
+.deadline-september-07-2025-wrapper {
+  	position: absolute;
+  	top: 4px;
+  	left: 11px;
+  	width: var(--width-140);
+  	height: var(--height-12);
+}
+.deadline-september {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: var(--width-140);
+  	height: var(--height-12);
+}
+.company-dashboard-applicants {
+  	position: absolute;
+  	top: 2px;
+  	left: 195px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 67px;
+  	height: var(--height-12);
+}
+.posted-inner {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 158px;
+  	height: var(--height-20);
+}
+.group-child {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-10);
+  	background-color: var(--color-red);
+  	width: 158px;
+  	height: var(--height-20);
+  	opacity: 0.2;
+}
+.frame-parent5 {
+  	position: absolute;
+  	top: calc(50% + 65px);
+  	left: 103px;
+  	width: 1670px;
+  	height: 191px;
+  	font-size: var(--fs-10);
+  	font-family: var(--font-lato);
+}
+.rectangle-group {
+  	position: absolute;
+  	top: -1px;
+  	left: -1px;
+  	border-radius: var(--br-14);
+  	border: 2px solid var(--color-lightsteelblue-200);
+  	box-sizing: border-box;
+  	width: 1677px;
+  	height: 193px;
+  	overflow: hidden;
+  	font-size: var(--fs-16);
+  	font-family: var(--font-inter);
+}
+.company-dashboard-frame-child {
+  	position: absolute;
+  	top: 130px;
+  	left: 462px;
+  	border-radius: var(--br-20);
+  	background-color: var(--color-palegreen);
+  	width: var(--width-100);
+  	height: var(--height-20);
+}
+.software-developer-frontend {
+  	position: absolute;
+  	top: 24px;
+  	left: 46px;
+  	font-size: var(--fs-32);
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 440px;
+  	height: 38px;
+}
+.frame-parent7 {
+  	position: absolute;
+  	top: 67px;
+  	left: 79px;
+  	width: 169px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	font-size: var(--fs-20);
+}
+.options-group {
+  	position: absolute;
+  	top: 129px;
+  	left: 40px;
+  	width: 61px;
+  	height: var(--height-20);
+  	font-family: var(--font-roboto);
+}
+.posted2 {
+  	position: absolute;
+  	top: 130px;
+  	left: 126px;
+  	width: 141.2px;
+  	height: var(--height-20);
+  	text-align: center;
+}
+.company-dashboard-posted-august {
+  	position: absolute;
+  	top: 4px;
+  	left: 17px;
+  	font-weight: 600;
+}
+.posted3 {
+  	position: absolute;
+  	top: 130px;
+  	left: 287px;
+  	width: 261px;
+  	height: var(--height-20);
+  	text-align: center;
+  	color: var(--color-black);
+}
+.company-dashboard-deadline-september {
+  	position: absolute;
+  	top: 4px;
+  	left: 6px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: var(--width-140);
+  	height: var(--height-12);
+}
+.applicants3 {
+  	position: absolute;
+  	top: 3px;
+  	left: 194px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 67px;
+  	height: var(--height-12);
+}
+.company-dashboard-posted-child {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-10);
+  	background-color: var(--color-red);
+  	width: 151px;
+  	height: var(--height-20);
+  	opacity: 0.2;
+}
+.company-dashboard-child {
+  	position: absolute;
+  	top: 651.79px;
+  	left: 102px;
+  	max-height: 100%;
+  	width: 1651px;
+}
+.posted-jobs-parent {
+  	position: absolute;
+  	top: 596px;
+  	left: 102px;
+  	width: 1584px;
+  	height: 34px;
+}
+.posted-jobs {
+  	position: absolute;
+  	top: 6px;
+  	left: 0px;
+  	color: var(--color-skyblue);
+  	display: inline-block;
+  	width: 160px;
+}
+.applicants4 {
+  	position: absolute;
+  	top: 0px;
+  	left: 741.6px;
+  	display: inline-block;
+  	width: 194.8px;
+  	cursor: pointer;
+}
+.drafted {
+  	position: absolute;
+  	top: 6px;
+  	left: 1449.01px;
+  	display: inline-block;
+  	width: 135px;
+  	cursor: pointer;
+}
+.company-dashboard-posted-jobs {
+  	position: absolute;
+  	top: 693px;
+  	left: 106px;
+  	font-size: var(--fs-36);
+  	font-weight: 500;
+}
+.frame-parent8 {
+  	position: absolute;
+  	top: 486px;
+  	left: 104px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-100);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	width: 266px;
+  	height: 61px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	padding: var(--padding-10);
+  	gap: var(--gap-10);
+  	font-family: var(--font-inter);
+}
+.frame-icon11 {
+  	height: var(--height-24);
+  	width: var(--width-24);
+  	position: relative;
+}
+.company-dashboard-item {
+  	position: absolute;
+  	top: 651px;
+  	left: 102px;
+  	max-height: 100%;
+  	width: 144px;
+}
+.company-profile-wrapper {
+  	position: absolute;
+  	top: 486px;
+  	left: 412px;
+  	box-shadow: var(--shadow-drop-1);
+  	border-radius: var(--br-6);
+  	background-color: var(--color-midnightblue-100);
+  	border: var(--border-1);
+  	box-sizing: border-box;
+  	width: 266px;
+  	height: 61px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	padding: var(--padding-10);
+  	cursor: pointer;
+  	font-family: var(--font-inter);
+}
+.footer-section {
+  	position: absolute;
+  	top: 1727px;
+  	left: 0px;
+  	background: linear-gradient(-51.63deg, #363795 19.62%, #005c97 55.98%, #adb9bf);
+  	border: 2px solid var(--color-darkslateblue-100);
+  	box-sizing: border-box;
+  	width: 1920px;
+  	height: 297px;
+  	display: flex;
+  	align-items: flex-start;
+  	flex-wrap: wrap;
+  	align-content: flex-start;
+  	padding: 34px 135px;
+  	gap: 26px 450px;
+}
+.cse-job-portal {
+  	height: 116px;
+  	width: 332px;
+  	position: relative;
+}
+.company-dashboard-cse-job-portal {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+}
+.connecting-cse-students {
+  	position: absolute;
+  	top: 47px;
+  	left: 0px;
+  	font-size: var(--fs-20);
+  	font-weight: 300;
+  	display: inline-block;
+  	width: 332px;
+}
+.quick-links {
+  	height: 163px;
+  	width: 126px;
+  	position: relative;
+  	font-size: var(--fs-20);
+}
+.company-dashboard-quick-links {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	font-size: var(--fs-24);
+}
+.company-dashboard-home {
+  	position: absolute;
+  	top: 44px;
+  	left: 2px;
+  	font-weight: 300;
+}
+.company-dashboard-jobs {
+  	position: absolute;
+  	top: 76px;
+  	left: 2px;
+  	font-weight: 300;
+}
+.login {
+  	position: absolute;
+  	top: 108px;
+  	left: 4px;
+  	font-weight: 300;
+}
+.register {
+  	position: absolute;
+  	top: 140px;
+  	left: 4px;
+  	font-weight: 300;
+}
+.contact-us {
+  	height: 102px;
+  	width: 246px;
+  	position: relative;
+  	font-size: var(--fs-22);
+}
+.div3 {
+  	position: absolute;
+  	top: 41px;
+  	left: 37px;
+  	font-weight: 300;
+  	color: var(--color-snow-100);
+  	display: inline-block;
+  	width: 135px;
+}
+.cse-jobsuap-bdedu {
+  	position: absolute;
+  	top: 76px;
+  	left: 37px;
+  	font-weight: 300;
+}
+.frame-icon12 {
+  	position: absolute;
+  	top: 43px;
+  	left: 7px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+}
+.frame-icon13 {
+  	position: absolute;
+  	top: 78px;
+  	left: 10px;
+  	width: var(--width-24);
+  	height: var(--height-24);
+}
+.copyright {
+  	height: 43px;
+  	width: 1618px;
+  	position: relative;
+  	font-size: 15px;
+}
+.cse-department-job-portalall-wrapper {
+  	position: absolute;
+  	top: 21px;
+  	left: 633px;
+  	width: 389px;
+  	height: var(--height-22);
+  	display: flex;
+  	align-items: flex-end;
+}
+.cse-department-job {
+  	position: relative;
+  	font-weight: 300;
+}
+.copyright-child {
+  	position: absolute;
+  	top: -0.5px;
+  	left: -0.5px;
+  	border-top: 1px solid var(--color-white);
+  	box-sizing: border-box;
+  	width: 1619px;
+  	height: 1px;
+  	transform:  rotate(0.2deg);
+  	transform-origin: 0 0;
+}
+
+
+     </style>
+
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="initial-scale=1, width=device-width">
+
+
+  	<link rel="stylesheet" href="./global.css" />
+  	<link rel="stylesheet"  href="./index.css" />
+  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+
+
+
+</head>
+<body>
+
+  	<div class="company-dashboard">
+    		<div class="logo-parent">
+      			<div class="logo">
+        				<div class="ellipse">
+        				</div>
+        				<div class="cse">CSE</div>
+      			</div>
+      			<div class="job-portal">Job Portal</div>
+    		</div>
+    		<div class="home-parent">
+      			<b class="home">Home</b>
+      			<b class="home">Jobs</b>
+      			<b class="home">About</b>
+      			<div class="dashboard-wrapper">
+        				<b class="dashboard">Dashboard</b>
+      			</div>
+    		</div>
+    		<b class="company-dashboard-company-dashboard">Company Dashboard</b>
+    		<div class="welcome-back-technoeven-container">
+      			<span class="welcome-back">Welcome back, </span>
+      			<span class="technoeven-company-ltd">Technoeven Company Ltd. </span>
+    		</div>
+    		<div class="billboard">
+      			<div class="frame-parent">
+        				<div class="frame-child">
+        				</div>
+        				<div class="frame-group">
+          					<img class="frame-item" alt="">
+
+          					<div class="div">2</div>
+          					<div class="active-jobs">Active Jobs</div>
+        				</div>
+      			</div>
+      			<div class="frame-container">
+        				<div class="frame-wrapper">
+          					<img class="frame-inner" alt="">
+
+        				</div>
+        				<div class="pending-approval-parent">
+          					<div class="pending-approval">Pending Approval</div>
+          					<div class="company-dashboard-div">1</div>
+        				</div>
+      			</div>
+      			<div class="frame-div">
+        				<div class="frame-wrapper">
+          					<div class="company-dashboard-frame-parent">
+            						<img class="frame-icon" alt="">
+
+            						<div class="div2">4</div>
+          					</div>
+        				</div>
+        				<div class="total-applicants">Total Applicants</div>
+      			</div>
+    		</div>
+    		<div class="group-div">
+      			<div class="search-jobs-parent">
+        				<div class="search-jobs">Search Jobs</div>
+        				<img class="company-dashboard-frame-icon" alt="">
+
+      			</div>
+      			<div class="all-jobs-parent">
+        				<div class="all-jobs">All Jobs</div>
+        				<img class="frame-icon2" alt="" id="frameIcon">
+
+      			</div>
+    		</div>
+    		<div class="frame-parent2">
+      			<div class="rectangle-parent">
+        				<div class="rectangle-div">
+        				</div>
+        				<div class="group-wrapper">
+          					<div class="view-parent">
+            						<div class="view">
+              							<div class="view-group">
+                								<b class="company-dashboard-view">View </b>
+                								<img class="frame-icon3" alt="">
+
+              							</div>
+            						</div>
+            						<div class="edit">
+              							<div class="edit-inner">
+                								<div class="frame-parent3">
+                  									<img class="frame-icon4" alt="">
+
+                  									<div class="company-dashboard-edit">Edit </div>
+                								</div>
+              							</div>
+            						</div>
+            						<div class="edit2">
+              							<div class="vector-parent">
+                								<img class="vector-icon" alt="">
+
+                								<div class="applicants-wrapper">
+                  									<div class="applicants">Applicants</div>
+                								</div>
+              							</div>
+            						</div>
+            						<img class="frame-icon5" alt="">
+
+          					</div>
+        				</div>
+      			</div>
+      			<div class="frame">
+      			</div>
+      			<div class="software-developer-backend">Software Developer (Backend) </div>
+      			<div class="frame-parent4">
+        				<img class="frame-icon6" alt="">
+
+        				<div class="posted-by">Posted by :  Saju Ahmed</div>
+      			</div>
+      			<div class="options-parent">
+        				<div class="options">
+        				</div>
+        				<b class="full-time">Full-time</b>
+      			</div>
+      			<div class="posted">
+        				<div class="posted-august">Posted : August 07, 2025</div>
+        				<div class="posted-child">
+        				</div>
+      			</div>
+      			<div class="company-dashboard-posted">
+        				<div class="deadline-september-07-2025-wrapper">
+          					<div class="deadline-september">Deadline : September 07, 2025</div>
+        				</div>
+        				<div class="company-dashboard-applicants">4 Applicants</div>
+        				<div class="posted-inner">
+          					<div class="group-child">
+          					</div>
+        				</div>
+      			</div>
+    		</div>
+    		<div class="frame-parent5">
+      			<div class="rectangle-group">
+        				<div class="company-dashboard-frame-child">
+        				</div>
+        				<div class="group-wrapper">
+          					<div class="view-parent">
+            						<div class="view">
+              							<div class="view-group">
+                								<b class="company-dashboard-view">View </b>
+                								<img class="frame-icon3" alt="">
+
+              							</div>
+            						</div>
+            						<div class="edit">
+              							<div class="edit-inner">
+                								<div class="frame-parent3">
+                  									<img class="frame-icon4" alt="">
+
+                  									<div class="company-dashboard-edit">Edit </div>
+                								</div>
+              							</div>
+            						</div>
+            						<div class="edit2">
+              							<div class="vector-parent">
+                								<img class="vector-icon" alt="">
+
+                								<div class="applicants-wrapper">
+                  									<div class="applicants">Applicants</div>
+                								</div>
+              							</div>
+            						</div>
+            						<img class="frame-icon5" alt="">
+
+          					</div>
+        				</div>
+      			</div>
+      			<div class="frame">
+      			</div>
+      			<div class="software-developer-frontend">Software Developer (Frontend) </div>
+      			<div class="frame-parent7">
+        				<img class="frame-icon6" alt="">
+
+        				<div class="posted-by">Posted by :  Saju Ahmed</div>
+      			</div>
+      			<div class="options-group">
+        				<div class="options">
+        				</div>
+        				<b class="full-time">Full-time</b>
+      			</div>
+      			<div class="posted2">
+        				<div class="company-dashboard-posted-august">Posted : August 3, 2025</div>
+        				<div class="posted-child">
+        				</div>
+      			</div>
+      			<div class="posted3">
+        				<div class="company-dashboard-deadline-september">Deadline : September 03, 2025</div>
+        				<div class="applicants3">7 Applicants</div>
+        				<div class="company-dashboard-posted-child">
+        				</div>
+      			</div>
+    		</div>
+    		<img class="company-dashboard-child" alt="">
+
+    		<div class="posted-jobs-parent">
+      			<div class="posted-jobs">Posted Jobs</div>
+      			<div class="applicants4" id="applicantsText">Applicants</div>
+      			<div class="drafted" id="draftedText">Drafted</div>
+    		</div>
+    		<div class="company-dashboard-posted-jobs">Posted Jobs</div>
+    		<div class="frame-parent8">
+      			<img class="frame-icon11" alt="">
+
+      			<b class="home">Post New Job</b>
+    		</div>
+    		<img class="company-dashboard-item" alt="">
+
+    		<div class="company-profile-wrapper" id="frameContainer5">
+      			<b class="home">Company Profile</b>
+    		</div>
+    		<div class="footer-section">
+      			<div class="cse-job-portal">
+        				<b class="company-dashboard-cse-job-portal">CSE Job Portal</b>
+        				<div class="connecting-cse-students">Connecting CSE students and alumni with career opportunities in the industry.</div>
+      			</div>
+      			<div class="quick-links">
+        				<b class="company-dashboard-quick-links">Quick Links</b>
+        				<div class="company-dashboard-home">Home </div>
+        				<div class="company-dashboard-jobs">Jobs</div>
+        				<div class="login">Login</div>
+        				<div class="register">Register</div>
+      			</div>
+      			<div class="contact-us">
+        				<b class="company-dashboard-quick-links">Contact Us</b>
+        				<div class="div3">02-58157091</div>
+        				<div class="cse-jobsuap-bdedu">cse-jobs@uap-bd.edu</div>
+        				<img class="frame-icon12" alt="">
+
+        				<img class="frame-icon13" alt="">
+
+      			</div>
+      			<div class="copyright">
+        				<div class="cse-department-job-portalall-wrapper">
+          					<div class="cse-department-job">2025 CSE Department Job Portal.All rights reserved.</div>
+        				</div>
+        				<div class="copyright-child">
+        				</div>
+      			</div>
+    		</div>
+  	</div>
+
+
+
+
+  	<script>
+    		var frameIcon = document.getElementById("frameIcon");
+    		if(frameIcon) {
+      			frameIcon.addEventListener("click", function (e) {
+        				// Add your code here
+      			});
+    		}
+
+    		var applicantsText = document.getElementById("applicantsText");
+    		if(applicantsText) {
+      			applicantsText.addEventListener("click", function (e) {
+        				// Add your code here
+      			});
+    		}
+
+    		var draftedText = document.getElementById("draftedText");
+    		if(draftedText) {
+      			draftedText.addEventListener("click", function (e) {
+        				// Add your code here
+      			});
+    		}
+
+    		var frameContainer5 = document.getElementById("frameContainer5");
+    		if(frameContainer5) {
+      			frameContainer5.addEventListener("click", function (e) {
+        				// Add your code here
+      			});
+    		}</script></body>
+</html>
