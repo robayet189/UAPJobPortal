@@ -718,10 +718,64 @@
                 width: 100% !important;
             }
         }
+                /* Action Buttons Section */
+        .action-buttons-section {
+            margin-bottom: 30px;
+        }
+
+        .post-job-btn {
+            background-color: var(--color-midnightblue-200);
+            border: none;
+            border-radius: var(--br-6);
+            padding: 15px 30px;
+            color: var(--color-white);
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-job-btn:hover {
+            background-color: var(--color-darkslateblue-200);
+            transform: translateY(-2px);
+        }
+
+        .edit-profile-main-btn {
+            background-color: var(--color-midnightblue-300);
+            border: 2px solid var(--color-midnightblue-100);
+            border-radius: var(--br-6);
+            padding: 15px 30px;
+            color: var(--color-white);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .edit-profile-main-btn:hover {
+            background-color: var(--color-midnightblue-200);
+            transform: translateY(-2px);
+        }
+
+        /* Jobs Header - Updated to remove the button */
+        .jobs-header {
+            display: flex;
+            justify-content: flex-start; /* Changed from space-between */
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-skyblue); /* Added color to make it stand out */
+        }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
+    <body class="dashboard-container">
         <!-- Header -->
         <header class="header">
             <div class="logo-section">
@@ -768,11 +822,31 @@
         <div class="sidebar-container">
             <!-- Main Content -->
             <div class="main-content">
+                <!-- Action Buttons Section -->
+                <section class="action-buttons-section" style="margin-bottom: 30px;">
+                    <div style="display: flex; gap: 20px;">
+                        <button class="post-job-btn" id="postNewJobBtn" style="padding: 15px 30px; font-size: 18px;">
+                            <span style="margin-right: 10px;">+</span> Post New Job
+                        </button>
+                        <button class="edit-profile-main-btn" id="editProfileMainBtn"
+                                style="background-color: var(--color-midnightblue-300);
+                                       border: 2px solid var(--color-midnightblue-100);
+                                       border-radius: var(--br-6);
+                                       padding: 15px 30px;
+                                       color: var(--color-white);
+                                       font-size: 18px;
+                                       cursor: pointer;
+                                       transition: background-color 0.3s;">
+                            <span style="margin-right: 10px;">✎</span> Edit Company Profile
+                        </button>
+                    </div>
+                </section>
+
                 <!-- Jobs Section -->
                 <section class="jobs">
                     <div class="jobs-header">
                         <h2 class="section-title">Your Job Postings</h2>
-                        <button class="post-job-btn" id="postNewJobBtn">+ Post New Job</button>
+                        <!-- Removed the post button from here -->
                     </div>
 
                     <!-- Tabs -->
@@ -830,7 +904,6 @@
                 </section>
             </div>
         </div>
-    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -1176,13 +1249,19 @@
                 });
             });
 
-            // Post new job button
+            // Post new job button (main button)
             const postNewJobBtn = document.getElementById('postNewJobBtn');
             postNewJobBtn.addEventListener('click', function() {
                 openPostJobModal();
             });
 
-            // Edit profile button
+            // Edit profile main button (above job postings)
+            const editProfileMainBtn = document.getElementById('editProfileMainBtn');
+            editProfileMainBtn.addEventListener('click', function() {
+                editProfile();
+            });
+
+            // Edit profile button (in sidebar)
             const editProfileBtn = document.getElementById('editProfileBtn');
             editProfileBtn.addEventListener('click', function() {
                 editProfile();
@@ -1454,6 +1533,6 @@
                 }
             });
         });
-    </script>
-</body>
+       </script>
+    </body>
 </html>

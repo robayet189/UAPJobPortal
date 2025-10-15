@@ -640,7 +640,7 @@ body {
 }
 .jobs-found {
   	position: absolute;
-  	top: 108px;
+  	top: 80px;
   	left: 1142px;
   	font-size: var(--fs-16);
   	font-weight: 300;
@@ -1350,32 +1350,40 @@ body {
         return cookieValue;
     }
 
-    // Load real jobs from API
-    async function loadJobs() {
-        try {
-            const response = await fetch('/api/jobs/student/');
-            const jobs = await response.json();
+// Updated loadJobs function to fetch both alumni jobs and faculty opportunities
+async function loadJobs() {
+    try {
+        // Fetch alumni jobs
+        const jobsResponse = await fetch('/api/jobs/student/');
+        const alumniJobs = await jobsResponse.json();
 
-            // Check which jobs the student has applied to
-            await loadAppliedJobs();
+        // Fetch faculty opportunities
+        const opportunitiesResponse = await fetch('/api/opportunities/student/');
+        const facultyOpportunities = await opportunitiesResponse.json();
 
-            // Mark applied jobs
-            jobs.forEach(job => {
-                job.applied = appliedJobs.includes(job.id);
-            });
+        // Combine both types
+        const allOpportunities = [...alumniJobs, ...facultyOpportunities];
 
-            filteredJobs = jobs;
-            renderJobCards(filteredJobs);
+        // Check which opportunities the student has applied to
+        await loadAppliedJobs();
 
-            // Update jobs count
-            document.getElementById('jobsCount').textContent = `${jobs.length} jobs found`;
-        } catch (error) {
-            console.error('Error loading jobs:', error);
-            document.getElementById('jobsCount').textContent = 'Error loading jobs';
-            // Fallback to empty state
-            renderJobCards([]);
-        }
+        // Mark applied opportunities
+        allOpportunities.forEach(opportunity => {
+            opportunity.applied = appliedJobs.includes(opportunity.id);
+        });
+
+        filteredJobs = allOpportunities;
+        renderJobCards(filteredJobs);
+
+        // Update jobs count
+        document.getElementById('jobsCount').textContent = `${allOpportunities.length} opportunities found`;
+    } catch (error) {
+        console.error('Error loading opportunities:', error);
+        document.getElementById('jobsCount').textContent = 'Error loading opportunities';
+        // Fallback to empty state
+        renderJobCards([]);
     }
+}
 
     // Load applied jobs for this student
     async function loadAppliedJobs() {
@@ -1384,110 +1392,125 @@ body {
         appliedJobs = JSON.parse(sessionStorage.getItem('appliedJobs') || '[]');
     }
 
-    // Render job cards dynamically
-    function renderJobCards(jobs) {
-        const container = document.getElementById('jobCardsContainer');
-        container.innerHTML = '';
+// Updated renderJobCards function to handle both job types
+function renderJobCards(jobs) {
+    const container = document.getElementById('jobCardsContainer');
+    container.innerHTML = '';
 
-        // Update jobs count
-        document.getElementById('jobsCount').textContent = `${jobs.length} jobs found`;
+    // Update jobs count
+    document.getElementById('jobsCount').textContent = `${jobs.length} opportunities found`;
 
-        if (jobs.length === 0) {
-            container.innerHTML = `
-                <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue); font-size: var(--fs-20);">
-                    ${currentView === 'applied' ? 'No applied jobs found.' : 'No jobs found matching your criteria.'}
-                </div>
-            `;
-            return;
-        }
-
-        jobs.forEach((job) => {
-            const jobCard = document.createElement('div');
-            jobCard.className = 'job-card';
-
-            jobCard.innerHTML = `
-                <div class="job-card-content">
-                    <div style="
-                        position: absolute;
-                        top: 30px;
-                        left: 18px;
-                        width: 58px;
-                        height: 58px;
-                        background: #383790;
-                        border: 1px solid white;
-                        border-radius: 8px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-weight: bold;
-                        color: white;
-                        font-size: 20px;
-                        opacity: 0.8;
-                    ">${job.company ? job.company.charAt(0).toUpperCase() : 'C'}</div>
-
-                    ${job.is_new ? `
-                    <div class="new-wrapper">
-                        <div class="new">NEW</div>
-                    </div>
-                    ` : ''}
-
-                    ${job.applied ? '<div style="position: absolute; top: 40px; left: 1174px; background: var(--color-darkslateblue-200); color: white; padding: 2px 0px; border-radius: 4px; font-size: 12px;">APPLIED</div>' : ''}
-
-                    <!-- Job Details -->
-                    <div style="position: absolute; top: 145px; left: 954px; font-weight: 300; width: 220px;">
-                        Deadline: ${job.deadline}
-                    </div>
-
-                    <div class="frame-icon8" alt="" style="position: absolute; top: 149px; left: 96px; width: 24px; height: 24px;">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20ZM10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM11 10H15V12H9V5H11V10Z" fill="white"/>
-                       </svg>
-                    </div>
-
-                    <div style="position: absolute; top: 149px; left: 126px; font-weight: 300; width: 209px;">
-                        Posted : ${job.posted}
-                    </div>
-
-                    <div class="frame-icon9" alt="" style="position: absolute; top: 116px; left: 96px; width: 24px; height: 24px;">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995L16.9497 15.9497ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z" fill="white"/>
-                       </svg>
-                    </div>
-
-                    <div style="position: absolute; top: 113px; left: 126px; font-weight: 300; width: 600px;">
-                        ${job.location}
-                    </div>
-
-                    <div style="position: absolute; top: 66px; left: 102px; font-size: var(--fs-30); font-weight: 300; color: var(--color-gray); width: 376px;">
-                        ${job.company}
-                    </div>
-
-                    <div style="position: absolute; top: 24px; left: 102px; font-size: var(--fs-32); font-weight: 600; width: 596px;">
-                        ${job.title}
-                    </div>
-                </div>
-            `;
-
-            // Add hover effect
-            jobCard.style.cursor = 'pointer';
-            jobCard.style.transition = 'transform 0.2s ease';
-
-            jobCard.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
-            });
-
-            jobCard.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-
-            // Add click event to job card
-            jobCard.addEventListener('click', function() {
-                viewJobDetails(job.id);
-            });
-
-            container.appendChild(jobCard);
-        });
+    if (jobs.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue); font-size: var(--fs-20);">
+                ${currentView === 'applied' ? 'No applied opportunities found.' : 'No opportunities found matching your criteria.'}
+            </div>
+        `;
+        return;
     }
+
+    jobs.forEach((job) => {
+        const jobCard = document.createElement('div');
+        jobCard.className = 'job-card';
+
+        // Determine if it's a faculty opportunity or alumni job
+        const isFacultyOpportunity = job.type === 'faculty_opportunity';
+        const companyDisplay = isFacultyOpportunity ? job.department : job.company;
+        const locationDisplay = isFacultyOpportunity ? "University Campus" : job.location;
+        const postedByDisplay = job.posted_by_name || (isFacultyOpportunity ? "Faculty" : "Alumni");
+
+        // Type badge
+        const typeBadge = isFacultyOpportunity ?
+            '<div style="position: absolute; top: 10px; right: 80px; background: var(--color-plum); color: black; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;"></div>' :
+            '<div style="position: absolute; top: 10px; right: 80px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;"></div>';
+
+        jobCard.innerHTML = `
+            <div class="job-card-content">
+                <div style="
+                    position: absolute;
+                    top: 30px;
+                    left: 18px;
+                    width: 58px;
+                    height: 58px;
+                    background: ${isFacultyOpportunity ? '#8b5cf6' : '#383790'};
+                    border: 1px solid white;
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    color: white;
+                    font-size: 20px;
+                    opacity: 0.8;
+                ">${companyDisplay ? companyDisplay.charAt(0).toUpperCase() : 'C'}</div>
+
+                ${job.is_new ? `
+                <div class="new-wrapper">
+                    <div class="new">NEW</div>
+                </div>
+                ` : ''}
+
+
+
+                ${job.applied ? '<div style="position: absolute; top: 40px; left: 1174px; background: var(--color-darkslateblue-200); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">APPLIED</div>' : ''}
+
+                <!-- Job Details -->
+                <div style="position: absolute; top: 145px; left: 954px; font-weight: 300; width: 220px;">
+                    Deadline: ${job.deadline}
+                </div>
+
+                <div class="frame-icon8" alt="" style="position: absolute; top: 149px; left: 96px; width: 24px; height: 24px;">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20ZM10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM11 10H15V12H9V5H11V10Z" fill="white"/>
+                   </svg>
+                </div>
+
+                <div style="position: absolute; top: 149px; left: 126px; font-weight: 300; width: 209px;">
+                    Posted : ${job.posted || job.posted_date}
+                </div>
+
+                <div class="frame-icon9" alt="" style="position: absolute; top: 116px; left: 96px; width: 24px; height: 24px;">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995L16.9497 15.9497ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z" fill="white"/>
+                   </svg>
+                </div>
+
+                <div style="position: absolute; top: 113px; left: 126px; font-weight: 300; width: 600px;">
+                    ${locationDisplay}
+                </div>
+
+                <div style="position: absolute; top: 66px; left: 102px; font-size: var(--fs-30); font-weight: 300; color: var(--color-gray); width: 376px;">
+                    ${companyDisplay}
+                </div>
+
+                <div style="position: absolute; top: 24px; left: 102px; font-size: var(--fs-32); font-weight: 600; width: 596px;">
+                    ${job.title}
+                </div>
+
+
+            </div>
+        `;
+
+        // Add hover effect
+        jobCard.style.cursor = 'pointer';
+        jobCard.style.transition = 'transform 0.2s ease';
+
+        jobCard.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+
+        jobCard.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+
+        // Add click event to job card
+        jobCard.addEventListener('click', function() {
+            viewJobDetails(job.id, job.type || 'job');
+        });
+
+        container.appendChild(jobCard);
+    });
+}
 
     // Render upcoming deadlines (you can remove this if not needed, or update to use real data)
     function renderUpcomingDeadlines() {
@@ -1515,27 +1538,27 @@ body {
         }
     }
 
-    // Filter jobs based on current view and search
-    function filterJobs() {
-        const searchQuery = document.getElementById('jobSearch').value.toLowerCase();
+    // Updated filterJobs function
+function filterJobs() {
+    const searchQuery = document.getElementById('jobSearch').value.toLowerCase();
 
-        const filtered = filteredJobs.filter(job => {
-            // Filter by search query
-            const matchesSearch = searchQuery === '' ||
-                job.title.toLowerCase().includes(searchQuery) ||
-                job.company.toLowerCase().includes(searchQuery) ||
-                (job.requirements && job.requirements.some(req => req.toLowerCase().includes(searchQuery)));
+    const filtered = filteredJobs.filter(opportunity => {
+        // Filter by search query
+        const matchesSearch = searchQuery === '' ||
+            opportunity.title.toLowerCase().includes(searchQuery) ||
+            (opportunity.company && opportunity.company.toLowerCase().includes(searchQuery)) ||
+            (opportunity.department && opportunity.department.toLowerCase().includes(searchQuery)) ||
+            (opportunity.requirements && opportunity.requirements.some(req => req.toLowerCase().includes(searchQuery)));
 
-            // Filter by view type
-            const matchesView = currentView === 'recommended' ||
-                (currentView === 'applied' && job.applied);
+        // Filter by view type
+        const matchesView = currentView === 'recommended' ||
+            (currentView === 'applied' && opportunity.applied);
 
-            return matchesSearch && matchesView;
-        });
+        return matchesSearch && matchesView;
+    });
 
-        renderJobCards(filtered);
-    }
-
+    renderJobCards(filtered);
+}
     // Set up event listeners
     function setupEventListeners() {
         // Search functionality
@@ -1575,56 +1598,116 @@ body {
         }
     }
 
-    // View job details in modal
-    function viewJobDetails(jobId) {
-        const job = filteredJobs.find(j => j.id === jobId);
+    // Updated viewJobDetails function to handle both types
+function viewJobDetails(opportunityId, opportunityType) {
+    const opportunity = filteredJobs.find(j => j.id === opportunityId);
 
-        if (job) {
-            // Special case: Junior Backend Developer navigates to job description page
-            if (job.title.includes("Junior Backend Developer")) {
-                window.location.href = '/browseoppurtunity/job_id/';
-                return;
+    if (opportunity) {
+        // Special case: Junior Backend Developer navigates to job description page
+        if (opportunity.title.includes("Junior Backend Developer")) {
+            window.location.href = '/browseoppurtunity/job_id/';
+            return;
+        }
+
+        const isFacultyOpportunity = opportunityType === 'faculty_opportunity';
+        const typeDisplay = isFacultyOpportunity ? 'Faculty Opportunity' : 'Alumni Job';
+        const companyDisplay = isFacultyOpportunity ? opportunity.department : opportunity.company;
+        const locationDisplay = isFacultyOpportunity ? "University Campus" : opportunity.location;
+
+        const opportunityDetails = `
+            <div style="max-width: 500px; padding: 20px;">
+                <h2 style="color: var(--color-skyblue); margin-bottom: 10px;">${opportunity.title}</h2>
+                <h3 style="color: var(--color-gray); margin-bottom: 15px;">${companyDisplay}</h3>
+                <div style="background: ${isFacultyOpportunity ? 'var(--color-plum)' : 'var(--color-lightgreen)'}; color: ${isFacultyOpportunity ? 'black' : 'var(--color-darkgreen)'}; padding: 5px 10px; border-radius: 4px; display: inline-block; margin-bottom: 10px; font-weight: 600;">
+                    ${typeDisplay}
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <strong>Location:</strong> ${locationDisplay}<br>
+                    <strong>Type:</strong> ${opportunity.job_type || opportunity.opportunity_type}<br>
+                    <strong>Salary:</strong> ${opportunity.salary || (isFacultyOpportunity ? 'Stipend/University Rate' : 'Not specified')}<br>
+                    <strong>Deadline:</strong> ${opportunity.deadline}<br>
+                    <strong>Posted:</strong> ${opportunity.posted || opportunity.posted_date}<br>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <strong>Description:</strong><br>
+                    ${opportunity.description}
+                </div>
+
+                ${opportunity.requirements && opportunity.requirements.length > 0 ? `
+                <div style="margin-bottom: 20px;">
+                    <strong>Requirements:</strong><br>
+                    ${opportunity.requirements.map(req => `• ${req}`).join('<br>')}
+                </div>
+                ` : ''}
+
+                <div style="text-align: center;">
+                    <button style="background: var(--color-forestgreen); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;" onclick="applyToOpportunity(${opportunity.id}, '${opportunityType || 'job'}')">
+                        ${opportunity.applied ? 'Already Applied' : 'Apply Now'}
+                    </button>
+                    <button style="background: var(--color-darkslateblue-200); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;" onclick="saveOpportunity(${opportunity.id})">
+                        Save Opportunity
+                    </button>
+                </div>
+            </div>
+        `;
+
+        showModal(opportunityDetails);
+    }
+}
+
+// Updated apply function to handle both types
+async function applyToOpportunity(opportunityId, opportunityType) {
+    try {
+        let url = '';
+        let payload = {};
+
+        if (opportunityType === 'job') {
+            url = '/api/jobs/apply/';
+            payload = { job_id: opportunityId };
+        } else if (opportunityType === 'faculty_opportunity') {
+            url = '/api/opportunities/apply/';
+            payload = { opportunity_id: opportunityId };
+        } else {
+            throw new Error('Unknown opportunity type');
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Application submitted successfully!');
+
+            // Update applied opportunities list
+            appliedJobs.push(opportunityId);
+            sessionStorage.setItem('appliedJobs', JSON.stringify(appliedJobs));
+
+            // Update UI
+            const opportunity = filteredJobs.find(j => j.id === opportunityId);
+            if (opportunity) {
+                opportunity.applied = true;
             }
 
-            const jobDetails = `
-                <div style="max-width: 500px; padding: 20px;">
-                    <h2 style="color: var(--color-skyblue); margin-bottom: 10px;">${job.title}</h2>
-                    <h3 style="color: var(--color-gray); margin-bottom: 15px;">${job.company}</h3>
-
-                    <div style="margin-bottom: 15px;">
-                        <strong>Location:</strong> ${job.location}<br>
-                        <strong>Type:</strong> ${job.job_type || job.type}<br>
-                        <strong>Salary:</strong> ${job.salary || 'Not specified'}<br>
-                        <strong>Deadline:</strong> ${job.deadline}<br>
-                        <strong>Posted:</strong> ${job.posted}
-                    </div>
-
-                    <div style="margin-bottom: 15px;">
-                        <strong>Description:</strong><br>
-                        ${job.description}
-                    </div>
-
-                    ${job.requirements && job.requirements.length > 0 ? `
-                    <div style="margin-bottom: 20px;">
-                        <strong>Requirements:</strong><br>
-                        ${job.requirements.map(req => `• ${req}`).join('<br>')}
-                    </div>
-                    ` : ''}
-
-                    <div style="text-align: center;">
-                        <button style="background: var(--color-forestgreen); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;" onclick="applyToJob(${job.id})">
-                            ${job.applied ? 'Already Applied' : 'Apply Now'}
-                        </button>
-                        <button style="background: var(--color-darkslateblue-200); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;" onclick="saveJob(${job.id})">
-                            Save Job
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            showModal(jobDetails);
+            closeModal();
+            filterJobs(); // Refresh the view to show applied status
+        } else {
+            alert('Error: ' + result.error);
         }
+    } catch (error) {
+        console.error('Error applying to opportunity:', error);
+        alert('Failed to apply. Please try again.');
     }
+}
+
+
 
     // Show modal function
     function showModal(content) {
@@ -1694,42 +1777,10 @@ body {
         }
     }
 
-    // Real apply to job function
-    async function applyToJob(jobId) {
-        try {
-            const response = await fetch('/api/jobs/apply/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCSRFToken(),
-                },
-                body: JSON.stringify({ job_id: jobId })
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                alert('Application submitted successfully!');
-
-                // Update applied jobs list
-                appliedJobs.push(jobId);
-                sessionStorage.setItem('appliedJobs', JSON.stringify(appliedJobs));
-
-                // Update UI
-                const job = filteredJobs.find(j => j.id === jobId);
-                if (job) {
-                    job.applied = true;
-                }
-
-                closeModal();
-                filterJobs(); // Refresh the view to show applied status
-            } else {
-                alert('Error: ' + result.error);
-            }
-        } catch (error) {
-            console.error('Error applying to job:', error);
-            alert('Failed to apply. Please try again.');
-        }
-    }
+// Keep the old function for backward compatibility
+async function applyToJob(jobId) {
+    await applyToOpportunity(jobId, 'job');
+}
 
     // Save job function (you can implement this later with real backend)
     function saveJob(jobId) {
