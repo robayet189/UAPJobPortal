@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 def home(request):
     return render(request, 'myapp/herosection.html')
 def login(request):
@@ -233,15 +234,28 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Job
 
-def browse_opportunities(request):
-    # Fetch all jobs (or apply filters as needed)
-    jobs = Job.objects.all()
 
-    # Pass jobs to the template
+def browse_opportunities(request):
+    # Fetch alumni jobs
+    alumni_jobs = Job.objects.filter(status='active').order_by('-created_at')
+
+    # Fetch faculty opportunities
+    faculty_opportunities = FacultyOpportunity.objects.filter(status='active').order_by('-created_at')
+
+    # Combine both for the template
+    all_opportunities = list(alumni_jobs) + list(faculty_opportunities)
+
+    # Sort by creation date (newest first)
+    all_opportunities.sort(key=lambda x: x.created_at, reverse=True)
+
     context = {
-        'jobs': jobs,
+        'opportunities': all_opportunities,
     }
     return render(request, 'myapp/browseoppurtunity.html', context)
+
+
+from django.db.models import Q  # Add this import
+from django.utils import timezone
 
 def search_jobs(request):
     query = request.GET.get('q', '')
@@ -249,32 +263,57 @@ def search_jobs(request):
     location = request.GET.get('location', '')
     posted = request.GET.get('posted', '')
 
-    jobs = Job.objects.all()
+    # Search alumni jobs
+    alumni_jobs = Job.objects.filter(status='active')
+    # Search faculty opportunities
+    faculty_opportunities = FacultyOpportunity.objects.filter(status='active')
 
     if query:
-        jobs = jobs.filter(title__icontains=query) | jobs.filter(company__icontains=query)
+        alumni_jobs = alumni_jobs.filter(
+            Q(title__icontains=query) |
+            Q(company__icontains=query)
+        )
+        faculty_opportunities = faculty_opportunities.filter(
+            Q(title__icontains=query) |
+            Q(department__icontains=query)
+        )
+
     if job_type:
-        jobs = jobs.filter(job_type=job_type)
-    if location:
-        jobs = jobs.filter(location__icontains=location)
-    if posted :
-        jobs = jobs.filter(posted__icontains=posted)
+        alumni_jobs = alumni_jobs.filter(job_type=job_type)
+        faculty_opportunities = faculty_opportunities.filter(opportunity_type=job_type)
 
+    # Combine results
+    jobs_data = []
 
-    jobs_data = [
-        {
+    # Add alumni jobs
+    for job in alumni_jobs:
+        jobs_data.append({
+            'id': job.id,
             'title': job.title,
             'company': job.company,
             'location': job.location,
             'posted': job.posted,
             'deadline': job.deadline.strftime('%B %d, %Y'),
             'is_new': job.is_new,
-        }
-        for job in jobs
-    ]
+            'type': 'job',
+            'posted_by': 'Alumni'
+        })
+
+    # Add faculty opportunities
+    for opportunity in faculty_opportunities:
+        jobs_data.append({
+            'id': opportunity.id,
+            'title': opportunity.title,
+            'company': opportunity.department,
+            'location': "University Campus",
+            'posted': opportunity.posted_date.strftime('%B %d, %Y'),
+            'deadline': opportunity.deadline.strftime('%B %d, %Y'),
+            'is_new': False,  # Simple approach - mark all faculty opportunities as not new
+            'type': 'faculty_opportunity',
+            'posted_by': 'Faculty'
+        })
 
     return JsonResponse(jobs_data, safe=False)
-
 
 def job_id(request):
     return render(request, 'myapp/job_id.html')
