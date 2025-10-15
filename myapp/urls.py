@@ -36,4 +36,13 @@ urlpatterns = [
     path('dashboard/alumni/register', views.register, name='alumni_register'),
     path('api/jobs/<int:job_id>/update/', views.update_job, name='api_update_job'),
     path('api/jobs/<int:job_id>/delete/', views.delete_job, name='api_delete_job'),
+    path('faculty/', views.faculty_dashboard, name='faculty_dashboard'),
+    path('api/opportunities/faculty/', views.get_faculty_opportunities, name='faculty_opportunities'),
+    path('api/opportunities/post/', views.post_opportunity, name='post_opportunity'),
+    path('api/opportunities/<int:opportunity_id>/update/', views.update_opportunity, name='api_update_opportunity'),
+    path('api/opportunities/<int:opportunity_id>/delete/', views.delete_opportunity, name='api_delete_opportunity'),
+    path('api/opportunities/<int:opportunity_id>/applicants/', views.get_opportunity_applicants, name='api_opportunity_applicants'),
+    path('api/faculty/stats/', views.get_faculty_stats, name='faculty_stats'),
+    path('api/opportunities/student/', views.get_faculty_opportunities_for_students, name='student_faculty_opportunities'),
+    path('api/opportunities/apply/', views.apply_to_faculty_opportunity, name='apply_faculty_opportunity'),
 ]
