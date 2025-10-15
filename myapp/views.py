@@ -136,6 +136,7 @@ def studentlogin(request):
     return render(request, "myapp/studentlogin.html")
 
 
+# views.py
 def alumnilogin(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -148,10 +149,9 @@ def alumnilogin(request):
             return redirect("almlog")
 
         if check_password(password, alumni.password):
-            # store session info
             request.session["alumni_id"] = alumni.id
             messages.success(request, "Login successful!")
-            return redirect("dashboard")  # replace with your dashboard/homepage
+            return redirect("alumni_dashboard")  # <— go to alumni dashboard
         else:
             messages.error(request, "Invalid email or password.")
             return redirect("almlog")
@@ -459,3 +459,365 @@ from django.http import JsonResponse
 def dashboard(request):
     return render(request, 'myapp/studentdashboard.html')
 
+
+from django.http import JsonResponse
+from .models import Job, Application
+import json
+
+
+def get_jobs_for_students(request):
+    """Get active jobs for student dashboard"""
+    jobs = Job.objects.filter(status='active').order_by('-created_at')
+
+    jobs_data = []
+    for job in jobs:
+        jobs_data.append({
+            'id': job.id,
+            'title': job.title,
+            'company': job.company,
+            'location': job.location,
+            'posted': job.posted,
+            'deadline': job.deadline.strftime('%B %d, %Y'),
+            'job_type': job.job_type,
+            'description': job.description,
+            'salary': job.salary,
+            'requirements': job.requirements.split('\n') if job.requirements else [],
+            'is_new': job.is_new,
+        })
+
+    return JsonResponse(jobs_data, safe=False)
+
+
+def get_alumni_jobs(request):
+    """Get jobs for alumni dashboard (all jobs posted by this alumni)"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    alumni_id = request.session['alumni_id']
+    jobs = Job.objects.filter(posted_by_id=alumni_id).order_by('-created_at')
+
+    jobs_data = []
+    for job in jobs:
+        jobs_data.append({
+            'id': job.id,
+            'title': job.title,
+            'company': job.company,
+            'location': job.location,
+            'posted': job.posted,
+            'deadline': job.deadline.strftime('%B %d, %Y'),
+            'status': job.status,
+            'job_type': job.job_type,
+            'applicants_count': job.applicants.count(),
+            'description': job.description,
+            'salary': job.salary,
+            'requirements': job.requirements.split('\n') if job.requirements else [],
+        })
+
+    return JsonResponse(jobs_data, safe=False)
+
+
+def post_job(request):
+    """Handle job posting from alumni dashboard"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+            job = Job.objects.create(
+                title=data['title'],
+                company=data['company'],
+                location=data['location'],
+                deadline=data['deadline'],
+                job_type=data['job_type'],
+                description=data['description'],
+                salary=data.get('salary', ''),
+                requirements='\n'.join(data.get('requirements', [])),
+                posted_by=alumni,
+                status=data.get('status', 'active')
+            )
+
+            return JsonResponse({'success': True, 'job_id': job.id})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+def apply_to_job(request):
+    """Handle job applications from students"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            student = Student.objects.get(id=request.session['student_id'])
+            job = Job.objects.get(id=data['job_id'])
+
+            # Check if already applied
+            if Application.objects.filter(student=student, job=job).exists():
+                return JsonResponse({'error': 'Already applied to this job'}, status=400)
+
+            Application.objects.create(student=student, job=job)
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+# views.py
+def alumni_dashboard(request):
+    if 'alumni_id' not in request.session:
+        return redirect('almlog')  # or wherever your alumni login is
+    return render(request, 'myapp/alumnidashboard.html')
+
+# views.py (add near your other job APIs)
+from django.views.decorators.http import require_POST
+import json
+from .models import Job
+
+@require_POST
+def update_job(request, job_id):
+    """Update a job (e.g., status=closed) owned by the logged-in alumni"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        payload = json.loads(request.body or "{}")
+        new_status = payload.get('status')
+
+        if new_status not in ['active', 'draft', 'closed']:
+            return JsonResponse({'error': 'Invalid status'}, status=400)
+
+        job = Job.objects.get(id=job_id, posted_by_id=request.session['alumni_id'])
+        job.status = new_status
+        job.save()
+        return JsonResponse({'success': True})
+    except Job.DoesNotExist:
+        return JsonResponse({'error': 'Job not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@require_POST
+def delete_job(request, job_id):
+    """Delete a job owned by the logged-in alumni"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        job = Job.objects.get(id=job_id, posted_by_id=request.session['alumni_id'])
+        job.delete()
+        return JsonResponse({'success': True})
+    except Job.DoesNotExist:
+        return JsonResponse({'error': 'Job not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+from .models import FacultyOpportunity,FacultyApplication
+
+def faculty_dashboard(request):
+    if 'faculty_id' not in request.session:
+        return redirect('fcltlog')
+    return render(request, 'myapp/facultydashboard.html')
+
+
+def get_faculty_opportunities(request):
+    """Get opportunities for faculty dashboard"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    faculty_id = request.session['faculty_id']
+    opportunities = FacultyOpportunity.objects.filter(posted_by_id=faculty_id).order_by('-created_at')
+
+    opportunities_data = []
+    for opportunity in opportunities:
+        opportunities_data.append({
+            'id': opportunity.id,
+            'title': opportunity.title,
+            'department': opportunity.department,
+            'opportunity_type': opportunity.opportunity_type,
+            'description': opportunity.description,
+            'requirements': opportunity.requirements.split('\n') if opportunity.requirements else [],
+            'expected_applicants': opportunity.expected_applicants,
+            'posted_date': opportunity.posted_date.strftime('%B %d, %Y'),
+            'deadline': opportunity.deadline.strftime('%B %d, %Y'),
+            'status': opportunity.status,
+            'applicants_count': opportunity.applicants.count(),
+        })
+
+    return JsonResponse(opportunities_data, safe=False)
+
+
+def post_opportunity(request):
+    """Handle opportunity posting from faculty dashboard"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+            opportunity = FacultyOpportunity.objects.create(
+                title=data['title'],
+                department=data['department'],
+                opportunity_type=data['opportunity_type'],
+                description=data['description'],
+                requirements='\n'.join(data.get('requirements', [])),
+                expected_applicants=data.get('expected_applicants', 0),
+                deadline=data['deadline'],
+                posted_by=faculty,
+                status=data.get('status', 'active')
+            )
+
+            return JsonResponse({'success': True, 'opportunity_id': opportunity.id})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+@require_POST
+def update_opportunity(request, opportunity_id):
+    """Update an opportunity (e.g., status=closed)"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        payload = json.loads(request.body or "{}")
+        new_status = payload.get('status')
+
+        if new_status not in ['active', 'pending', 'closed']:
+            return JsonResponse({'error': 'Invalid status'}, status=400)
+
+        opportunity = FacultyOpportunity.objects.get(id=opportunity_id, posted_by_id=request.session['faculty_id'])
+        opportunity.status = new_status
+        opportunity.save()
+        return JsonResponse({'success': True})
+    except FacultyOpportunity.DoesNotExist:
+        return JsonResponse({'error': 'Opportunity not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@require_POST
+def delete_opportunity(request, opportunity_id):
+    """Delete an opportunity"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        opportunity = FacultyOpportunity.objects.get(id=opportunity_id, posted_by_id=request.session['faculty_id'])
+        opportunity.delete()
+        return JsonResponse({'success': True})
+    except FacultyOpportunity.DoesNotExist:
+        return JsonResponse({'error': 'Opportunity not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+def get_opportunity_applicants(request, opportunity_id):
+    """Get applicants for a specific opportunity"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        opportunity = FacultyOpportunity.objects.get(id=opportunity_id, posted_by_id=request.session['faculty_id'])
+        applications = FacultyApplication.objects.filter(opportunity=opportunity).select_related('student')
+
+        applicants_data = []
+        for application in applications:
+            applicants_data.append({
+                'id': application.student.id,
+                'name': f"{application.student.first_name} {application.student.last_name}",
+                'email': application.student.email,
+                'student_id': application.student.student_id,
+                'graduation_year': application.student.graduation_year,
+                'applied_at': application.applied_at.strftime('%B %d, %Y %H:%M'),
+                'status': application.status
+            })
+
+        return JsonResponse(applicants_data, safe=False)
+    except FacultyOpportunity.DoesNotExist:
+        return JsonResponse({'error': 'Opportunity not found'}, status=404)
+
+
+def get_faculty_stats(request):
+    """Get statistics for faculty dashboard"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    faculty_id = request.session['faculty_id']
+
+    # Count total students (you might want to adjust this based on your logic)
+    total_students = Student.objects.count()
+
+    # Count faculty opportunities
+    total_opportunities = FacultyOpportunity.objects.filter(posted_by_id=faculty_id).count()
+
+    # Count students hired (you might want to track this differently)
+    total_hired = FacultyApplication.objects.filter(
+        opportunity__posted_by_id=faculty_id,
+        status='accepted'
+    ).count()
+
+    # Count total applications
+    total_applied = FacultyApplication.objects.filter(
+        opportunity__posted_by_id=faculty_id
+    ).count()
+
+    return JsonResponse({
+        'total_students': total_students,
+        'total_opportunities': total_opportunities,
+        'total_hired': total_hired,
+        'total_applied': total_applied
+    })
+
+
+# Add to views.py
+
+def get_faculty_opportunities_for_students(request):
+    """Get active faculty opportunities for student dashboard"""
+    opportunities = FacultyOpportunity.objects.filter(status='active').order_by('-created_at')
+
+    opportunities_data = []
+    for opportunity in opportunities:
+        opportunities_data.append({
+            'id': opportunity.id,
+            'title': opportunity.title,
+            'department': opportunity.department,
+            'opportunity_type': opportunity.opportunity_type,
+            'description': opportunity.description,
+            'posted_date': opportunity.posted_date.strftime('%B %d, %Y'),
+            'deadline': opportunity.deadline.strftime('%B %d, %Y'),
+            'posted_by': f"{opportunity.posted_by.first_name} {opportunity.posted_by.last_name}",
+        })
+
+    return JsonResponse(opportunities_data, safe=False)
+
+
+def apply_to_faculty_opportunity(request):
+    """Handle student applications to faculty opportunities"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            student = Student.objects.get(id=request.session['student_id'])
+            opportunity = FacultyOpportunity.objects.get(id=data['opportunity_id'])
+
+            # Check if already applied
+            if FacultyApplication.objects.filter(student=student, opportunity=opportunity).exists():
+                return JsonResponse({'error': 'Already applied to this opportunity'}, status=400)
+
+            FacultyApplication.objects.create(student=student, opportunity=opportunity)
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
