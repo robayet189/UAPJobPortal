@@ -67,21 +67,21 @@ class Faculty(models.Model):
 class Company(models.Model):
     company_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)  # Always store hashed passwords!
+    password = models.CharField(max_length=128)
     company_type = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=20)
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)  # For admin verification
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return self.company_name  # FIXED: Was using first_name/last_name
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
 
     def check_password(self, raw_password):
-        from django.contrib.auth.hashers import check_password
         return check_password(raw_password, self.password)
+
 
 class Administrator(models.Model):
     first_name = models.CharField(max_length=100)
@@ -101,9 +101,11 @@ from django.db import models
 
 class Job(models.Model):
     JOB_STATUS = [
+        ('pending', 'Pending'),  # ADD THIS
         ('active', 'Active'),
         ('draft', 'Draft'),
         ('closed', 'Closed'),
+        ('rejected', 'Rejected'),  # ADD THIS
     ]
 
     JOB_TYPES = [
@@ -147,9 +149,10 @@ class Application(models.Model):
 
 class FacultyOpportunity(models.Model):
     OPPORTUNITY_STATUS = [
+        ('pending', 'Pending'),  # ADD THIS
         ('active', 'Active'),
-        ('pending', 'Pending'),
         ('closed', 'Closed'),
+        ('rejected', 'Rejected'),  # ADD THIS
     ]
 
     OPPORTUNITY_TYPES = [
@@ -187,10 +190,11 @@ class FacultyApplication(models.Model):
 
 class CompanyJob(models.Model):
     JOB_STATUS = [
-        ('active', 'Active'),
         ('pending', 'Pending'),
+        ('active', 'Active'),
         ('closed', 'Closed'),
         ('draft', 'Draft'),
+        ('rejected', 'Rejected'),
     ]
 
     JOB_TYPES = [
@@ -212,6 +216,7 @@ class CompanyJob(models.Model):
     deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     posted_date = models.DateField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=JOB_STATUS, default='pending')
 
     def __str__(self):
         return f"{self.title} - {self.company.company_name}"
@@ -224,3 +229,24 @@ class CompanyApplication(models.Model):
 
     class Meta:
         unique_together = ['student', 'job']
+
+
+# Add to models.py
+class ActivityLog(models.Model):
+    ACTION_TYPES = [
+        ('approval', 'Approval'),
+        ('rejection', 'Rejection'),
+        ('verification', 'Verification'),
+        ('user_management', 'User Management'),
+        ('system', 'System'),
+    ]
+
+    admin = models.ForeignKey(Administrator, on_delete=models.CASCADE, null=True, blank=True)
+    action = models.CharField(max_length=255)
+    action_type = models.CharField(max_length=20, choices=ACTION_TYPES)
+    details = models.TextField(blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.action} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"

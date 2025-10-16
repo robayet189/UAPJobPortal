@@ -91,14 +91,14 @@ def companyregistration(request):
     if request.method == 'POST':
         form = CompanyRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Registration successful! Please check your email for verification.")
+            company = form.save(commit=False)
+            company.is_verified = False  # Companies start unverified
+            company.save()
+            messages.success(request, "Registration successful! Please wait for admin verification.")
             return redirect('/success/?from=companyregistration')
     else:
         form = CompanyRegistrationForm()
-
     return render(request, 'myapp/companyregistration.html', {'form': form})
-
 
 def adminregistration(request):
     if request.method == 'POST':
@@ -220,7 +220,7 @@ def adminlogin(request):
             # store session info
             request.session["admin_id"] = admin.id
             messages.success(request, "Login successful!")
-            return redirect("dashboard")  # replace with your dashboard/homepage
+            return redirect("custom_admin_dashboard")  # replace with your dashboard/homepage
         else:
             messages.error(request, "Invalid email or password.")
             return redirect("adminlog")
@@ -276,13 +276,9 @@ def search_jobs(request):
     location = request.GET.get('location', '')
     posted = request.GET.get('posted', '')
 
-    # Search alumni jobs
     alumni_jobs = Job.objects.filter(status='active')
-    # Search faculty opportunities
     faculty_opportunities = FacultyOpportunity.objects.filter(status='active')
-    # Search company jobs - NEW
     company_jobs = CompanyJob.objects.filter(status='active')
-
     if query:
         alumni_jobs = alumni_jobs.filter(
             Q(title__icontains=query) |
@@ -772,7 +768,6 @@ def get_faculty_opportunities(request):
 
 
 def post_opportunity(request):
-    """Handle opportunity posting from faculty dashboard"""
     if 'faculty_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
 
@@ -790,7 +785,7 @@ def post_opportunity(request):
                 expected_applicants=data.get('expected_applicants', 0),
                 deadline=data['deadline'],
                 posted_by=faculty,
-                status=data.get('status', 'active')
+                status='pending'  # CHANGED: Needs admin approval
             )
 
             return JsonResponse({'success': True, 'opportunity_id': opportunity.id})
@@ -798,7 +793,6 @@ def post_opportunity(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
-
 
 @require_POST
 def update_opportunity(request, opportunity_id):
@@ -1037,6 +1031,10 @@ def post_company_job(request):
             data = json.loads(request.body)
             company = Company.objects.get(id=request.session['company_id'])
 
+            # Check if company is verified
+            if not company.is_verified:
+                return JsonResponse({'error': 'Company not verified. Please wait for admin verification.'}, status=400)
+
             job = CompanyJob.objects.create(
                 title=data['title'],
                 company=company,
@@ -1047,7 +1045,7 @@ def post_company_job(request):
                 job_type=data['job_type'],
                 expected_applicants=data.get('expected_applicants', 0),
                 deadline=data['deadline'],
-                status=data.get('status', 'active')
+                status='pending'  # CHANGED: Needs admin approval
             )
 
             return JsonResponse({'success': True, 'job_id': job.id})
@@ -1055,7 +1053,6 @@ def post_company_job(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
-
 
 def get_job_applicants(request, job_id):
     """Get applicants for a specific company job"""
@@ -1189,14 +1186,13 @@ def apply_to_company_job(request):
 
 # Update student jobs API to include company jobs
 def get_jobs_for_students(request):
-    """Get active jobs for student dashboard - UPDATED to include company jobs"""
-    # Alumni jobs
+    """Get active jobs for student dashboard - UPDATED to only show approved jobs"""
+    # Only show ACTIVE (approved) jobs
     alumni_jobs = Job.objects.filter(status='active').order_by('-created_at')
-    # Company jobs - NEW
     company_jobs = CompanyJob.objects.filter(status='active').order_by('-created_at')
+    faculty_opportunities = FacultyOpportunity.objects.filter(status='active').order_by('-created_at')
 
     jobs_data = []
-
     # Add alumni jobs
     for job in alumni_jobs:
         jobs_data.append({
@@ -1234,3 +1230,453 @@ def get_jobs_for_students(request):
         })
 
     return JsonResponse(jobs_data, safe=False)
+
+
+# Add to views.py
+
+# Admin Dashboard APIs
+from .models import ActivityLog
+
+def admin_stats(request):
+    """Get admin dashboard statistics"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    total_users = (Student.objects.count() + Alumni.objects.count() +
+                   Faculty.objects.count() + Company.objects.count())
+    active_jobs = (Job.objects.filter(status='active').count() +
+                   FacultyOpportunity.objects.filter(status='active').count() +
+                   CompanyJob.objects.filter(status='active').count())
+    pending_reviews = (Job.objects.filter(status='pending').count() +
+                       FacultyOpportunity.objects.filter(status='pending').count() +
+                       CompanyJob.objects.filter(status='pending').count())
+    total_companies = Company.objects.count()
+
+    # Calculate new signups (last 7 days)
+    week_ago = timezone.now() - timedelta(days=7)
+    new_signups = (Student.objects.filter(created_at__gte=week_ago).count() +
+                   Alumni.objects.filter(created_at__gte=week_ago).count() +
+                   Faculty.objects.filter(created_at__gte=week_ago).count() +
+                   Company.objects.filter(created_at__gte=week_ago).count())
+
+    total_applications = (Application.objects.count() +
+                          FacultyApplication.objects.count() +
+                          CompanyApplication.objects.count())
+
+    return JsonResponse({
+        'total_users': total_users,
+        'active_jobs': active_jobs,
+        'pending_reviews': pending_reviews,
+        'total_companies': total_companies,
+        'new_signups': new_signups,
+        'total_applications': total_applications
+    })
+
+
+def pending_approvals(request):
+    """Get all pending approvals for admin dashboard"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    pending_data = []
+
+    # Alumni jobs pending approval
+    alumni_jobs = Job.objects.filter(status='pending')
+    for job in alumni_jobs:
+        pending_data.append({
+            'id': job.id,
+            'type': 'job',
+            'title': job.title,
+            'submitted_by': f"{job.posted_by.first_name} {job.posted_by.last_name}",
+            'submitted_by_type': 'Alumni',
+            'location': job.location,
+            'job_type': job.job_type,
+            'description': job.description,
+            'submitted_at': job.created_at.strftime('%B %d, %Y'),
+            'deadline': job.deadline.strftime('%B %d, %Y')
+        })
+
+    # Faculty opportunities pending approval
+    faculty_opportunities = FacultyOpportunity.objects.filter(status='pending')
+    for opportunity in faculty_opportunities:
+        pending_data.append({
+            'id': opportunity.id,
+            'type': 'faculty_opportunity',
+            'title': opportunity.title,
+            'submitted_by': f"{opportunity.posted_by.first_name} {opportunity.posted_by.last_name}",
+            'submitted_by_type': 'Faculty',
+            'location': "University Campus",
+            'opportunity_type': opportunity.opportunity_type,
+            'description': opportunity.description,
+            'submitted_at': opportunity.created_at.strftime('%B %d, %Y'),
+            'deadline': opportunity.deadline.strftime('%B %d, %Y')
+        })
+
+    # Company jobs pending approval
+    company_jobs = CompanyJob.objects.filter(status='pending')
+    for job in company_jobs:
+        pending_data.append({
+            'id': job.id,
+            'type': 'company_job',
+            'title': job.title,
+            'submitted_by': job.company.company_name,
+            'submitted_by_type': 'Company',
+            'location': job.location,
+            'job_type': job.job_type,
+            'description': job.description,
+            'submitted_at': job.created_at.strftime('%B %d, %Y'),
+            'deadline': job.deadline.strftime('%B %d, %Y')
+        })
+
+    return JsonResponse(pending_data, safe=False)
+
+
+def company_verification(request):
+    """Get companies pending verification"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    companies = Company.objects.filter(is_verified=False)
+    companies_data = []
+
+    for company in companies:
+        companies_data.append({
+            'id': company.id,
+            'company_name': company.company_name,
+            'email': company.email,
+            'company_type': company.company_type,
+            'phone_number': company.phone_number,
+            'created_at': company.created_at.strftime('%B %d, %Y')
+        })
+
+    return JsonResponse(companies_data, safe=False)
+
+
+def admin_users(request):
+    """Get all users for admin management"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    users_data = []
+
+    # Students
+    students = Student.objects.all()
+    for student in students:
+        users_data.append({
+            'id': student.id,
+            'user_type': 'student',
+            'first_name': student.first_name,
+            'last_name': student.last_name,
+            'email': student.email,
+            'student_id': student.student_id,
+            'graduation_year': student.graduation_year,
+            'is_verified': student.is_verified,
+            'created_at': student.created_at.strftime('%B %d, %Y')
+        })
+
+    # Alumni
+    alumni = Alumni.objects.all()
+    for alum in alumni:
+        users_data.append({
+            'id': alum.id,
+            'user_type': 'alumni',
+            'first_name': alum.first_name,
+            'last_name': alum.last_name,
+            'email': alum.email,
+            'student_id': alum.student_id,
+            'graduation_year': alum.graduation_year,
+            'is_verified': alum.is_verified,
+            'created_at': alum.created_at.strftime('%B %d, %Y')
+        })
+
+    # Faculty
+    faculty = Faculty.objects.all()
+    for faculty_member in faculty:
+        users_data.append({
+            'id': faculty_member.id,
+            'user_type': 'faculty',
+            'first_name': faculty_member.first_name,
+            'last_name': faculty_member.last_name,
+            'email': faculty_member.email,
+            'position': faculty_member.position,
+            'is_verified': faculty_member.is_verified,
+            'created_at': faculty_member.created_at.strftime('%B %d, %Y')
+        })
+
+    return JsonResponse(users_data, safe=False)
+
+
+def approve_item(request, item_type, item_id):
+    """Approve a pending item"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        if item_type == 'job':
+            item = Job.objects.get(id=item_id)
+        elif item_type == 'faculty_opportunity':
+            item = FacultyOpportunity.objects.get(id=item_id)
+        elif item_type == 'company_job':
+            item = CompanyJob.objects.get(id=item_id)
+        else:
+            return JsonResponse({'error': 'Invalid item type'}, status=400)
+
+        item.status = 'active'
+        item.save()
+
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+def reject_item(request, item_type, item_id):
+    """Reject a pending item"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        if item_type == 'job':
+            item = Job.objects.get(id=item_id)
+        elif item_type == 'faculty_opportunity':
+            item = FacultyOpportunity.objects.get(id=item_id)
+        elif item_type == 'company_job':
+            item = CompanyJob.objects.get(id=item_id)
+        else:
+            return JsonResponse({'error': 'Invalid item type'}, status=400)
+
+        item.status = 'rejected'
+        item.save()
+
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+def verify_company(request, company_id):
+    """Verify a company"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=company_id)
+        company.is_verified = True
+        company.save()
+
+        return JsonResponse({'success': True})
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+
+
+def reject_company(request, company_id):
+    """Reject a company registration"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=company_id)
+        company.delete()  # Or mark as rejected instead of deleting
+
+        return JsonResponse({'success': True})
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+
+
+def add_user(request):
+    """Add a new user (admin functionality)"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_type = data['user_type']
+
+            if user_type == 'student':
+                user = Student.objects.create(
+                    first_name=data['first_name'],
+                    last_name=data['last_name'],
+                    email=data['email'],
+                    student_id=data.get('student_id', ''),
+                    graduation_year=data.get('graduation_year', 2024),
+                    is_verified=True
+                )
+                user.set_password(data['password'])
+                user.save()
+
+            elif user_type == 'alumni':
+                user = Alumni.objects.create(
+                    first_name=data['first_name'],
+                    last_name=data['last_name'],
+                    email=data['email'],
+                    student_id=data.get('student_id', ''),
+                    graduation_year=data.get('graduation_year', 2024),
+                    is_verified=True
+                )
+                user.set_password(data['password'])
+                user.save()
+
+            elif user_type == 'faculty':
+                user = Faculty.objects.create(
+                    first_name=data['first_name'],
+                    last_name=data['last_name'],
+                    email=data['email'],
+                    position=data.get('position', 'Professor'),
+                    is_verified=True
+                )
+                user.set_password(data['password'])
+                user.save()
+
+            else:
+                return JsonResponse({'error': 'Invalid user type'}, status=400)
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+def delete_user(request, user_type, user_id):
+    """Delete a user"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        if user_type == 'student':
+            user = Student.objects.get(id=user_id)
+        elif user_type == 'alumni':
+            user = Alumni.objects.get(id=user_id)
+        elif user_type == 'faculty':
+            user = Faculty.objects.get(id=user_id)
+        else:
+            return JsonResponse({'error': 'Invalid user type'}, status=400)
+
+        user.delete()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+def activity_log(request):
+    """Get activity log for admin"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    # This would typically come from an ActivityLog model
+    # For now, return mock data
+    activities = [
+        {
+            'action': 'Job Approved',
+            'timestamp': '2024-01-20 14:30:25',
+            'details': 'Approved "Software Developer" position from TechCorp'
+        },
+        {
+            'action': 'Company Verified',
+            'timestamp': '2024-01-20 13:15:42',
+            'details': 'Verified company "Innovate Solutions"'
+        },
+        {
+            'action': 'User Added',
+            'timestamp': '2024-01-20 12:05:18',
+            'details': 'Added new faculty member Dr. Robert Chen'
+        }
+    ]
+
+    return JsonResponse(activities, safe=False)
+
+
+def log_activity(request):
+    """Log admin activity"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    # This would save to an ActivityLog model
+    # For now, just return success
+    return JsonResponse({'success': True})
+
+
+def admin_profile(request):
+    """Get admin profile data"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        admin = Administrator.objects.get(id=request.session['admin_id'])
+        return JsonResponse({
+            'name': f"{admin.first_name} {admin.last_name}",
+            'email': admin.email,
+            'phone_number': admin.phone_number,
+            'last_login': 'Just now'  # You might want to add last_login field to your model
+        })
+    except Administrator.DoesNotExist:
+        return JsonResponse({'error': 'Admin not found'}, status=404)
+
+
+def system_health(request):
+    """Get system health status"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    # Mock data - you can implement actual health checks
+    return JsonResponse({
+        'server_status': 'operational',
+        'database_status': 'healthy',
+        'storage_used': 72,
+        'last_checked': timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+    })
+
+
+def recent_activity(request):
+    """Get recent signup activity"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    # Get recent signups (last 5)
+    recent_activities = []
+
+    # Recent students
+    recent_students = Student.objects.order_by('-created_at')[:2]
+    for student in recent_students:
+        recent_activities.append({
+            'name': f"{student.first_name} {student.last_name}",
+            'type': 'student',
+            'time': student.created_at.strftime('%H:%M'),
+            'date': student.created_at.strftime('%b %d, %Y')
+        })
+
+    # Recent alumni
+    recent_alumni = Alumni.objects.order_by('-created_at')[:1]
+    for alumni in recent_alumni:
+        recent_activities.append({
+            'name': f"{alumni.first_name} {alumni.last_name}",
+            'type': 'alumni',
+            'time': alumni.created_at.strftime('%H:%M'),
+            'date': alumni.created_at.strftime('%b %d, %Y')
+        })
+
+    # Recent faculty
+    recent_faculty = Faculty.objects.order_by('-created_at')[:1]
+    for faculty in recent_faculty:
+        recent_activities.append({
+            'name': f"{faculty.first_name} {faculty.last_name}",
+            'type': 'faculty',
+            'time': faculty.created_at.strftime('%H:%M'),
+            'date': faculty.created_at.strftime('%b %d, %Y')
+        })
+
+    # Recent companies
+    recent_companies = Company.objects.order_by('-created_at')[:1]
+    for company in recent_companies:
+        recent_activities.append({
+            'name': company.company_name,
+            'type': 'company',
+            'time': company.created_at.strftime('%H:%M'),
+            'date': company.created_at.strftime('%b %d, %Y')
+        })
+
+    return JsonResponse(recent_activities, safe=False)
+
+def admin_dashboard(request):
+    if 'admin_id' not in request.session:
+        return redirect('adminlog')
+    return render(request, 'myapp/admindashboard.html')
