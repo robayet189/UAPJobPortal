@@ -393,7 +393,7 @@ body {
        <div class="log-in-as-a-student-item">
            <div class="vector-parent">
 
-              <div class="log-in-as-a-student-back-to-home">Login as Admin</div>
+              <div class="log-in-as-a-student-back-to-home">Login as Company</div>
            </div>
            <form method="post">
             {% csrf_token %}
@@ -412,7 +412,7 @@ body {
                     <input type="password" name="password" value="" required />
                 </div>
              <div class="forgot-password">
-                    <a href="{% url 'forgotpass' source='admin' %}">Forgot Password?</a>
+                    <a href="{% url 'forgotpass' source='company' %}">Forgot Password?</a>
                 </div>
             </div>
 

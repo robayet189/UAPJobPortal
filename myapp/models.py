@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
 class Student(models.Model):
     first_name = models.CharField(max_length=100)
@@ -13,6 +14,12 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        from django.contrib.auth.hashers import check_password
+        return check_password(raw_password, self.password)
 
 
 
@@ -29,6 +36,12 @@ class Alumni(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        from django.contrib.auth.hashers import check_password
+        return check_password(raw_password, self.password)
 
 
 class Faculty(models.Model):
@@ -43,6 +56,12 @@ class Faculty(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        from django.contrib.auth.hashers import check_password
+        return check_password(raw_password, self.password)
 
 
 class Company(models.Model):
@@ -57,6 +76,12 @@ class Company(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        from django.contrib.auth.hashers import check_password
+        return check_password(raw_password, self.password)
 
 class Administrator(models.Model):
     first_name = models.CharField(max_length=100)
@@ -159,3 +184,43 @@ class FacultyApplication(models.Model):
 
     class Meta:
         unique_together = ['student', 'opportunity']
+
+class CompanyJob(models.Model):
+    JOB_STATUS = [
+        ('active', 'Active'),
+        ('pending', 'Pending'),
+        ('closed', 'Closed'),
+        ('draft', 'Draft'),
+    ]
+
+    JOB_TYPES = [
+        ('full', 'Full Time'),
+        ('part', 'Part Time'),
+        ('intern', 'Internship'),
+        ('contract', 'Contract'),
+    ]
+
+    title = models.CharField(max_length=200)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    location = models.CharField(max_length=100)
+    description = models.TextField()
+    requirements = models.TextField(blank=True)
+    salary = models.CharField(max_length=100, blank=True)
+    job_type = models.CharField(max_length=20, choices=JOB_TYPES)
+    status = models.CharField(max_length=20, choices=JOB_STATUS, default='pending')
+    expected_applicants = models.IntegerField(default=0)
+    deadline = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    posted_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.company.company_name}"
+
+class CompanyApplication(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    job = models.ForeignKey(CompanyJob, on_delete=models.CASCADE)
+    applied_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='pending')
+
+    class Meta:
+        unique_together = ['student', 'job']

@@ -1153,12 +1153,6 @@ function closeModal() {
     document.getElementById('jobModal').style.display = 'none';
 }
 
-// Function to handle job title click for Junior Backend Developer only
-function handleJuniorBackendClick() {
-    console.log('Junior Backend Developer clicked - navigating to specific page');
-    window.location.href = '/browseoppurtunity/job_id/'; // Your specific page
-}
-
 function renderJobModal(job) {
     const isFacultyOpportunity = job.type === 'faculty_opportunity';
     const companyDisplay = isFacultyOpportunity ? job.department : job.company;
@@ -1219,25 +1213,10 @@ function renderJobModal(job) {
         </div>
         ` : ''}
 
-        <div style="text-align: center; margin-top: 30px;">
-            <button id="applyButton" style="
-                background-color: #51d784;
-                color: #1b6700;
-                border: none;
-                border-radius: 6px;
-                padding: 12px 30px;
-                font-size: 18px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            ">Apply Now</button>
-        </div>
+
     `;
 
-    // Add event listener for apply button
-    document.getElementById('applyButton').addEventListener('click', function() {
-        applyToJob(job);
-    });
+
 
     showModal();
 }
@@ -1361,7 +1340,6 @@ function renderJobs(jobs) {
 
         // Determine if it's a faculty opportunity or alumni job
         const isFacultyOpportunity = job.type === 'faculty_opportunity';
-        const isJuniorBackend = job.title === "Junior Backend Developer (Laravel)";
         const companyDisplay = isFacultyOpportunity ? job.department : job.company;
         const locationDisplay = isFacultyOpportunity ? "University Campus" : job.location;
         const postedByDisplay = job.posted_by || (isFacultyOpportunity ? "Faculty" : "Alumni");
@@ -1425,6 +1403,7 @@ function renderJobs(jobs) {
             ">${companyDisplay || 'No Company'}</div>
 
 
+
             <!-- Location -->
             <div style="
                 position: absolute;
@@ -1477,36 +1456,27 @@ function renderJobs(jobs) {
 
         resultsDiv.appendChild(jobCard);
 
-        // SPECIAL BEHAVIOR: Only for Junior Backend Developer
-        if (isJuniorBackend) {
-            // For Junior Backend Developer, keep the old navigation behavior
-            jobCard.addEventListener('click', function() {
-                handleJuniorBackendClick();
-            });
-        } else {
-            // For all other jobs, show modal on click
-            jobCard.addEventListener('click', function() {
-                console.log('Job card clicked:', job.title);
-                renderJobModal(job);
-            });
+        // BROWSE OPPORTUNITY BEHAVIOR: ALL cards show modal
+        jobCard.addEventListener('click', function() {
+            console.log('Job card clicked:', job.title);
+            renderJobModal(job);
+        });
 
-            // Add hover effect for normal job cards
-            jobCard.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
-                this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-                this.style.borderColor = '#a3b9e9';
-            });
+        // Add hover effect for all job cards
+        jobCard.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+            this.style.borderColor = '#a3b9e9';
+        });
 
-            jobCard.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = 'none';
-                this.style.borderColor = '#969dc9';
-            });
-        }
+        jobCard.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+            this.style.borderColor = '#969dc9';
+        });
 
         console.log('Opportunity card', index + 1, 'added:', job.title,
-                   '- Type:', isFacultyOpportunity ? 'Faculty' : 'Alumni',
-                   '- Special Click:', isJuniorBackend);
+                   '- Type:', isFacultyOpportunity ? 'Faculty' : 'Alumni');
     });
 
     console.log('All opportunities rendered successfully');
