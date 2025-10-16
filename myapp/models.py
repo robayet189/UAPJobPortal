@@ -101,11 +101,11 @@ from django.db import models
 
 class Job(models.Model):
     JOB_STATUS = [
-        ('pending', 'Pending'),  # ADD THIS
+        ('pending', 'Pending'),
         ('active', 'Active'),
         ('draft', 'Draft'),
         ('closed', 'Closed'),
-        ('rejected', 'Rejected'),  # ADD THIS
+        ('rejected', 'Rejected'),
     ]
 
     JOB_TYPES = [
@@ -124,7 +124,7 @@ class Job(models.Model):
     description = models.TextField(blank=True)
 
     # Add these new fields
-    status = models.CharField(max_length=20, choices=JOB_STATUS, default='active')
+    status = models.CharField(max_length=20, choices=JOB_STATUS, default='pending')
     posted_by = models.ForeignKey(Alumni, on_delete=models.CASCADE, null=True, blank=True)
     applicants = models.ManyToManyField(Student, through='Application', blank=True)
     salary = models.CharField(max_length=100, blank=True)
@@ -149,10 +149,10 @@ class Application(models.Model):
 
 class FacultyOpportunity(models.Model):
     OPPORTUNITY_STATUS = [
-        ('pending', 'Pending'),  # ADD THIS
+        ('pending', 'Pending'),
         ('active', 'Active'),
         ('closed', 'Closed'),
-        ('rejected', 'Rejected'),  # ADD THIS
+        ('rejected', 'Rejected'),
     ]
 
     OPPORTUNITY_TYPES = [
@@ -170,7 +170,7 @@ class FacultyOpportunity(models.Model):
     expected_applicants = models.IntegerField(default=0)
     posted_date = models.DateField(auto_now_add=True)
     deadline = models.DateField()
-    status = models.CharField(max_length=20, choices=OPPORTUNITY_STATUS, default='active')
+    status = models.CharField(max_length=20, choices=OPPORTUNITY_STATUS, default='pending')
     posted_by = models.ForeignKey(Faculty, on_delete=models.CASCADE)
     applicants = models.ManyToManyField(Student, through='FacultyApplication', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -211,12 +211,11 @@ class CompanyJob(models.Model):
     requirements = models.TextField(blank=True)
     salary = models.CharField(max_length=100, blank=True)
     job_type = models.CharField(max_length=20, choices=JOB_TYPES)
-    status = models.CharField(max_length=20, choices=JOB_STATUS, default='pending')
+    status = models.CharField(max_length=20, choices=JOB_STATUS, default='pending')  # keep THIS one
     expected_applicants = models.IntegerField(default=0)
     deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     posted_date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=JOB_STATUS, default='pending')
 
     def __str__(self):
         return f"{self.title} - {self.company.company_name}"

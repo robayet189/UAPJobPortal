@@ -236,21 +236,14 @@ from .models import Job
 
 
 def browse_opportunities(request):
-    # Fetch alumni jobs
     alumni_jobs = Job.objects.filter(status='active').order_by('-created_at')
-
-    # Fetch faculty opportunities
     faculty_opportunities = FacultyOpportunity.objects.filter(status='active').order_by('-created_at')
+    company_jobs = CompanyJob.objects.filter(status='active').order_by('-created_at')  # NEW
 
-    # Combine both for the template
-    all_opportunities = list(alumni_jobs) + list(faculty_opportunities)
-
-    # Sort by creation date (newest first)
+    all_opportunities = list(alumni_jobs) + list(faculty_opportunities) + list(company_jobs)
     all_opportunities.sort(key=lambda x: x.created_at, reverse=True)
 
-    context = {
-        'opportunities': all_opportunities,
-    }
+    context = {'opportunities': all_opportunities}
     return render(request, 'myapp/browseoppurtunity.html', context)
 
 
@@ -276,9 +269,11 @@ def search_jobs(request):
     location = request.GET.get('location', '')
     posted = request.GET.get('posted', '')
 
-    alumni_jobs = Job.objects.filter(status='active')
-    faculty_opportunities = FacultyOpportunity.objects.filter(status='active')
-    company_jobs = CompanyJob.objects.filter(status='active')
+    alumni_jobs = Job.objects.filter(status='active')  # CHANGED
+    faculty_opportunities = FacultyOpportunity.objects.filter(status='active')  # CHANGED
+    company_jobs = CompanyJob.objects.filter(status='active')  # CHANGED
+
+
     if query:
         alumni_jobs = alumni_jobs.filter(
             Q(title__icontains=query) |
@@ -610,7 +605,6 @@ def get_alumni_jobs(request):
 
     alumni_id = request.session['alumni_id']
     jobs = Job.objects.filter(posted_by_id=alumni_id).order_by('-created_at')
-
     jobs_data = []
     for job in jobs:
         jobs_data.append({
@@ -632,7 +626,6 @@ def get_alumni_jobs(request):
 
 
 def post_job(request):
-    """Handle job posting from alumni dashboard"""
     if 'alumni_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
 
@@ -651,7 +644,7 @@ def post_job(request):
                 salary=data.get('salary', ''),
                 requirements='\n'.join(data.get('requirements', [])),
                 posted_by=alumni,
-                status=data.get('status', 'active')
+                status='pending'  # <-- FORCE pending
             )
 
             return JsonResponse({'success': True, 'job_id': job.id})
@@ -659,7 +652,6 @@ def post_job(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
-
 
 def apply_to_job(request):
     """Handle job applications from students"""
@@ -695,8 +687,8 @@ import json
 from .models import Job
 
 @require_POST
+@require_POST
 def update_job(request, job_id):
-    """Update a job (e.g., status=closed) owned by the logged-in alumni"""
     if 'alumni_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
 
@@ -704,11 +696,13 @@ def update_job(request, job_id):
         payload = json.loads(request.body or "{}")
         new_status = payload.get('status')
 
-        if new_status not in ['active', 'draft', 'closed']:
-            return JsonResponse({'error': 'Invalid status'}, status=400)
+        # Alumni cannot self-activate or set pending
+        if new_status and new_status not in ['draft', 'closed']:
+            return JsonResponse({'error': 'Forbidden status change'}, status=403)
 
         job = Job.objects.get(id=job_id, posted_by_id=request.session['alumni_id'])
-        job.status = new_status
+        if new_status:
+            job.status = new_status
         job.save()
         return JsonResponse({'success': True})
     except Job.DoesNotExist:
@@ -796,7 +790,6 @@ def post_opportunity(request):
 
 @require_POST
 def update_opportunity(request, opportunity_id):
-    """Update an opportunity (e.g., status=closed)"""
     if 'faculty_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
 
@@ -804,11 +797,13 @@ def update_opportunity(request, opportunity_id):
         payload = json.loads(request.body or "{}")
         new_status = payload.get('status')
 
-        if new_status not in ['active', 'pending', 'closed']:
-            return JsonResponse({'error': 'Invalid status'}, status=400)
+        # Faculty cannot self-activate
+        if new_status and new_status not in ['closed', 'pending']:
+            return JsonResponse({'error': 'Forbidden status change'}, status=403)
 
         opportunity = FacultyOpportunity.objects.get(id=opportunity_id, posted_by_id=request.session['faculty_id'])
-        opportunity.status = new_status
+        if new_status:
+            opportunity.status = new_status
         opportunity.save()
         return JsonResponse({'success': True})
     except FacultyOpportunity.DoesNotExist:
@@ -998,7 +993,6 @@ def get_company_jobs(request):
     try:
         company = Company.objects.get(id=request.session['company_id'])
         jobs = CompanyJob.objects.filter(company=company).order_by('-created_at')
-
         jobs_data = []
         for job in jobs:
             jobs_data.append({
@@ -1081,39 +1075,33 @@ def get_job_applicants(request, job_id):
         return JsonResponse({'error': 'Job not found'}, status=404)
 
 
+@require_POST
 def update_company_job(request, job_id):
-    """Update a company job"""
     if 'company_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
 
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            company = Company.objects.get(id=request.session['company_id'])
-            job = CompanyJob.objects.get(id=job_id, company=company)
+    try:
+        data = json.loads(request.body)
+        company = Company.objects.get(id=request.session['company_id'])
+        job = CompanyJob.objects.get(id=job_id, company=company)
 
-            # Update fields if provided
-            if 'status' in data:
-                job.status = data['status']
-            if 'title' in data:
-                job.title = data['title']
-            if 'location' in data:
-                job.location = data['location']
-            if 'description' in data:
-                job.description = data['description']
-            if 'salary' in data:
-                job.salary = data['salary']
-            if 'deadline' in data:
-                job.deadline = data['deadline']
+        # Restrict status changes
+        if 'status' in data:
+            if data['status'] not in ['closed', 'draft']:
+                return JsonResponse({'error': 'Forbidden status change'}, status=403)
+            job.status = data['status']
 
-            job.save()
-            return JsonResponse({'success': True})
-        except CompanyJob.DoesNotExist:
-            return JsonResponse({'error': 'Job not found'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
+        # Allow safe field edits
+        for f in ['title', 'location', 'description', 'salary', 'deadline']:
+            if f in data:
+                setattr(job, f, data[f])
 
-    return JsonResponse({'error': 'Invalid method'}, status=405)
+        job.save()
+        return JsonResponse({'success': True})
+    except CompanyJob.DoesNotExist:
+        return JsonResponse({'error': 'Job not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
 
 def delete_company_job(request, job_id):
@@ -1184,16 +1172,16 @@ def apply_to_company_job(request):
     return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
-# Update student jobs API to include company jobs
+# In get_jobs_for_students function - UPDATE filter
 def get_jobs_for_students(request):
-    """Get active jobs for student dashboard - UPDATED to only show approved jobs"""
-    # Only show ACTIVE (approved) jobs
+    """Active & approved only: alumni jobs, faculty opps, company jobs"""
     alumni_jobs = Job.objects.filter(status='active').order_by('-created_at')
     company_jobs = CompanyJob.objects.filter(status='active').order_by('-created_at')
     faculty_opportunities = FacultyOpportunity.objects.filter(status='active').order_by('-created_at')
 
     jobs_data = []
-    # Add alumni jobs
+
+    # Alumni jobs
     for job in alumni_jobs:
         jobs_data.append({
             'id': job.id,
@@ -1211,7 +1199,9 @@ def get_jobs_for_students(request):
             'posted_by_name': 'Alumni'
         })
 
-    # Add company jobs - NEW
+    # Company jobs
+    from datetime import timedelta
+    from django.utils import timezone
     for job in company_jobs:
         jobs_data.append({
             'id': job.id,
@@ -1229,8 +1219,25 @@ def get_jobs_for_students(request):
             'posted_by_name': job.company.company_name
         })
 
-    return JsonResponse(jobs_data, safe=False)
+    # Faculty opportunities (expose alongside jobs)
+    for opportunity in faculty_opportunities:
+        jobs_data.append({
+            'id': opportunity.id,
+            'title': opportunity.title,
+            'company': opportunity.department,  # or 'CSE Department'
+            'location': "University Campus",
+            'posted_date': opportunity.posted_date.strftime('%B %d, %Y'),
+            'deadline': opportunity.deadline.strftime('%B %d, %Y'),
+            'job_type': opportunity.opportunity_type,
+            'description': opportunity.description,
+            'salary': 'University Stipend',
+            'requirements': opportunity.requirements.split('\n') if opportunity.requirements else [],
+            'is_new': opportunity.posted_date >= timezone.now().date() - timedelta(days=7),
+            'type': 'faculty_opportunity',
+            'posted_by_name': f"{opportunity.posted_by.first_name} {opportunity.posted_by.last_name}"
+        })
 
+    return JsonResponse(jobs_data, safe=False)
 
 # Add to views.py
 
@@ -1406,11 +1413,12 @@ def admin_users(request):
     return JsonResponse(users_data, safe=False)
 
 
+from django.views.decorators.http import require_POST
+
+@require_POST
 def approve_item(request, item_type, item_id):
-    """Approve a pending item"""
     if 'admin_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
-
     try:
         if item_type == 'job':
             item = Job.objects.get(id=item_id)
@@ -1420,20 +1428,20 @@ def approve_item(request, item_type, item_id):
             item = CompanyJob.objects.get(id=item_id)
         else:
             return JsonResponse({'error': 'Invalid item type'}, status=400)
+
+        if getattr(item, 'status') != 'pending':
+            return JsonResponse({'error': 'Only pending items can be approved'}, status=400)
 
         item.status = 'active'
         item.save()
-
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
-
+@require_POST
 def reject_item(request, item_type, item_id):
-    """Reject a pending item"""
     if 'admin_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
-
     try:
         if item_type == 'job':
             item = Job.objects.get(id=item_id)
@@ -1444,38 +1452,34 @@ def reject_item(request, item_type, item_id):
         else:
             return JsonResponse({'error': 'Invalid item type'}, status=400)
 
+        if getattr(item, 'status') != 'pending':
+            return JsonResponse({'error': 'Only pending items can be rejected'}, status=400)
+
         item.status = 'rejected'
         item.save()
-
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
-
+@require_POST
 def verify_company(request, company_id):
-    """Verify a company"""
     if 'admin_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
-
     try:
         company = Company.objects.get(id=company_id)
         company.is_verified = True
         company.save()
-
         return JsonResponse({'success': True})
     except Company.DoesNotExist:
         return JsonResponse({'error': 'Company not found'}, status=404)
 
-
+@require_POST
 def reject_company(request, company_id):
-    """Reject a company registration"""
     if 'admin_id' not in request.session:
         return JsonResponse({'error': 'Not authenticated'}, status=401)
-
     try:
         company = Company.objects.get(id=company_id)
-        company.delete()  # Or mark as rejected instead of deleting
-
+        company.delete()  # or set a rejected flag
         return JsonResponse({'success': True})
     except Company.DoesNotExist:
         return JsonResponse({'error': 'Company not found'}, status=404)
