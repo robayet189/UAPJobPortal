@@ -1415,14 +1415,15 @@ function renderJobCards(jobs) {
 
         // Determine if it's a faculty opportunity or alumni job
         const isFacultyOpportunity = job.type === 'faculty_opportunity';
+        const isJuniorBackend = job.title.includes("Junior Backend Developer");
         const companyDisplay = isFacultyOpportunity ? job.department : job.company;
         const locationDisplay = isFacultyOpportunity ? "University Campus" : job.location;
         const postedByDisplay = job.posted_by_name || (isFacultyOpportunity ? "Faculty" : "Alumni");
 
         // Type badge
         const typeBadge = isFacultyOpportunity ?
-            '<div style="position: absolute; top: 10px; right: 80px; background: var(--color-plum); color: black; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;"></div>' :
-            '<div style="position: absolute; top: 10px; right: 80px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;"></div>';
+            '<div style="position: absolute; top: 10px; right: 80px; background: var(--color-plum); color: black; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Faculty Opportunity</div>' :
+            '<div style="position: absolute; top: 10px; right: 80px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Alumni Job</div>';
 
         jobCard.innerHTML = `
             <div class="job-card-content">
@@ -1452,7 +1453,7 @@ function renderJobCards(jobs) {
 
 
 
-                ${job.applied ? '<div style="position: absolute; top: 40px; left: 1174px; background: var(--color-darkslateblue-200); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">APPLIED</div>' : ''}
+                ${job.applied ? '<div style="position: absolute; top: 40px; left: 1164px; background: var(--color-darkslateblue-200); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">APPLIED</div>' : ''}
 
                 <!-- Job Details -->
                 <div style="position: absolute; top: 145px; left: 954px; font-weight: 300; width: 220px;">
@@ -1486,8 +1487,6 @@ function renderJobCards(jobs) {
                 <div style="position: absolute; top: 24px; left: 102px; font-size: var(--fs-32); font-weight: 600; width: 596px;">
                     ${job.title}
                 </div>
-
-
             </div>
         `;
 
@@ -1503,10 +1502,19 @@ function renderJobCards(jobs) {
             this.style.transform = 'translateY(0)';
         });
 
-        // Add click event to job card
-        jobCard.addEventListener('click', function() {
-            viewJobDetails(job.id, job.type || 'job');
-        });
+        // STUDENT DASHBOARD BEHAVIOR: Only Junior Backend Developer navigates, others show modal
+        if (isJuniorBackend) {
+            // For Junior Backend Developer, navigate to specific page
+            jobCard.addEventListener('click', function() {
+                console.log('Junior Backend Developer clicked - navigating to specific page');
+                window.location.href = '/browseoppurtunity/job_id/';
+            });
+        } else {
+            // For all other jobs, show modal on click
+            jobCard.addEventListener('click', function() {
+                viewJobDetails(job.id, job.type || 'job');
+            });
+        }
 
         container.appendChild(jobCard);
     });
@@ -1603,12 +1611,6 @@ function viewJobDetails(opportunityId, opportunityType) {
     const opportunity = filteredJobs.find(j => j.id === opportunityId);
 
     if (opportunity) {
-        // Special case: Junior Backend Developer navigates to job description page
-        if (opportunity.title.includes("Junior Backend Developer")) {
-            window.location.href = '/browseoppurtunity/job_id/';
-            return;
-        }
-
         const isFacultyOpportunity = opportunityType === 'faculty_opportunity';
         const typeDisplay = isFacultyOpportunity ? 'Faculty Opportunity' : 'Alumni Job';
         const companyDisplay = isFacultyOpportunity ? opportunity.department : opportunity.company;
@@ -1706,8 +1708,6 @@ async function applyToOpportunity(opportunityId, opportunityType) {
         alert('Failed to apply. Please try again.');
     }
 }
-
-
 
     // Show modal function
     function showModal(content) {

@@ -197,7 +197,7 @@ def companylogin(request):
             # store session info
             request.session["company_id"] = company.id
             messages.success(request, "Login successful!")
-            return redirect("dashboard")  # replace with your dashboard/homepage
+            return redirect("company_dashboard")  # replace with your dashboard/homepage
         else:
             messages.error(request, "Invalid email or password.")
             return redirect("comlog")
@@ -256,6 +256,19 @@ def browse_opportunities(request):
 
 from django.db.models import Q  # Add this import
 from django.utils import timezone
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib import messages
+from django.db.models import Q
+from django.utils import timezone
+from datetime import timedelta
+import json
+from .models import (
+    Student, Alumni, Faculty, Company, Administrator,
+    Job, Application, FacultyOpportunity, FacultyApplication,
+    CompanyJob, CompanyApplication
+)
+
 
 def search_jobs(request):
     query = request.GET.get('q', '')
@@ -267,20 +280,60 @@ def search_jobs(request):
     alumni_jobs = Job.objects.filter(status='active')
     # Search faculty opportunities
     faculty_opportunities = FacultyOpportunity.objects.filter(status='active')
+    # Search company jobs - NEW
+    company_jobs = CompanyJob.objects.filter(status='active')
 
     if query:
         alumni_jobs = alumni_jobs.filter(
             Q(title__icontains=query) |
-            Q(company__icontains=query)
+            Q(company__icontains=query) |
+            Q(description__icontains=query)
         )
         faculty_opportunities = faculty_opportunities.filter(
             Q(title__icontains=query) |
-            Q(department__icontains=query)
+            Q(department__icontains=query) |
+            Q(description__icontains=query)
+        )
+        company_jobs = company_jobs.filter(  # NEW
+            Q(title__icontains=query) |
+            Q(description__icontains=query) |
+            Q(requirements__icontains=query)
         )
 
     if job_type:
-        alumni_jobs = alumni_jobs.filter(job_type=job_type)
-        faculty_opportunities = faculty_opportunities.filter(opportunity_type=job_type)
+        # Map frontend job types to model values
+        type_mapping = {
+            'full': 'full',
+            'part': 'part',
+            'intern': 'intern'
+        }
+        mapped_type = type_mapping.get(job_type)
+        if mapped_type:
+            alumni_jobs = alumni_jobs.filter(job_type=mapped_type)
+            faculty_opportunities = faculty_opportunities.filter(opportunity_type=mapped_type)
+            company_jobs = company_jobs.filter(job_type=mapped_type)  # NEW
+
+    if location:
+        alumni_jobs = alumni_jobs.filter(location__icontains=location)
+        company_jobs = company_jobs.filter(location__icontains=location)  # NEW
+
+    # Handle posted date filter
+    if posted:
+        today = timezone.now().date()
+        if posted == 'today':
+            alumni_jobs = alumni_jobs.filter(created_at__date=today)
+            faculty_opportunities = faculty_opportunities.filter(created_at__date=today)
+            company_jobs = company_jobs.filter(created_at__date=today)  # NEW
+        elif posted == 'week':
+            week_ago = today - timedelta(days=7)
+            alumni_jobs = alumni_jobs.filter(created_at__date__gte=week_ago)
+            faculty_opportunities = faculty_opportunities.filter(created_at__date__gte=week_ago)
+            company_jobs = company_jobs.filter(created_at__date__gte=week_ago)  # NEW
+        elif posted == 'month':
+            month_ago = today - timedelta(days=30)
+            alumni_jobs = alumni_jobs.filter(created_at__date__gte=month_ago)
+            faculty_opportunities = faculty_opportunities.filter(created_at__date__gte=month_ago)
+            company_jobs = company_jobs.filter(created_at__date__gte=month_ago)  # NEW
 
     # Combine results
     jobs_data = []
@@ -296,7 +349,12 @@ def search_jobs(request):
             'deadline': job.deadline.strftime('%B %d, %Y'),
             'is_new': job.is_new,
             'type': 'job',
-            'posted_by': 'Alumni'
+            'job_type': job.job_type,
+            'description': job.description,
+            'salary': job.salary,
+            'requirements': job.requirements.split('\n') if job.requirements else [],
+            'posted_by': 'Alumni',
+            'posted_date': job.created_at.strftime('%B %d, %Y')
         })
 
     # Add faculty opportunities
@@ -304,13 +362,35 @@ def search_jobs(request):
         jobs_data.append({
             'id': opportunity.id,
             'title': opportunity.title,
-            'company': opportunity.department,
+            'department': opportunity.department,
             'location': "University Campus",
-            'posted': opportunity.posted_date.strftime('%B %d, %Y'),
+            'posted_date': opportunity.posted_date.strftime('%B %d, %Y'),
             'deadline': opportunity.deadline.strftime('%B %d, %Y'),
-            'is_new': False,  # Simple approach - mark all faculty opportunities as not new
+            'is_new': False,
             'type': 'faculty_opportunity',
-            'posted_by': 'Faculty'
+            'opportunity_type': opportunity.opportunity_type,
+            'description': opportunity.description,
+            'requirements': opportunity.requirements.split('\n') if opportunity.requirements else [],
+            'posted_by': f"{opportunity.posted_by.first_name} {opportunity.posted_by.last_name}",
+            'salary': 'University Stipend'
+        })
+
+    # ADD COMPANY JOBS - NEW
+    for job in company_jobs:
+        jobs_data.append({
+            'id': job.id,
+            'title': job.title,
+            'company': job.company.company_name,
+            'location': job.location,
+            'type': 'company_job',
+            'job_type': job.job_type,
+            'description': job.description,
+            'salary': job.salary,
+            'requirements': job.requirements.split('\n') if job.requirements else [],
+            'deadline': job.deadline.strftime('%B %d, %Y'),
+            'posted_date': job.posted_date.strftime('%B %d, %Y'),
+            'posted_by': job.company.company_name,
+            'is_new': job.posted_date >= timezone.now().date() - timedelta(days=7)
         })
 
     return JsonResponse(jobs_data, safe=False)
@@ -860,3 +940,297 @@ def apply_to_faculty_opportunity(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+def company_dashboard(request):
+    if 'company_id' not in request.session:
+        return redirect('comlog')
+    return render(request, 'myapp/companydashboard.html')
+
+
+def get_company_profile(request):
+    """Get company profile data"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+        return JsonResponse({
+            'id': company.id,
+            'company_name': company.company_name,
+            'email': company.email,
+            'phone_number': company.phone_number,
+            'company_type': company.company_type
+        })
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+
+
+def get_company_stats(request):
+    """Get company dashboard statistics"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+
+        # Count jobs by status
+        active_jobs = CompanyJob.objects.filter(company=company, status='active').count()
+        pending_jobs = CompanyJob.objects.filter(company=company, status='pending').count()
+        closed_jobs = CompanyJob.objects.filter(company=company, status='closed').count()
+        draft_jobs = CompanyJob.objects.filter(company=company, status='draft').count()
+        total_jobs = CompanyJob.objects.filter(company=company).count()
+
+        # Count total applicants across all jobs
+        total_applicants = CompanyApplication.objects.filter(job__company=company).count()
+
+        return JsonResponse({
+            'active_jobs': active_jobs,
+            'pending_jobs': pending_jobs,
+            'closed_jobs': closed_jobs,
+            'draft_jobs': draft_jobs,
+            'total_applicants': total_applicants,
+            'total_jobs': total_jobs
+        })
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+
+
+def get_company_jobs(request):
+    """Get all jobs for a company"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+        jobs = CompanyJob.objects.filter(company=company).order_by('-created_at')
+
+        jobs_data = []
+        for job in jobs:
+            jobs_data.append({
+                'id': job.id,
+                'title': job.title,
+                'location': job.location,
+                'job_type': job.job_type,
+                'status': job.status,
+                'description': job.description,
+                'requirements': job.requirements.split('\n') if job.requirements else [],
+                'salary': job.salary,
+                'expected_applicants': job.expected_applicants,
+                'deadline': job.deadline.strftime('%Y-%m-%d'),
+                'posted_date': job.posted_date.strftime('%B %d, %Y'),
+                'applicants_count': CompanyApplication.objects.filter(job=job).count()
+            })
+
+        return JsonResponse(jobs_data, safe=False)
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+
+
+def post_company_job(request):
+    """Handle job posting from company dashboard"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            company = Company.objects.get(id=request.session['company_id'])
+
+            job = CompanyJob.objects.create(
+                title=data['title'],
+                company=company,
+                location=data['location'],
+                description=data['description'],
+                requirements='\n'.join(data.get('requirements', [])),
+                salary=data.get('salary', ''),
+                job_type=data['job_type'],
+                expected_applicants=data.get('expected_applicants', 0),
+                deadline=data['deadline'],
+                status=data.get('status', 'active')
+            )
+
+            return JsonResponse({'success': True, 'job_id': job.id})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+def get_job_applicants(request, job_id):
+    """Get applicants for a specific company job"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+        job = CompanyJob.objects.get(id=job_id, company=company)
+        applications = CompanyApplication.objects.filter(job=job).select_related('student')
+
+        applicants_data = []
+        for application in applications:
+            applicants_data.append({
+                'id': application.student.id,
+                'name': f"{application.student.first_name} {application.student.last_name}",
+                'email': application.student.email,
+                'student_id': application.student.student_id,
+                'graduation_year': application.student.graduation_year,
+                'applied_at': application.applied_at.strftime('%B %d, %Y %H:%M'),
+                'status': application.status
+            })
+
+        return JsonResponse(applicants_data, safe=False)
+    except CompanyJob.DoesNotExist:
+        return JsonResponse({'error': 'Job not found'}, status=404)
+
+
+def update_company_job(request, job_id):
+    """Update a company job"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            company = Company.objects.get(id=request.session['company_id'])
+            job = CompanyJob.objects.get(id=job_id, company=company)
+
+            # Update fields if provided
+            if 'status' in data:
+                job.status = data['status']
+            if 'title' in data:
+                job.title = data['title']
+            if 'location' in data:
+                job.location = data['location']
+            if 'description' in data:
+                job.description = data['description']
+            if 'salary' in data:
+                job.salary = data['salary']
+            if 'deadline' in data:
+                job.deadline = data['deadline']
+
+            job.save()
+            return JsonResponse({'success': True})
+        except CompanyJob.DoesNotExist:
+            return JsonResponse({'error': 'Job not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+def delete_company_job(request, job_id):
+    """Delete a company job"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+        job = CompanyJob.objects.get(id=job_id, company=company)
+        job.delete()
+        return JsonResponse({'success': True})
+    except CompanyJob.DoesNotExist:
+        return JsonResponse({'error': 'Job not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+def get_recent_applicants(request):
+    """Get recent applicants for company dashboard"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+
+        # Get recent applications (last 5)
+        recent_applications = CompanyApplication.objects.filter(
+            job__company=company
+        ).select_related('student', 'job').order_by('-applied_at')[:5]
+
+        applicants_data = []
+        for application in recent_applications:
+            applicants_data.append({
+                'name': f"{application.student.first_name} {application.student.last_name}",
+                'position': application.job.title,
+                'time': application.applied_at.strftime('%H:%M'),
+                'date': application.applied_at.strftime('%b %d, %Y')
+            })
+
+        return JsonResponse(applicants_data, safe=False)
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+
+
+def apply_to_company_job(request):
+    """Handle applications to company jobs from students"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            student = Student.objects.get(id=request.session['student_id'])
+            job = CompanyJob.objects.get(id=data['job_id'])
+
+            # Check if already applied
+            if CompanyApplication.objects.filter(student=student, job=job).exists():
+                return JsonResponse({'error': 'Already applied to this job'}, status=400)
+
+            CompanyApplication.objects.create(student=student, job=job)
+            return JsonResponse({'success': True})
+        except CompanyJob.DoesNotExist:
+            return JsonResponse({'error': 'Job not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+# Update student jobs API to include company jobs
+def get_jobs_for_students(request):
+    """Get active jobs for student dashboard - UPDATED to include company jobs"""
+    # Alumni jobs
+    alumni_jobs = Job.objects.filter(status='active').order_by('-created_at')
+    # Company jobs - NEW
+    company_jobs = CompanyJob.objects.filter(status='active').order_by('-created_at')
+
+    jobs_data = []
+
+    # Add alumni jobs
+    for job in alumni_jobs:
+        jobs_data.append({
+            'id': job.id,
+            'title': job.title,
+            'company': job.company,
+            'location': job.location,
+            'posted': job.posted,
+            'deadline': job.deadline.strftime('%B %d, %Y'),
+            'job_type': job.job_type,
+            'description': job.description,
+            'salary': job.salary,
+            'requirements': job.requirements.split('\n') if job.requirements else [],
+            'is_new': job.is_new,
+            'type': 'job',
+            'posted_by_name': 'Alumni'
+        })
+
+    # Add company jobs - NEW
+    for job in company_jobs:
+        jobs_data.append({
+            'id': job.id,
+            'title': job.title,
+            'company': job.company.company_name,
+            'location': job.location,
+            'posted_date': job.posted_date.strftime('%B %d, %Y'),
+            'deadline': job.deadline.strftime('%B %d, %Y'),
+            'job_type': job.job_type,
+            'description': job.description,
+            'salary': job.salary,
+            'requirements': job.requirements.split('\n') if job.requirements else [],
+            'is_new': job.posted_date >= timezone.now().date() - timedelta(days=7),
+            'type': 'company_job',
+            'posted_by_name': job.company.company_name
+        })
+
+    return JsonResponse(jobs_data, safe=False)
