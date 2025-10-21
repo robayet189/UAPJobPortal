@@ -835,6 +835,7 @@ option{
 }
 .dashboard-wrapper {
     width: 197px;
+    margin-left: 300px;
     border-radius: var(--br-6);
     background-color: var(--color-midnightblue-200);
     border: 6px solid var(--color-midnightblue-100);
@@ -843,13 +844,17 @@ option{
     align-items: center;
     justify-content: center;
     padding: var(--padding-10) 3px var(--padding-10) var(--padding-10);
+
 }
 .dashboard {
     width: 149px;
+    left: 30px;
     position: relative;
     display: inline-block;
     flex-shrink: 0;
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    color: white;
 }
 .logo-parent {
     position: absolute;
@@ -944,9 +949,9 @@ input{
               <div class="quick-links">
                      <b class="browse-opportunities-quick-links">Quick Links</b>
                      <a href="{% url 'home' %}" class="home">Home </a>
-                     <div class="jobs">Jobs</div>
-                    <a href="{% url 'login' %}" class="login">Login</a>
-                     <a href="{% url 'register' %}" class="register">Register</a>
+
+                    <a href="{% url 'login' %}" class="jobs">Login</a>
+                     <a href="{% url 'register' %}" class="login">Register</a>
               </div>
               <div class="contact-us">
                      <b class="browse-opportunities-contact-us">Contact Us</b>
@@ -1042,11 +1047,9 @@ input{
            </div>
 
            <div class="home-parent">
-              <b class="browse-opportunities-home">Home</b>
-              <b class="browse-opportunities-home">Jobs</b>
-              <b class="browse-opportunities-home">About</b>
+
               <div class="dashboard-wrapper">
-                     <b class="dashboard">Dashboard</b>
+                     <a href="{% url 'home' %}" class="dashboard">Back</a>
               </div>
            </div>
            <div class="logo-parent">
@@ -1068,11 +1071,10 @@ const locationSelect = document.getElementById('locationSelect');
 const postedSelect = document.getElementById('dataPost');
 const resultsDiv = document.getElementById('results');
 
-// First, let's make sure the results container is visible and properly positioned
 console.log('Initializing job search...');
 console.log('Results div found:', !!resultsDiv);
 
-// Add some CSS to ensure results are visible
+// Add CSS to ensure results are visible
 if (resultsDiv) {
     resultsDiv.style.cssText = `
         position: absolute;
@@ -1088,73 +1090,206 @@ if (resultsDiv) {
     `;
 }
 
-const mockJobs = [
-    {
-        id: 1,
-        title: "WordPress Developer",
-        company: "Workspace Infotec Limited",
-        location: "Dhaka, BD",
-        posted: "16 hours ago",
-        deadline: "July 31, 2025",
-        is_new: true,
-        job_type: "full"
-    },
-    {
-        id: 2,
-        title: "Junior Backend Developer (Laravel)",
-        company: "DISYSTEM",
-        location: "Dhaka, BD",
-        posted: "10 days ago",
-        deadline: "August 2, 2025",
-        is_new: true,
-        job_type: "full"
-    },
-    {
-        id: 3,
-        title: "Research Assistant",
-        company: "CSE Department University",
-        location: "Dhaka, BD",
-        posted: "July 15, 2024",
-        deadline: "August 10, 2024",
-        is_new: false,
-        job_type: "part"
-    },
-    {
-        id: 4,
-        title: "Frontend Intern",
-        company: "Tech Solutions Ltd",
-        location: "Chittagong, BD",
-        posted: "2 days ago",
-        deadline: "August 15, 2025",
-        is_new: true,
-        job_type: "intern"
-    },
-    {
-        id: 5,
-        title: "Data Analyst",
-        company: "Analytics Pro",
-        location: "Rajshahi, BD",
-        posted: "5 hours ago",
-        deadline: "August 5, 2025",
-        is_new: true,
-        job_type: "full"
+// Create Modal HTML dynamically
+function createModal() {
+    const modalHTML = `
+        <div id="jobModal" style="
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        ">
+            <div style="
+                background: linear-gradient(135deg, #303a95, #46479d);
+                border: 2px solid #969dc9;
+                border-radius: 14px;
+                padding: 30px;
+                max-width: 800px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                color: white;
+                position: relative;
+            ">
+                <button id="closeModal" style="
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 24px;
+                    cursor: pointer;
+                ">×</button>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Add event listener for close button
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+
+    // Close modal when clicking outside
+    document.getElementById('jobModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+}
+
+function showModal() {
+    document.getElementById('jobModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('jobModal').style.display = 'none';
+}
+
+function renderJobModal(job) {
+    const isFacultyOpportunity = job.type === 'faculty_opportunity';
+    const companyDisplay = isFacultyOpportunity ? job.department : job.company;
+    const locationDisplay = isFacultyOpportunity ? "University Campus" : job.location;
+    const postedByDisplay = job.posted_by || (isFacultyOpportunity ? "Faculty" : "Alumni");
+
+    const modalContent = document.getElementById('modalContent');
+    modalContent.innerHTML = `
+        <h2 style="font-size: 32px; margin-bottom: 10px; color: #90d1f1;">${job.title || 'No Title'}</h2>
+        <h3 style="font-size: 24px; color: #fefefe; margin-bottom: 20px;">${companyDisplay || 'No Company'}</h3>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                <strong style="color: #90d1f1;">Location:</strong><br>
+                ${locationDisplay || 'Not specified'}
+            </div>
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                <strong style="color: #90d1f1;">Job Type:</strong><br>
+                ${isFacultyOpportunity ? 'Faculty Opportunity' : 'Alumni Job'}
+            </div>
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                <strong style="color: #90d1f1;">Posted Date:</strong><br>
+                ${job.posted || job.posted_date || 'Not specified'}
+            </div>
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                <strong style="color: #90d1f1;">Deadline:</strong><br>
+                ${job.deadline || 'Not specified'}
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <strong style="color: #90d1f1; font-size: 18px;">Posted by:</strong><br>
+            <span style="font-size: 16px;">${postedByDisplay}</span>
+        </div>
+
+        ${job.description ? `
+        <div style="margin-bottom: 20px;">
+            <strong style="color: #90d1f1; font-size: 18px;">Description:</strong><br>
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                ${job.description}
+            </div>
+        </div>
+        ` : ''}
+
+        ${job.requirements && job.requirements.length > 0 ? `
+        <div style="margin-bottom: 20px;">
+            <strong style="color: #90d1f1; font-size: 18px;">Requirements:</strong><br>
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                ${Array.isArray(job.requirements) ? job.requirements.map(req => `• ${req}`).join('<br>') : job.requirements}
+            </div>
+        </div>
+        ` : ''}
+
+        ${job.salary ? `
+        <div style="margin-bottom: 20px;">
+            <strong style="color: #90d1f1; font-size: 18px;">Salary:</strong><br>
+            <span style="font-size: 16px;">${job.salary}</span>
+        </div>
+        ` : ''}
+
+
+    `;
+
+
+
+    showModal();
+}
+
+function applyToJob(job) {
+    const isFacultyOpportunity = job.type === 'faculty_opportunity';
+
+    // Check if user is logged in (you'll need to implement this based on your auth system)
+    const isLoggedIn = checkUserLoggedIn(); // Implement this function
+
+    if (!isLoggedIn) {
+        alert('Please log in to apply for this opportunity.');
+        return;
     }
-];
 
-// Function to handle job title click for Junior Backend Developer only
-function handleJuniorBackendClick() {
-    console.log('Junior Backend Developer clicked - navigating to next page');
+    // Make API call to apply for the job
+    const applyUrl = isFacultyOpportunity ? '/api/opportunities/apply/' : '/api/company/jobs/apply/';
+    const payload = {
+        [isFacultyOpportunity ? 'opportunity_id' : 'job_id']: job.id
+    };
 
-    // Navigate to the next page - choose one method below:
+    fetch(applyUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert('Application submitted successfully!');
+            closeModal();
+        } else {
+            alert('Error: ' + (result.error || 'Failed to submit application'));
+        }
+    })
+    .catch(error => {
+        console.error('Error applying to job:', error);
+        alert('Failed to submit application. Please try again.');
+    });
+}
 
-    // Method 1: Simple redirect
-    //window.location.href = '/job_id?id=2&title=Junior+Backend+Developer';
+// CSRF token helper function (you might already have this)
+function getCSRFToken() {
+    const name = 'csrftoken';
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
-    // Method 2: Or use this alternative
-     window.location.href = '/browseoppurtunity/job_id/';
+// Placeholder function - implement based on your authentication system
+function checkUserLoggedIn() {
+    // This should check if the user is logged in
+    // For now, return true for testing
+    return true;
 
-    // Method 3: Or if you want to use a different page name
-    // window.location.href = '/backend-job-details.html';
+    // In your actual implementation, you might check:
+    // - Session storage
+    // - Cookies
+    // - Make an API call to verify authentication
+    // Example:
+    // return localStorage.getItem('userToken') !== null;
 }
 
 function renderJobs(jobs) {
@@ -1179,14 +1314,14 @@ function renderJobs(jobs) {
                 font-size: 20px;
                 background: rgba(0,0,0,0.3);
             ">
-                No jobs found. Try broadening your search criteria.
+                No opportunities found. Try broadening your search criteria.
             </div>
         `;
-        console.log('No jobs to display');
+        console.log('No opportunities to display');
         return;
     }
 
-    console.log('Rendering', jobs.length, 'jobs');
+    console.log('Rendering', jobs.length, 'opportunities');
 
     jobs.forEach((job, index) => {
         const jobCard = document.createElement('div');
@@ -1199,10 +1334,15 @@ function renderJobs(jobs) {
             border-radius: 14px;
             background: transparent;
             overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         `;
 
-        // Check if this is the Junior Backend Developer job
-        const isJuniorBackend = job.title === "Junior Backend Developer (Laravel)";
+        // Determine if it's a faculty opportunity or alumni job
+        const isFacultyOpportunity = job.type === 'faculty_opportunity';
+        const companyDisplay = isFacultyOpportunity ? job.department : job.company;
+        const locationDisplay = isFacultyOpportunity ? "University Campus" : job.location;
+        const postedByDisplay = job.posted_by || (isFacultyOpportunity ? "Faculty" : "Alumni");
 
         jobCard.innerHTML = `
             <!-- NEW Badge -->
@@ -1220,6 +1360,7 @@ function renderJobs(jobs) {
                 z-index: 10;
             ">NEW</div>
 
+
             <!-- Company Logo -->
             <div style="
                 position: absolute;
@@ -1227,7 +1368,7 @@ function renderJobs(jobs) {
                 left: 18px;
                 width: 58px;
                 height: 58px;
-                background: #383790;
+                background: ${isFacultyOpportunity ? '#8b5cf6' : '#383790'};
                 border: 1px solid white;
                 border-radius: 8px;
                 display: flex;
@@ -1237,10 +1378,10 @@ function renderJobs(jobs) {
                 color: white;
                 font-size: 20px;
                 opacity: 0.8;
-            ">${job.company ? job.company.charAt(0).toUpperCase() : 'C'}</div>
+            ">${companyDisplay ? companyDisplay.charAt(0).toUpperCase() : 'C'}</div>
 
-            <!-- Job Title - Only clickable for Junior Backend Developer -->
-            <div id="job-title-${job.id}" style="
+            <!-- Job Title -->
+            <div style="
                 position: absolute;
                 top: 24px;
                 left: 102px;
@@ -1248,10 +1389,9 @@ function renderJobs(jobs) {
                 font-weight: 600;
                 color: white;
                 font-family: 'Lato', sans-serif;
-                ${isJuniorBackend ? 'cursor: pointer; transition: color 0.2s ease;' : ''}
             ">${job.title || 'No Title'}</div>
 
-            <!-- Company Name -->
+            <!-- Company/Department Name -->
             <div style="
                 position: absolute;
                 top: 66px;
@@ -1260,7 +1400,9 @@ function renderJobs(jobs) {
                 font-weight: 300;
                 color: #fefefe;
                 font-family: 'Roboto', sans-serif;
-            ">${job.company || 'No Company'}</div>
+            ">${companyDisplay || 'No Company'}</div>
+
+
 
             <!-- Location -->
             <div style="
@@ -1277,7 +1419,7 @@ function renderJobs(jobs) {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                     <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
                 </svg>
-                ${job.location || 'Location not specified'}
+                ${locationDisplay || 'Location not specified'}
             </div>
 
             <!-- Posted Date -->
@@ -1296,7 +1438,7 @@ function renderJobs(jobs) {
                     <path d="M19 3H18V1H16V3H8V1H6V3H5C3.89 3 3.01 3.9 3.01 5L3 19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V8H19V19Z"/>
                     <path d="M7 10H11V14H7V10Z"/>
                 </svg>
-                Posted: ${job.posted || 'Date not specified'}
+                Posted: ${job.posted || job.posted_date || 'Date not specified'}
             </div>
 
             <!-- Deadline -->
@@ -1314,32 +1456,30 @@ function renderJobs(jobs) {
 
         resultsDiv.appendChild(jobCard);
 
-        // Add click event listener ONLY for Junior Backend Developer
-        if (isJuniorBackend) {
-            const jobTitleElement = document.getElementById(`job-title-${job.id}`);
-            if (jobTitleElement) {
-                jobTitleElement.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent event bubbling
-                    handleJuniorBackendClick();
-                });
+        // BROWSE OPPORTUNITY BEHAVIOR: ALL cards show modal
+        jobCard.addEventListener('click', function() {
+            console.log('Job card clicked:', job.title);
+            renderJobModal(job);
+        });
 
-                // Add hover effects only for Junior Backend Developer
-                jobTitleElement.addEventListener('mouseenter', () => {
-                    jobTitleElement.style.color = '#4fc3f7'; // Light blue color on hover
-                    jobTitleElement.style.textDecoration = 'underline';
-                });
+        // Add hover effect for all job cards
+        jobCard.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+            this.style.borderColor = '#a3b9e9';
+        });
 
-                jobTitleElement.addEventListener('mouseleave', () => {
-                    jobTitleElement.style.color = 'white';
-                    jobTitleElement.style.textDecoration = 'none';
-                });
-            }
-        }
+        jobCard.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+            this.style.borderColor = '#969dc9';
+        });
 
-        console.log('Job card', index + 1, 'added:', job.title, '- Clickable:', isJuniorBackend);
+        console.log('Opportunity card', index + 1, 'added:', job.title,
+                   '- Type:', isFacultyOpportunity ? 'Faculty' : 'Alumni');
     });
 
-    console.log('All jobs rendered successfully');
+    console.log('All opportunities rendered successfully');
 }
 
 function fetchJobs() {
@@ -1352,48 +1492,7 @@ function fetchJobs() {
 
     console.log('Filter criteria:', { query, jobType, location, posted });
 
-    // First filter mock data based on search criteria
-    let filteredJobs = mockJobs.filter(job => {
-        let matches = true;
-
-        // Search query filter (title and company)
-        if (query) {
-            const titleMatch = job.title.toLowerCase().includes(query);
-            const companyMatch = job.company.toLowerCase().includes(query);
-            matches = matches && (titleMatch || companyMatch);
-        }
-
-        // Job type filter
-        if (jobType && job.job_type) {
-            matches = matches && (job.job_type === jobType);
-        }
-
-        // Location filter
-        if (location) {
-            matches = matches && job.location.toLowerCase().includes(location);
-        }
-
-        // Posted date filter (simplified for mock data)
-        if (posted) {
-            // This is a simple implementation for mock data
-            // You would need more complex logic for real dates
-            if (posted === 'today') {
-                matches = matches && job.posted.includes('hour') || job.posted.includes('today');
-            } else if (posted === 'week') {
-                matches = matches && (job.posted.includes('day') && parseInt(job.posted) <= 7);
-            }
-            // Add more date logic as needed
-        }
-
-        return matches;
-    });
-
-    console.log('Filtered jobs:', filteredJobs.length);
-
-    // Show filtered mock data
-    renderJobs(filteredJobs);
-
-    // Then try API call with actual filters
+    // Make API call to get REAL data (both alumni jobs and faculty opportunities)
     try {
         const params = new URLSearchParams();
         if (query) params.append('q', query);
@@ -1410,28 +1509,58 @@ function fetchJobs() {
                 return res.json();
             })
             .then(apiJobs => {
-                console.log('API response:', apiJobs);
+                console.log('API response received:', apiJobs);
 
-                // Handle different API response formats
-                let jobsFromAPI = apiJobs;
-                if (apiJobs && apiJobs.jobs) jobsFromAPI = apiJobs.jobs;
-                if (apiJobs && apiJobs.results) jobsFromAPI = apiJobs.results;
-
-                if (jobsFromAPI && jobsFromAPI.length > 0) {
-                    console.log('Using API data:', jobsFromAPI.length, 'jobs');
-                    renderJobs(jobsFromAPI);
+                if (apiJobs && apiJobs.length > 0) {
+                    console.log('Using API data:', apiJobs.length, 'opportunities');
+                    console.log('Opportunity types:', apiJobs.map(job => ({
+                        title: job.title,
+                        type: job.type,
+                        company: job.company
+                    })));
+                    renderJobs(apiJobs);
                 } else {
-                    console.log('No API results, keeping filtered mock data');
+                    console.log('No API results found');
+                    renderJobs([]);
                 }
             })
             .catch(error => {
-                console.log('API call failed, using filtered mock data:', error);
-                // We already showed filtered mock data, so no need to do anything
+                console.log('API call failed:', error);
+                // Show error message but don't use mock data
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = `
+                        <div style="
+                            border: 2px solid #969dc9;
+                            border-radius: 14px;
+                            padding: 50px;
+                            text-align: center;
+                            color: white;
+                            font-size: 20px;
+                            background: rgba(0,0,0,0.3);
+                        ">
+                            Unable to load opportunities. Please try again later.
+                        </div>
+                    `;
+                }
             });
 
     } catch (error) {
         console.log('API call error:', error);
-        // We already showed filtered mock data
+        if (resultsDiv) {
+            resultsDiv.innerHTML = `
+                <div style="
+                    border: 2px solid #969dc9;
+                    border-radius: 14px;
+                    padding: 50px;
+                    text-align: center;
+                    color: white;
+                    font-size: 20px;
+                    background: rgba(0,0,0,0.3);
+                ">
+                    Error loading opportunities. Please refresh the page.
+                </div>
+            `;
+        }
     }
 }
 
@@ -1466,9 +1595,12 @@ document.addEventListener('DOMContentLoaded', function() {
         height: resultsDiv.offsetHeight
     } : 'Not found');
 
-    // Show jobs immediately
+    // Create modal
+    createModal();
+
+    // Show opportunities immediately
     setTimeout(() => {
-        console.log('Initializing job display...');
+        console.log('Initializing opportunities display...');
         fetchJobs();
     }, 100);
 });
@@ -1478,6 +1610,7 @@ if (document.readyState === 'loading') {
     console.log('Document still loading...');
 } else {
     console.log('Document already ready, initializing...');
+    createModal();
     setTimeout(() => {
         fetchJobs();
     }, 100);

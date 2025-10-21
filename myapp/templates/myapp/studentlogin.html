@@ -395,7 +395,7 @@ body {
 
               <div class="log-in-as-a-student-back-to-home">Login as Student</div>
            </div>
-           <form method="post">
+           <form method="post" action="{% url 'dashboard' %}">
             {% csrf_token %}
             <!-- Replace the static email/password fields with Django form fields -->
             <div class="frame-group">
@@ -411,13 +411,8 @@ body {
                 <div class="frame-child">
                     <input type="password" name="password" value="" required />
                 </div>
-
              <div class="forgot-password">
                     <a href="{% url 'forgotpass' source='student' %}">Forgot Password?</a>
-
-				<div class="forgot-password">
-                    <a href="{% url 'stdreg' %}">Forgot Password?</a>
-
                 </div>
             </div>
 
@@ -434,8 +429,7 @@ body {
               <div class="dont-have-an">Haven’t verified your account?</div>
               <div class="verify-now">Verify Now</div>
            </div>
-
-           </form>
+        </form>
 
 
            </div>

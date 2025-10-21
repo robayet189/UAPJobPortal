@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-black: #000;
+            --color-darkgreen: #1b6700;
+            --color-darkslateblue-100: #6d68ab;
+            --color-darkslateblue-200: #46479d;
+            --color-firebrick: #a31e1e;
+            --color-gainsboro: #d9d9d9;
+            --color-gray: #fefefe;
+            --color-honeydew: #dcfce7;
+            --color-lightgreen: #51d784;
+            --color-lightsteelblue-100: #a3b9e9;
+            --color-lightsteelblue-200: #969dc9;
+            --color-midnightblue-100: #21287d;
+            --color-midnightblue-200: #131a73;
+            --color-midnightblue-300: rgba(33, 40, 125, 0.2);
+            --color-palegoldenrod: #f8eeb1;
+            --color-palegreen: #9af082;
+            --color-plum: #d5b6f0;
+            --color-silver: #d9c3c3;
+            --color-skyblue: #90d1f1;
+            --color-snow: #fffcfc;
+            --color-white: #fff;
+            --color-lemonchiffon: #fef9c3;
+
+            /* Font Sizes */
+            --fs-10: 10px;
+            --fs-16: 16px;
+            --fs-20: 20px;
+            --fs-22: 22px;
+            --fs-24: 24px;
+            --fs-26: 26px;
+            --fs-30: 30px;
+            --fs-32: 32px;
+            --fs-36: 36px;
+            --fs-64: 64px;
+
+            /* Border Radius */
+            --br-6: 6px;
+            --br-10: 10px;
+            --br-14: 14px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, rgba(48, 58, 149, 0.2), rgba(118, 25, 125, 0.2) 25%, rgba(173, 0, 107, 0.2) 66%),
+                        linear-gradient(rgba(14, 82, 150, 0.2), rgba(14, 82, 150, 0.2)), #303a95;
+            color: var(--color-white);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .dashboard-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--color-gainsboro);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--color-darkslateblue-200);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            font-size: 20px;
+        }
+
+        .nav-links a {
+            color: var(--color-white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-skyblue);
+        }
+
+        .dashboard-btn {
+            background-color: var(--color-midnightblue-300);
+            border: 4px solid var(--color-midnightblue-100);
+            border-radius: var(--br-6);
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--color-white);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text {
+            font-size: 28px;
+        }
+
+        .welcome-text span {
+            font-weight: 600;
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: var(--br-10);
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.active-jobs {
+            background-color: var(--color-lightsteelblue-100);
+            color: var(--color-black);
+        }
+
+        .stat-card.pending {
+            background-color: var(--color-palegoldenrod);
+            color: var(--color-black);
+        }
+
+        .stat-card.total-applicants {
+            background-color: var(--color-honeydew);
+            color: var(--color-black);
+        }
+
+        .stat-card.total-jobs {
+            background-color: var(--color-plum);
+            color: var(--color-black);
+        }
+
+        .stat-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-subtitle {
+            font-size: 18px;
+        }
+
+        /* Jobs Section */
+        .jobs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .post-job-btn {
+            background-color: var(--color-midnightblue-200);
+            border: none;
+            border-radius: var(--br-6);
+            padding: 15px 25px;
+            color: var(--color-white);
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-job-btn:hover {
+            background-color: var(--color-darkslateblue-200);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: flex-start;
+            gap: 280px;
+        }
+
+        .tab {
+            padding: 12px 0;
+            cursor: pointer;
+            font-size: 20px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .tab.active {
+            color: var(--color-skyblue);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-skyblue);
+        }
+
+        /* Job Cards */
+        .job-cards-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .job-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--color-lightsteelblue-200);
+            border-radius: var(--br-14);
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .job-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .job-location {
+            font-size: 24px;
+            color: var(--color-gray);
+            margin-bottom: 15px;
+        }
+
+        .job-status {
+            background-color: var(--color-lightgreen);
+            color: var(--color-darkgreen);
+            padding: 5px 12px;
+            border-radius: var(--br-10);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .job-status.pending {
+            background-color: var(--color-palegoldenrod);
+            color: var(--color-black);
+        }
+
+        .job-status.closed {
+            background-color: var(--color-silver);
+            color: var(--color-black);
+        }
+
+        .job-details {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .job-tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: var(--br-10);
+            font-size: 14px;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: var(--br-6);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        .view-applicants {
+            background-color: var(--color-midnightblue-200);
+            color: var(--color-white);
+        }
+
+        .edit-job {
+            background-color: var(--color-midnightblue-300);
+            color: var(--color-white);
+            border: 2px solid var(--color-midnightblue-100);
+        }
+
+        .close-job {
+            background-color: transparent;
+            color: var(--color-white);
+            border: 2px solid var(--color-firebrick);
+        }
+
+        /* Sidebar Sections */
+        .sidebar-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .main-content {
+            grid-column: 1;
+        }
+
+        .sidebar {
+            grid-column: 2;
+        }
+
+        .sidebar-section {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--color-lightsteelblue-200);
+            border-radius: var(--br-14);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--color-skyblue);
+        }
+
+        .applicant-item {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .applicant-item:last-child {
+            border-bottom: none;
+        }
+
+        .applicant-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .applicant-position {
+            font-size: 14px;
+            color: var(--color-gray);
+            margin-bottom: 5px;
+        }
+
+        .applicant-time {
+            font-size: 12px;
+            color: var(--color-silver);
+        }
+
+        .view-all-btn {
+            background-color: var(--color-midnightblue-200);
+            color: var(--color-white);
+            border: none;
+            border-radius: var(--br-6);
+            padding: 10px 20px;
+            width: 100%;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .view-all-btn:hover {
+            background-color: var(--color-darkslateblue-200);
+        }
+
+        /* Company Profile Section */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: var(--color-gainsboro);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--color-darkslateblue-200);
+            margin-right: 15px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .profile-position {
+            font-size: 16px;
+            color: var(--color-gray);
+        }
+
+        .profile-details {
+            margin-top: 15px;
+        }
+
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-detail:last-child {
+            border-bottom: none;
+        }
+
+        .edit-profile-btn {
+            background-color: transparent;
+            color: var(--color-white);
+            border: 1px solid var(--color-white);
+            border-radius: var(--br-6);
+            padding: 8px 15px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .edit-profile-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(-51.63deg, #363795 19.62%);
+            border-top: 2px solid var(--color-darkslateblue-100);
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--color-white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-skyblue);
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #303a95, #46479d);
+            border: 2px solid var(--color-lightsteelblue-200);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: white;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--color-skyblue);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--br-6);
+            border: 1px solid var(--color-lightsteelblue-200);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--color-white);
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-skyblue);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: var(--br-6);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--color-lightgreen);
+            color: var(--color-darkgreen);
+        }
+
+        .btn-primary:hover {
+            background-color: #45c575;
+        }
+
+        .btn-secondary {
+            background-color: var(--color-silver);
+            color: var(--color-black);
+        }
+
+        .btn-cancel {
+            background-color: transparent;
+            color: var(--color-white);
+            border: 1px solid var(--color-white);
+        }
+
+        .btn-cancel:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Action Buttons Section */
+        .action-buttons-section {
+            margin-bottom: 30px;
+        }
+
+        .post-job-btn-main {
+            background-color: var(--color-midnightblue-200);
+            border: none;
+            border-radius: var(--br-6);
+            padding: 15px 30px;
+            color: var(--color-white);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .post-job-btn-main:hover {
+            background-color: var(--color-darkslateblue-200);
+            transform: translateY(-2px);
+        }
+
+        .edit-profile-main-btn {
+            background-color: var(--color-midnightblue-300);
+            border: 2px solid var(--color-midnightblue-100);
+            border-radius: var(--br-6);
+            padding: 15px 30px;
+            color: var(--color-white);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .edit-profile-main-btn:hover {
+            background-color: var(--color-midnightblue-200);
+            transform: translateY(-2px);
+        }
+
+        /* Loading and Error States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--color-skyblue);
+            font-size: 18px;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: var(--color-firebrick);
+            background-color: rgba(163, 30, 30, 0.1);
+            border-radius: var(--br-6);
+            border: 1px solid var(--color-firebrick);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .sidebar-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                grid-column: 1;
+            }
+
+            .tabs {
+                gap: 50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .stats-container {
+                flex-direction: column;
+            }
+
+            .job-actions {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .tabs {
+                gap: 20px;
+                justify-content: space-between;
+            }
+
+            .action-buttons-section {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .post-job-btn-main, .edit-profile-main-btn {
+                margin-right: 0;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">CSE</div>
+                <div class="logo-text">Job Portal</div>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'comlog' %}" class="dashboard-btn">
+                    Back to Login
+                </a>
+            </div>
+        </header>
+
+        <!-- Dashboard Header -->
+        <section class="dashboard-header">
+            <h1 class="dashboard-title">Company Dashboard</h1>
+            <p class="welcome-text">Welcome back, <span id="companyName">Loading...</span></p>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-container">
+            <div class="stat-card active-jobs" id="activeJobsCard">
+                <h3 class="stat-title">Active Jobs</h3>
+                <div class="stat-value" id="activeJobs">0</div>
+                <p class="stat-subtitle">Visible to Students</p>
+            </div>
+            <div class="stat-card pending" id="pendingJobsCard">
+                <h3 class="stat-title">Pending Approval</h3>
+                <div class="stat-value" id="pendingJobs">0</div>
+                <p class="stat-subtitle">Awaiting Review</p>
+            </div>
+            <div class="stat-card total-applicants" id="applicantsCard">
+                <h3 class="stat-title">Total Applicants</h3>
+                <div class="stat-value" id="totalApplicants">0</div>
+                <p class="stat-subtitle">All Applications</p>
+            </div>
+            <div class="stat-card total-jobs" id="totalJobsCard">
+                <h3 class="stat-title">Total Jobs</h3>
+                <div class="stat-value" id="totalJobs">0</div>
+                <p class="stat-subtitle">All Posted Jobs</p>
+            </div>
+        </section>
+
+        <div class="sidebar-container">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Action Buttons Section -->
+                <section class="action-buttons-section">
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <button class="post-job-btn-main" id="postNewJobBtn">
+                            <span style="margin-right: 10px;">+</span> Post New Job
+                        </button>
+                        <button class="edit-profile-main-btn" id="editProfileMainBtn">
+                            <span style="margin-right: 10px;">✎</span> Edit Company Profile
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Jobs Section -->
+                <section class="jobs">
+                    <div class="jobs-header">
+                        <h2 class="section-title">Your Job Postings</h2>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="tabs-container">
+                        <div class="tabs">
+                            <div class="tab active" id="activeTab">Active</div>
+                            <div class="tab" id="pendingTab">Pending</div>
+                            <div class="tab" id="closedTab">Closed</div>
+                            <div class="tab" id="draftTab">Draft</div>
+                        </div>
+                    </div>
+
+                    <!-- Job Cards -->
+                    <div id="jobCardsContainer" class="job-cards-container">
+                        <div class="loading">Loading jobs...</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Recent Applicants Section -->
+                <section class="sidebar-section">
+                    <h3 class="sidebar-title">Recent Applicants</h3>
+                    <div id="recentApplicantsList">
+                        <div class="loading">Loading applicants...</div>
+                    </div>
+                    <button class="view-all-btn" id="viewAllApplicantsBtn">View All Applications</button>
+                </section>
+
+                <!-- Company Profile Section -->
+                <section class="sidebar-section">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">C</div>
+                        <div class="profile-info">
+                            <div class="profile-name" id="profileName">Loading...</div>
+                            <div class="profile-position" id="profileType">Company</div>
+                        </div>
+                    </div>
+                    <div class="profile-details">
+                        <div class="profile-detail">
+                            <span>Email:</span>
+                            <span id="profileEmail">Loading...</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span>Phone:</span>
+                            <span id="profilePhone">Loading...</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span>Type:</span>
+                            <span id="profileCompanyType">Loading...</span>
+                        </div>
+                    </div>
+                    <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
+                </section>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CSE Job Portal</h3>
+                    <p>Connecting CSE students and alumni with career opportunities in the industry.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'browse_opportunities' %}">Browse Jobs</a></li>
+                        <li><a href="{% url 'comlog' %}">Company Login</a></li>
+                        <li><a href="{% url 'comreg' %}">Company Register</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <div class="contact-info">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.36556 7.6821C7.302 9.3288 8.6712 10.698 10.3179 11.6344L11.2024 10.3961C11.4965 9.9845 12.0516 9.8573 12.4956 10.0998C13.9024 10.8683 15.4571 11.3353 17.0789 11.4637C17.599 11.5049 18 11.9389 18 12.4606V16.9234C18 17.4361 17.6122 17.8657 17.1022 17.9181C16.5723 17.9726 16.0377 18 15.5 18C6.93959 18 0 11.0604 0 2.5C0 1.96227 0.0274201 1.42771 0.0818901 0.89776C0.1343 0.38775 0.56394 0 1.07665 0H5.53942C6.0611 0 6.49513 0.40104 6.5363 0.92109C6.66467 2.54288 7.1317 4.09764 7.9002 5.50444C8.1427 5.9484 8.0155 6.50354 7.6039 6.79757L6.36556 7.6821ZM3.84425 7.0252L5.7442 5.66809C5.20547 4.50514 4.83628 3.27183 4.64727 2H2.00907C2.00303 2.16632 2 2.333 2 2.5C2 9.9558 8.0442 16 15.5 16C15.667 16 15.8337 15.997 16 15.9909V13.3527C14.7282 13.1637 13.4949 12.7945 12.3319 12.2558L10.9748 14.1558C10.4258 13.9425 9.8956 13.6915 9.3874 13.4061L9.3293 13.373C7.3697 12.2587 5.74134 10.6303 4.627 8.6707L4.59394 8.6126C4.30849 8.1044 4.05754 7.5742 3.84425 7.0252Z" fill="white"/>
+                        </svg>
+                        <span>02-58157091</span>
+                    </div>
+                    <div class="contact-info">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM12.0606 11.6829L5.64722 6.2377L4.35278 7.7623L12.0731 14.3171L19.6544 7.75616L18.3456 6.24384L12.0606 11.6829Z" fill="white"/>
+                        </svg>
+                        <span>cse-jobs@uap-bd.edu</span>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 CSE Department Job Portal. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <!-- Post Job Modal -->
+    <div id="postJobModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <h2 class="modal-title">Post New Job</h2>
+            <form id="newJobForm">
+                <div class="form-group">
+                    <label for="jobTitle">Job Title *</label>
+                    <input type="text" id="jobTitle" class="form-control" required placeholder="e.g., Junior Backend Developer">
+                </div>
+                <div class="form-group">
+                    <label for="jobLocation">Location *</label>
+                    <input type="text" id="jobLocation" class="form-control" required placeholder="e.g., Dhaka, Bangladesh">
+                </div>
+                <div class="form-group">
+                    <label for="jobDescription">Job Description *</label>
+                    <textarea id="jobDescription" class="form-control" rows="4" required placeholder="Describe the role, responsibilities, and what you're looking for in a candidate..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobType">Job Type *</label>
+                        <select id="jobType" class="form-control" required>
+                            <option value="">Select Job Type</option>
+                            <option value="full">Full Time</option>
+                            <option value="part">Part Time</option>
+                            <option value="intern">Internship</option>
+                            <option value="contract">Contract</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobSalary">Salary</label>
+                        <input type="text" id="jobSalary" class="form-control" placeholder="e.g., Negotiable, $500-800, etc.">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="jobRequirements">Requirements (one per line)</label>
+                    <textarea id="jobRequirements" class="form-control" rows="3" placeholder="Enter each requirement on a new line&#10;e.g.,&#10;Bachelor's in Computer Science&#10;2+ years of experience&#10;Knowledge of Python/Django"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobApplicants">Expected Applicants</label>
+                        <input type="number" id="jobApplicants" class="form-control" placeholder="10" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="jobDeadline">Application Deadline *</label>
+                        <input type="date" id="jobDeadline" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Post Job</button>
+                    <button type="button" class="btn btn-secondary" onclick="saveAsDraft()">Save as Draft</button>
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Job Details Modal -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Applicants Modal -->
+    <div id="applicantsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <h2 class="modal-title" id="applicantsModalTitle">Applicants</h2>
+            <div id="applicantsList">
+                <div class="loading">Loading applicants...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CSRF token helper
+        function getCSRFToken() {
+            const name = 'csrftoken';
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Current view state
+        let currentView = 'active';
+        let companyJobs = [];
+        let currentCompanyId = null;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing Company Dashboard...');
+
+            // Load company data and jobs
+            loadCompanyData();
+            loadCompanyStats();
+            loadCompanyJobs();
+            loadRecentApplicants();
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Set minimum date for deadline to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('jobDeadline').min = today;
+
+            // Initialize view
+            updateActiveTab();
+        });
+
+        // Load company data
+        async function loadCompanyData() {
+            try {
+                const response = await fetch('/api/company/profile/');
+                if (!response.ok) throw new Error('Failed to load company profile');
+
+                const company = await response.json();
+                currentCompanyId = company.id;
+
+                document.getElementById('companyName').textContent = company.company_name;
+                document.getElementById('profileName').textContent = company.company_name;
+                document.getElementById('profileEmail').textContent = company.email;
+                document.getElementById('profilePhone').textContent = company.phone_number;
+                document.getElementById('profileCompanyType').textContent = company.company_type;
+                document.getElementById('profileAvatar').textContent = company.company_name.charAt(0).toUpperCase();
+            } catch (error) {
+                console.error('Error loading company data:', error);
+                document.getElementById('companyName').textContent = 'Company';
+                document.getElementById('profileName').textContent = 'Company';
+                showError('Failed to load company profile');
+            }
+        }
+
+        // Load company statistics
+        async function loadCompanyStats() {
+            try {
+                const response = await fetch('/api/company/stats/');
+                if (!response.ok) throw new Error('Failed to load stats');
+
+                const stats = await response.json();
+
+                document.getElementById('activeJobs').textContent = stats.active_jobs;
+                document.getElementById('pendingJobs').textContent = stats.pending_jobs;
+                document.getElementById('totalApplicants').textContent = stats.total_applicants;
+                document.getElementById('totalJobs').textContent = stats.total_jobs;
+            } catch (error) {
+                console.error('Error loading company stats:', error);
+                showError('Failed to load statistics');
+            }
+        }
+
+        // Load company jobs
+        async function loadCompanyJobs() {
+            try {
+                const response = await fetch('/api/company/jobs/');
+                if (!response.ok) throw new Error('Failed to load jobs');
+
+                const jobs = await response.json();
+                companyJobs = jobs;
+                renderJobCards(filterJobsByView(companyJobs));
+            } catch (error) {
+                console.error('Error loading company jobs:', error);
+                document.getElementById('jobCardsContainer').innerHTML = `
+                    <div class="error">Failed to load jobs. Please try again.</div>
+                `;
+            }
+        }
+
+        // Filter jobs based on current view
+        function filterJobsByView(jobs) {
+            switch(currentView) {
+                case 'active':
+                    return jobs.filter(job => job.status === 'active');
+                case 'pending':
+                    return jobs.filter(job => job.status === 'pending');
+                case 'closed':
+                    return jobs.filter(job => job.status === 'closed');
+                case 'draft':
+                    return jobs.filter(job => job.status === 'draft');
+                default:
+                    return jobs;
+            }
+        }
+
+        // Render job cards
+        function renderJobCards(jobs) {
+            const container = document.getElementById('jobCardsContainer');
+
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue-200); font-size: var(--fs-20);">
+                        No jobs found in this category.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = jobs.map(job => `
+                <div class="job-card" data-job-id="${job.id}">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">${job.title}</h3>
+                            <p class="job-location">${job.location}</p>
+                        </div>
+                        <div class="job-status ${job.status}">${job.status.charAt(0).toUpperCase() + job.status.slice(1)}</div>
+                    </div>
+
+                    <div class="job-details">
+                        <div><strong>Type:</strong> ${getJobTypeDisplay(job.job_type)}</div>
+                        <div><strong>Salary:</strong> ${job.salary || 'Negotiable'}</div>
+                        <div><strong>Applicants:</strong> ${job.applicants_count || 0}</div>
+                    </div>
+
+                    <div class="job-meta">
+                        <div><strong>Posted:</strong> ${job.posted_date}</div>
+                        <div><strong>Deadline:</strong> ${job.deadline}</div>
+                        <div><strong>Expected:</strong> ${job.expected_applicants} applicants</div>
+                    </div>
+
+                    <div class="job-meta">
+                        <div class="job-tag">${getJobTypeDisplay(job.job_type)}</div>
+                        <div class="job-tag">${job.applicants_count || 0} Applicants</div>
+                        ${job.salary ? `<div class="job-tag">${job.salary}</div>` : ''}
+                    </div>
+
+                    <div class="job-actions">
+                        <button class="action-btn view-applicants" onclick="viewApplicants(${job.id})">
+                            View Applicants (${job.applicants_count || 0})
+                        </button>
+                        <button class="action-btn edit-job" onclick="editJob(${job.id})">
+                            Edit Listing
+                        </button>
+                        <button class="action-btn close-job" onclick="${job.status === 'active' ? 'closeJob' : 'deleteJob'}(${job.id})">
+                            ${job.status === 'active' ? 'Close Job' : 'Delete'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Helper functions
+        function getJobTypeDisplay(type) {
+            const typeMap = {
+                'full': 'Full Time',
+                'part': 'Part Time',
+                'intern': 'Internship',
+                'contract': 'Contract'
+            };
+            return typeMap[type] || type;
+        }
+
+        function getStatusColor(status) {
+            const statusColors = {
+                'active': 'var(--color-lightgreen)',
+                'pending': 'var(--color-palegoldenrod)',
+                'closed': 'var(--color-silver)',
+                'draft': 'var(--color-lightsteelblue-100)'
+            };
+            return statusColors[status] || 'var(--color-silver)';
+        }
+
+        // Update active tab styling
+        function updateActiveTab() {
+            const tabs = ['activeTab', 'pendingTab', 'closedTab', 'draftTab'];
+
+            // Remove active class from all tabs
+            tabs.forEach(tab => {
+                document.getElementById(tab).classList.remove('active');
+            });
+
+            // Add active class to current tab
+            document.getElementById(currentView + 'Tab').classList.add('active');
+
+            // Filter jobs based on current view
+            renderJobCards(filterJobsByView(companyJobs));
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Tab switching
+            const tabs = ['activeTab', 'pendingTab', 'closedTab', 'draftTab'];
+            tabs.forEach(tab => {
+                document.getElementById(tab).addEventListener('click', function() {
+                    currentView = tab.replace('Tab', '');
+                    updateActiveTab();
+                });
+            });
+
+            // Post new job button
+            document.getElementById('postNewJobBtn').addEventListener('click', function() {
+                openPostJobModal();
+            });
+
+            // Edit profile buttons
+            document.getElementById('editProfileMainBtn').addEventListener('click', function() {
+                editProfile();
+            });
+
+            document.getElementById('editProfileBtn').addEventListener('click', function() {
+                editProfile();
+            });
+
+            // View all applicants button
+            document.getElementById('viewAllApplicantsBtn').addEventListener('click', function() {
+                viewAllApplicants();
+            });
+
+            // New job form submission
+            document.getElementById('newJobForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitNewJob();
+            });
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
+
+        function openPostJobModal() {
+            // Reset form
+            document.getElementById('newJobForm').reset();
+
+            // Set minimum date for deadline to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('jobDeadline').min = today;
+
+            showModal('postJobModal');
+        }
+
+        // Job posting function - INTEGRATED WITH STUDENT DASHBOARD AND BROWSE OPPORTUNITIES
+        async function submitNewJob(event) {
+            const formData = {
+                title: document.getElementById('jobTitle').value,
+                location: document.getElementById('jobLocation').value,
+                description: document.getElementById('jobDescription').value,
+                job_type: document.getElementById('jobType').value,
+                salary: document.getElementById('jobSalary').value,
+                requirements: document.getElementById('jobRequirements').value.split('\n').filter(req => req.trim() !== ''),
+                expected_applicants: parseInt(document.getElementById('jobApplicants').value) || 0,
+                deadline: document.getElementById('jobDeadline').value,
+                status: 'active' // Jobs are immediately active and visible to students
+            };
+
+            try {
+                const response = await fetch('/api/company/jobs/post/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ Job posted successfully!\n\nThis job is now visible in:\n• Student Dashboard\n• Browse Opportunities Page\n• Search Results');
+                    closeModal();
+
+                    // Reload data to show the new job
+                    loadCompanyStats();
+                    loadCompanyJobs();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error posting job:', error);
+                alert('Failed to post job. Please try again.');
+            }
+        }
+
+        // View job details
+        function viewJobDetails(jobId) {
+            const job = companyJobs.find(j => j.id === jobId);
+            if (job) {
+                const jobDetails = `
+                    <h2 class="modal-title">${job.title}</h2>
+                    <h3 style="color: var(--color-gray); margin-bottom: 15px;">${job.location}</h3>
+
+                    <div style="margin-bottom: 15px;">
+                        <strong>Type:</strong> ${getJobTypeDisplay(job.job_type)}<br>
+                        <strong>Salary:</strong> ${job.salary || 'Negotiable'}<br>
+                        <strong>Applicants:</strong> ${job.applicants_count || 0}<br>
+                        <strong>Expected Applicants:</strong> ${job.expected_applicants}<br>
+                        <strong>Deadline:</strong> ${job.deadline}<br>
+                        <strong>Posted:</strong> ${job.posted_date}<br>
+                        <strong>Status:</strong> ${job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <strong>Description:</strong><br>
+                        ${job.description}
+                    </div>
+
+                    ${job.requirements && job.requirements.length > 0 ? `
+                    <div style="margin-bottom: 20px;">
+                        <strong>Requirements:</strong><br>
+                        ${job.requirements.map(req => `• ${req}`).join('<br>')}
+                    </div>
+                    ` : ''}
+
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="editJob(${job.id})">Edit Job</button>
+                        <button class="btn btn-cancel" onclick="${job.status === 'active' ? 'closeJob' : 'deleteJob'}(${job.id})">
+                            ${job.status === 'active' ? 'Close Job' : 'Delete Job'}
+                        </button>
+                    </div>
+                `;
+
+                document.getElementById('modalContent').innerHTML = jobDetails;
+                showModal('jobModal');
+            }
+        }
+
+        // View applicants for a job
+        async function viewApplicants(jobId) {
+            try {
+                const response = await fetch(`/api/company/jobs/${jobId}/applicants/`);
+                const applicants = await response.json();
+
+                const job = companyJobs.find(j => j.id === jobId);
+                const applicantsContent = `
+                    <h2 class="modal-title">Applicants for ${job.title}</h2>
+                    <h3 style="color: var(--color-gray); margin-bottom: 15px;">${applicants.length} Applicants</h3>
+
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        ${applicants.length > 0 ? applicants.map(applicant => `
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 5px; margin-bottom: 10px;">
+                                <strong>${applicant.name}</strong><br>
+                                <small>Student ID: ${applicant.student_id}</small><br>
+                                <small>Email: ${applicant.email}</small><br>
+                                <small>Graduation Year: ${applicant.graduation_year}</small><br>
+                                <small>Applied: ${applicant.applied_at}</small><br>
+                                <small>Status: ${applicant.status}</small>
+                            </div>
+                        `).join('') : `
+                            <div style="text-align: center; padding: 20px; color: var(--color-silver);">
+                                No applicants yet.
+                            </div>
+                        `}
+                    </div>
+                `;
+
+                document.getElementById('modalContent').innerHTML = applicantsContent;
+                showModal('jobModal');
+            } catch (error) {
+                console.error('Error loading applicants:', error);
+                alert('Failed to load applicants.');
+            }
+        }
+
+        // Edit job function
+        function editJob(jobId) {
+            const job = companyJobs.find(j => j.id === jobId);
+            alert(`Editing job: ${job.title}\n\nThis feature would open an edit form.`);
+            closeModal();
+        }
+
+        // Close job function
+        async function closeJob(jobId) {
+            const job = companyJobs.find(j => j.id === jobId);
+            if (job && confirm(`Are you sure you want to close "${job.title}"?\n\nThis will remove it from:\n• Student Dashboard\n• Browse Opportunities\n• Search Results`)) {
+                try {
+                    const response = await fetch(`/api/company/jobs/${jobId}/update/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCSRFToken(),
+                        },
+                        body: JSON.stringify({ status: 'closed' })
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert(`✅ Job "${job.title}" has been closed and is no longer visible to students.`);
+                        closeModal();
+                        loadCompanyStats();
+                        loadCompanyJobs();
+                    } else {
+                        alert('Error: ' + result.error);
+                    }
+                } catch (error) {
+                    console.error('Error closing job:', error);
+                    alert('Failed to close job. Please try again.');
+                }
+            }
+        }
+
+        // Delete job function
+        async function deleteJob(jobId) {
+            const job = companyJobs.find(j => j.id === jobId);
+            if (job && confirm(`Are you sure you want to permanently delete "${job.title}"?\n\nThis action cannot be undone.`)) {
+                try {
+                    const response = await fetch(`/api/company/jobs/${jobId}/delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCSRFToken(),
+                        }
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert(`✅ Job "${job.title}" has been deleted permanently.`);
+                        closeModal();
+                        loadCompanyStats();
+                        loadCompanyJobs();
+                    } else {
+                        alert('Error: ' + result.error);
+                    }
+                } catch (error) {
+                    console.error('Error deleting job:', error);
+                    alert('Failed to delete job. Please try again.');
+                }
+            }
+        }
+
+        // Save as draft function
+        function saveAsDraft() {
+            alert('📝 Job saved as draft!\n\nIt will not be visible to students until published.');
+            closeModal();
+        }
+
+        // Edit profile function
+        function editProfile() {
+            alert('👤 Edit profile functionality would open a profile editing form.');
+        }
+
+        // View all applicants function
+        function viewAllApplicants() {
+            alert('📋 View all applicants functionality would show all applications across all jobs.');
+        }
+
+        // Load recent applicants
+        async function loadRecentApplicants() {
+            try {
+                const response = await fetch('/api/company/recent-applicants/');
+                const applicants = await response.json();
+
+                const container = document.getElementById('recentApplicantsList');
+
+                if (applicants.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: var(--color-silver);">No recent applicants</div>';
+                    return;
+                }
+
+                container.innerHTML = applicants.map(applicant => `
+                    <div class="applicant-item">
+                        <div class="applicant-name">${applicant.name}</div>
+                        <div class="applicant-position">${applicant.position}</div>
+                        <div class="applicant-time">${applicant.time} • ${applicant.date}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading recent applicants:', error);
+                document.getElementById('recentApplicantsList').innerHTML =
+                    '<div style="text-align: center; color: var(--color-silver);">Error loading applicants</div>';
+            }
+        }
+
+        // Utility functions
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+
+        // Add click handlers to job cards for details view
+        document.addEventListener('click', function(e) {
+            const jobCard = e.target.closest('.job-card');
+            if (jobCard && !e.target.closest('.job-actions')) {
+                const jobId = jobCard.getAttribute('data-job-id');
+                viewJobDetails(parseInt(jobId));
+            }
+        });
+    </script>
+</body>
+</html>
