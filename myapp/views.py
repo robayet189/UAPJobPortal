@@ -279,7 +279,7 @@ def search_jobs(request):
 def job_id(request):
     return render(request, 'myapp/job_id.html')
 
-<<<<<<< HEAD
+
 
 
 
@@ -461,9 +461,9 @@ def verify_code(request, source):
         return redirect('resetpassword', source=source)
 
     return redirect('sendrecoverycode', source=source)
-=======
+
 from django.http import JsonResponse
 
 def dashboard(request):
     return render(request, 'myapp/studentdashboard.html')
->>>>>>> 7d380c34a20211d592a2c4a254a06c38875c1d9d
+
