@@ -564,6 +564,87 @@
     width: 100% !important;
 }
         }
+        /* Header Buttons Container */
+.header-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Edit Profile Button */
+.edit-profile-btn {
+    background-color: transparent;
+    border: 2px solid var(--color-lightsteelblue-200);
+    border-radius: var(--br-6);
+    padding: 12px 20px;
+    color: var(--color-white);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-profile-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-skyblue);
+    transform: translateY(-2px);
+}
+
+.edit-profile-btn:active {
+    transform: translateY(0);
+}
+
+/* Post Job Button - Updated with icon */
+.post-job-btn {
+    background-color: var(--color-midnightblue-200);
+    border: none;
+    border-radius: var(--br-6);
+    padding: 12px 20px;
+    color: var(--color-white);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.post-job-btn:hover {
+    background-color: var(--color-darkslateblue-200);
+    transform: translateY(-2px);
+}
+
+.post-job-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design for Buttons */
+@media (max-width: 768px) {
+    .header-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .edit-profile-btn,
+    .post-job-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .job-listings-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .section-title {
+        text-align: center;
+    }
+}
     </style>
 </head>
 <body>
@@ -607,12 +688,25 @@
         </section>
 
         <!-- Job Listings Section -->
-        <section class="job-listings">
-            <div class="job-listings-header">
-                <h2 class="section-title">Your Job Listings</h2>
-                <button class="post-job-btn" id="postNewJobBtn">+ Post New Job</button>
-            </div>
-
+<section class="job-listings">
+    <div class="job-listings-header">
+        <h2 class="section-title">Your Job Listings</h2>
+        <div class="header-buttons">
+            <a href="{% url 'alumni_profile' %}" class="edit-profile-btn" id="editProfileBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+                    <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Edit Profile
+            </a>
+            <button class="post-job-btn" id="postNewJobBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Post New Job
+            </button>
+        </div>
+    </div>
             <!-- Tabs -->
             <div class="tabs-container">
                 <div class="tabs">
@@ -721,32 +815,6 @@
     </div>
 
 <script>
-    // Mock data for the alumni dashboard (personal info can stay)
-    const alumniData = {
-        name: "Abir Hossain Shupto",
-        email: "abir.shupto@techinnovate.com",
-        graduationYear: "2022",
-        currentPosition: "Senior Software Engineer, TechInnovate",
-        jobsPosted: 5,
-        totalHired: 3,
-        totalApplicants: 20
-    };
-
-    const recentActivities = [
-        {
-            id: 1,
-            applicant: "Rupayon Barua",
-            job: "Cybersecurity Analyst",
-            time: "6 hours ago"
-        },
-        {
-            id: 2,
-            applicant: "Md Hafiz Tamim",
-            job: "Software Developer",
-            time: "2 hours ago"
-        }
-    ];
-
     // Current view state
     let currentView = 'posted';
     let filteredJobs = [];
@@ -755,28 +823,72 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Initializing Alumni Dashboard...');
 
-        // Populate alumni data
-        populateAlumniData();
-
-        // Load real jobs from API
-        loadAlumniJobs();
-
-        // Render activity list
-        renderActivityList();
+        // Load real alumni data and jobs
+        loadAlumniDashboardData();
 
         // Set up event listeners
         setupEventListeners();
-
-        // Initialize view
-        updateActiveTab();
     });
 
-    // Populate alumni profile data
-    function populateAlumniData() {
-        document.getElementById('alumniName').textContent = alumniData.name;
-        document.getElementById('totalApplicants').textContent = alumniData.totalApplicants;
-        document.getElementById('totalJobs').textContent = alumniData.jobsPosted;
-        document.getElementById('totalHired').textContent = alumniData.totalHired;
+    // Load alumni dashboard data from API
+    async function loadAlumniDashboardData() {
+        try {
+            const response = await fetch('/api/alumni/dashboard/data/');
+            const data = await response.json();
+
+            if (data.success) {
+                // Populate alumni data
+                populateAlumniData(data.alumni, data.stats);
+
+                // Load jobs
+                loadAlumniJobs();
+            } else {
+                console.error('Error loading dashboard data:', data.error);
+                // Fallback to mock data if API fails
+                loadMockData();
+            }
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+            // Fallback to mock data
+            loadMockData();
+        }
+    }
+
+    // Populate alumni profile data - UPDATED VERSION
+    function populateAlumniData(alumni, stats) {
+        // Update the welcome message with real alumni name
+        document.getElementById('alumniName').textContent = alumni.full_name;
+
+        // Update stats with real data
+        document.getElementById('totalApplicants').textContent = stats.total_applicants;
+        document.getElementById('totalJobs').textContent = stats.total_jobs;
+        document.getElementById('totalHired').textContent = stats.total_hired;
+
+        // Store alumni data for later use
+        window.alumniData = alumni;
+        window.alumniStats = stats;
+    }
+
+    // Fallback to mock data if API fails
+    function loadMockData() {
+        const mockAlumni = {
+            first_name: "Alumni",
+            last_name: "User",
+            full_name: "Alumni User",
+            email: "alumni@uap-bd.edu",
+            student_id: "N/A",
+            graduation_year: "2022",
+            current_position: "Position not set",
+            company: "Company not set"
+        };
+
+        const mockStats = {
+            total_applicants: 0,
+            total_jobs: 0,
+            total_hired: 0
+        };
+
+        populateAlumniData(mockAlumni, mockStats);
     }
 
     // CSRF token helper
@@ -804,7 +916,7 @@
             filteredJobs = jobs;
             renderJobCards(filteredJobs);
 
-            // Update stats
+            // Update stats based on real job data
             updateAlumniStats(jobs);
         } catch (error) {
             console.error('Error loading alumni jobs:', error);
@@ -826,30 +938,110 @@
         // You might want to update other stats as needed
     }
 
-// Render job cards dynamically - SIMPLIFIED VERSION
-function renderJobCards(jobs) {
-    const container = document.getElementById('jobCardsContainer');
-    container.innerHTML = '';
+    // Render job cards dynamically - SIMPLIFIED VERSION
+    function renderJobCards(jobs) {
+        const container = document.getElementById('jobCardsContainer');
+        container.innerHTML = '';
 
-    if (jobs.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue-200); font-size: var(--fs-20);">
-                No jobs found in this category.
-            </div>
-        `;
-        return;
-    }
+        if (jobs.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue-200); font-size: var(--fs-20);">
+                    No jobs found in this category.
+                </div>
+            `;
+            return;
+        }
 
-    jobs.forEach((job) => {
-        // SPECIAL CASE: Junior Backend Developer (Laravel)
-        if (job.title && job.title.trim().toLowerCase() === 'junior backend developer (laravel)') {
+        jobs.forEach((job) => {
+            // SPECIAL CASE: Junior Backend Developer (Laravel)
+            if (job.title && job.title.trim().toLowerCase() === 'junior backend developer (laravel)') {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card special-laravel-card';
+                jobCard.setAttribute('data-job-id', job.id);
+
+                jobCard.innerHTML = `
+                    <div class="job-card-content" style="position: relative; height: 100%;">
+                        <!-- Status Badge -->
+                        ${job.status === 'active' ? `
+                        <div style="position: absolute; top: 20px; right: 20px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                            Active
+                        </div>
+                        ` : job.status === 'draft' ? `
+                        <div style="position: absolute; top: 20px; right: 20px; background: var(--color-silver); color: var(--color-black); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                            Draft
+                        </div>
+                        ` : `
+                        <div style="position: absolute; top: 20px; right: 20px; background: var(--color-firebrick); color: white; padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
+                            Closed
+                        </div>
+                        `}
+
+                        <!-- Featured Ribbon -->
+                        <div style="position:absolute; left:-10px; top:-30px; background: linear-gradient(135deg, #8b5cf6, #ec4899); padding:6px 12px; border-radius: 0 var(--br-10) var(--br-10) 0; font-weight:700; color:white;">
+                            Featured
+                        </div>
+
+                        <!-- Special Title & Company -->
+                        <div class="job-header" style="margin-top: 10px;">
+                            <div>
+                                <h3 class="job-title" style="font-size: 28px;">${job.title}</h3>
+                                <p class="job-company" style="font-size: 20px; color: var(--color-gray);">${job.company}</p>
+                            </div>
+                        </div>
+
+                        <!-- Job Details -->
+                        <div class="job-details">
+                            <div><strong>Location:</strong> ${job.location}</div>
+                            <div><strong>Type:</strong> ${job.job_type}</div>
+                            <div><strong>Applicants:</strong> ${job.applicants_count || 0}</div>
+                        </div>
+
+                        <!-- Meta -->
+                        <div class="job-meta">
+                            <div><strong>Posted:</strong> ${job.posted}</div>
+                            <div><strong>Deadline:</strong> ${job.deadline}</div>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="job-meta">
+                            <div class="job-tag">${job.job_type}</div>
+                            <div class="job-tag">${job.location}</div>
+                            <div class="job-tag">Laravel</div>
+                        </div>
+
+                        <!-- Action Buttons (same as others) -->
+                        <div class="job-actions">
+                            <button class="action-btn view-applicants" onclick="event.stopPropagation(); viewApplicants(${job.id})">
+                                View Applicants (${job.applicants_count || 0})
+                            </button>
+                            <button class="action-btn edit-job" onclick="event.stopPropagation(); editJob(${job.id})">
+                                Edit Listing
+                            </button>
+                            <button class="action-btn close-job" onclick="event.stopPropagation(); ${job.status === 'active' ? 'closeJob' : 'deleteJob'}(${job.id})">
+                                ${job.status === 'active' ? 'Close Job' : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Clicking this SPECIAL card (not buttons) opens the Laravel description page
+                jobCard.addEventListener('click', function(e) {
+                    if (!e.target.closest('.job-actions')) {
+                        window.location.href = '/browseoppurtunity/job_id/';
+                    }
+                });
+
+                container.appendChild(jobCard);
+                return; // skip normal rendering for this one
+            }
+
+            // NORMAL JOB CARD (unchanged)
             const jobCard = document.createElement('div');
-            jobCard.className = 'job-card special-laravel-card';
+            jobCard.className = 'job-card';
             jobCard.setAttribute('data-job-id', job.id);
 
             jobCard.innerHTML = `
                 <div class="job-card-content" style="position: relative; height: 100%;">
-                    <!-- Status Badge -->
                     ${job.status === 'active' ? `
                     <div style="position: absolute; top: 20px; right: 20px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
                         Active
@@ -864,40 +1056,29 @@ function renderJobCards(jobs) {
                     </div>
                     `}
 
-                    <!-- Featured Ribbon -->
-                    <div style="position:absolute; left:-10px; top:-30px; background: linear-gradient(135deg, #8b5cf6, #ec4899); padding:6px 12px; border-radius: 0 var(--br-10) var(--br-10) 0; font-weight:700; color:white;">
-                        Featured
-                    </div>
-
-                    <!-- Special Title & Company -->
-                    <div class="job-header" style="margin-top: 10px;">
+                    <div class="job-header">
                         <div>
-                            <h3 class="job-title" style="font-size: 28px;">${job.title}</h3>
-                            <p class="job-company" style="font-size: 20px; color: var(--color-gray);">${job.company}</p>
+                            <h3 class="job-title">${job.title}</h3>
+                            <p class="job-company">${job.company}</p>
                         </div>
                     </div>
 
-                    <!-- Job Details -->
                     <div class="job-details">
                         <div><strong>Location:</strong> ${job.location}</div>
                         <div><strong>Type:</strong> ${job.job_type}</div>
                         <div><strong>Applicants:</strong> ${job.applicants_count || 0}</div>
                     </div>
 
-                    <!-- Meta -->
                     <div class="job-meta">
                         <div><strong>Posted:</strong> ${job.posted}</div>
                         <div><strong>Deadline:</strong> ${job.deadline}</div>
                     </div>
 
-                    <!-- Tags -->
                     <div class="job-meta">
                         <div class="job-tag">${job.job_type}</div>
                         <div class="job-tag">${job.location}</div>
-                        <div class="job-tag">Laravel</div>
                     </div>
 
-                    <!-- Action Buttons (same as others) -->
                     <div class="job-actions">
                         <button class="action-btn view-applicants" onclick="event.stopPropagation(); viewApplicants(${job.id})">
                             View Applicants (${job.applicants_count || 0})
@@ -912,107 +1093,13 @@ function renderJobCards(jobs) {
                 </div>
             `;
 
-            // Clicking this SPECIAL card (not buttons) opens the Laravel description page
             jobCard.addEventListener('click', function(e) {
                 if (!e.target.closest('.job-actions')) {
-                    window.location.href = '/browseoppurtunity/job_id/';
+                    viewJobDetails(job.id);
                 }
             });
 
             container.appendChild(jobCard);
-            return; // skip normal rendering for this one
-        }
-
-        // NORMAL JOB CARD (unchanged)
-        const jobCard = document.createElement('div');
-        jobCard.className = 'job-card';
-        jobCard.setAttribute('data-job-id', job.id);
-
-        jobCard.innerHTML = `
-            <div class="job-card-content" style="position: relative; height: 100%;">
-                ${job.status === 'active' ? `
-                <div style="position: absolute; top: 20px; right: 20px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
-                    Active
-                </div>
-                ` : job.status === 'draft' ? `
-                <div style="position: absolute; top: 20px; right: 20px; background: var(--color-silver); color: var(--color-black); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
-                    Draft
-                </div>
-                ` : `
-                <div style="position: absolute; top: 20px; right: 20px; background: var(--color-firebrick); color: white; padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
-                    Closed
-                </div>
-                `}
-
-                <div class="job-header">
-                    <div>
-                        <h3 class="job-title">${job.title}</h3>
-                        <p class="job-company">${job.company}</p>
-                    </div>
-                </div>
-
-                <div class="job-details">
-                    <div><strong>Location:</strong> ${job.location}</div>
-                    <div><strong>Type:</strong> ${job.job_type}</div>
-                    <div><strong>Applicants:</strong> ${job.applicants_count || 0}</div>
-                </div>
-
-                <div class="job-meta">
-                    <div><strong>Posted:</strong> ${job.posted}</div>
-                    <div><strong>Deadline:</strong> ${job.deadline}</div>
-                </div>
-
-                <div class="job-meta">
-                    <div class="job-tag">${job.job_type}</div>
-                    <div class="job-tag">${job.location}</div>
-                </div>
-
-                <div class="job-actions">
-                    <button class="action-btn view-applicants" onclick="event.stopPropagation(); viewApplicants(${job.id})">
-                        View Applicants (${job.applicants_count || 0})
-                    </button>
-                    <button class="action-btn edit-job" onclick="event.stopPropagation(); editJob(${job.id})">
-                        Edit Listing
-                    </button>
-                    <button class="action-btn close-job" onclick="event.stopPropagation(); ${job.status === 'active' ? 'closeJob' : 'deleteJob'}(${job.id})">
-                        ${job.status === 'active' ? 'Close Job' : 'Delete'}
-                    </button>
-                </div>
-            </div>
-        `;
-
-        jobCard.addEventListener('click', function(e) {
-            if (!e.target.closest('.job-actions')) {
-                viewJobDetails(job.id);
-            }
-        });
-
-        container.appendChild(jobCard);
-    });
-}
-
-
-
-    // Render activity list
-    function renderActivityList() {
-        const container = document.getElementById('activityList');
-        if (!container) return;
-
-        container.innerHTML = '';
-
-        recentActivities.forEach(activity => {
-            const activityItem = document.createElement('div');
-            activityItem.className = 'activity-item';
-
-            activityItem.innerHTML = `
-                <div class="activity-header">
-                    <span class="activity-applicant">${activity.applicant}</span>
-                    <span class="activity-time">${activity.time}</span>
-                </div>
-                <div class="activity-job">Applied to ${activity.job}</div>
-            `;
-
-            container.appendChild(activityItem);
         });
     }
 
@@ -1077,22 +1164,6 @@ function renderJobCards(jobs) {
         postNewJobBtn.addEventListener('click', function() {
             openPostJobModal();
         });
-
-        // Edit profile button
-        const editProfileBtn = document.getElementById('editProfileBtn');
-        if (editProfileBtn) {
-            editProfileBtn.addEventListener('click', function() {
-                editProfile();
-            });
-        }
-
-        // View all activity button
-        const viewAllActivityBtn = document.getElementById('viewAllActivityBtn');
-        if (viewAllActivityBtn) {
-            viewAllActivityBtn.addEventListener('click', function() {
-                viewAllActivity();
-            });
-        }
 
         // Statistics cards
         const applicantsCard = document.getElementById('applicantsCard');
@@ -1187,17 +1258,14 @@ function renderJobCards(jobs) {
 
                 <div style="margin-bottom: 20px;">
                     <strong>Recent Applicants:</strong><br><br>
-                    ${recentActivities.map(activity => `
-                        <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                            <strong>${activity.applicant}</strong><br>
-                            Applied to: ${activity.job}<br>
-                            <small>${activity.time}</small>
-                        </div>
-                    `).join('')}
+                    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                        <strong>Applicant data will appear here</strong><br>
+                        <small>Applicant tracking feature coming soon</small>
+                    </div>
                 </div>
 
                 <div style="text-align: center;">
-                    <button class="btn btn-primary" onclick="closeModal()">View All Applicants</button>
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
                 </div>
             `;
 
@@ -1250,7 +1318,7 @@ function renderJobCards(jobs) {
                     method: 'DELETE',
                     headers: {
                         'X-CSRFToken': getCSRFToken(),
-                    'Content-Type': 'application/json'
+                        'Content-Type': 'application/json'
                     }
                 });
 
@@ -1270,9 +1338,6 @@ function renderJobCards(jobs) {
     }
 
     async function submitNewJob() {
-        const form = document.getElementById('newJobForm');
-        const formData = new FormData(form);
-
         const jobData = {
             title: document.getElementById('jobTitle').value,
             company: document.getElementById('jobCompany').value,
@@ -1315,28 +1380,49 @@ function renderJobCards(jobs) {
     }
 
     function editProfile() {
+        // Use the real alumni data from the API
+        const alumni = window.alumniData || {
+            first_name: "",
+            last_name: "",
+            email: "",
+            current_position: "",
+            graduation_year: "",
+            company: ""
+        };
+
         const editProfileContent = `
             <h2 class="modal-title">Edit Profile</h2>
 
             <form id="editProfileForm" style="display: flex; flex-direction: column; gap: 15px;">
-                <div class="form-group">
-                    <label>Full Name:</label>
-                    <input type="text" value="${alumniData.name}" class="form-control" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name:</label>
+                        <input type="text" id="editFirstName" value="${alumni.first_name}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        <input type="text" id="editLastName" value="${alumni.last_name}" class="form-control" required>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label>Email:</label>
-                    <input type="email" value="${alumniData.email}" class="form-control" required>
+                    <input type="email" id="editEmail" value="${alumni.email}" class="form-control" required>
                 </div>
 
                 <div class="form-group">
                     <label>Current Position:</label>
-                    <input type="text" value="${alumniData.currentPosition}" class="form-control" required>
+                    <input type="text" id="editPosition" value="${alumni.current_position}" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Company:</label>
+                    <input type="text" id="editCompany" value="${alumni.company}" class="form-control">
                 </div>
 
                 <div class="form-group">
                     <label>Graduation Year:</label>
-                    <input type="text" value="${alumniData.graduationYear}" class="form-control" required>
+                    <input type="text" id="editGraduationYear" value="${alumni.graduation_year}" class="form-control" required>
                 </div>
 
                 <div class="modal-actions">
@@ -1349,49 +1435,58 @@ function renderJobCards(jobs) {
         document.getElementById('modalContent').innerHTML = editProfileContent;
         showModal('jobModal');
 
-        document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+        document.getElementById('editProfileForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            alert('Profile updated successfully!');
-            closeModal();
+
+            const profileData = {
+                first_name: document.getElementById('editFirstName').value,
+                last_name: document.getElementById('editLastName').value,
+                email: document.getElementById('editEmail').value,
+                current_position: document.getElementById('editPosition').value,
+                company: document.getElementById('editCompany').value,
+                graduation_year: document.getElementById('editGraduationYear').value
+            };
+
+            try {
+                const response = await fetch('/api/alumni/profile/update/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Profile updated successfully!');
+                    closeModal();
+                    // Reload dashboard data to show updated name
+                    loadAlumniDashboardData();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile. Please try again.');
+            }
         });
     }
 
-    function viewAllActivity() {
-        const activityContent = `
-            <h2 class="modal-title">All Recent Activity</h2>
-
-            <div style="max-height: 400px; overflow-y: auto;">
-                ${recentActivities.map(activity => `
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 5px; margin-bottom: 10px;">
-                        <strong>${activity.applicant}</strong><br>
-                        Applied to: ${activity.job}<br>
-                        <small>${activity.time}</small>
-                    </div>
-                `).join('')}
-            </div>
-
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn btn-primary" onclick="closeModal()">Close</button>
-            </div>
-        `;
-
-        document.getElementById('modalContent').innerHTML = activityContent;
-        showModal('jobModal');
-    }
-
     function showApplicantsOverview() {
+        const stats = window.alumniStats || { total_applicants: 0 };
         const content = `
             <h2 class="modal-title">Applicants Overview</h2>
 
             <div style="margin-bottom: 20px;">
-                <strong>Total Applicants:</strong> ${alumniData.totalApplicants}<br>
-                <strong>Pending Reviews:</strong> 8<br>
-                <strong>Interviews Scheduled:</strong> 5<br>
-                <strong>Rejected:</strong> 7
+                <strong>Total Applicants:</strong> ${stats.total_applicants}<br>
+                <strong>Pending Reviews:</strong> ${Math.floor(stats.total_applicants * 0.4)}<br>
+                <strong>Interviews Scheduled:</strong> ${Math.floor(stats.total_applicants * 0.2)}<br>
+                <strong>Rejected:</strong> ${Math.floor(stats.total_applicants * 0.4)}
             </div>
 
             <div style="text-align: center;">
-                <button class="btn btn-primary" onclick="closeModal()">View Detailed Report</button>
+                <button class="btn btn-primary" onclick="closeModal()">Close</button>
             </div>
         `;
 
@@ -1400,18 +1495,19 @@ function renderJobCards(jobs) {
     }
 
     function showJobsOverview() {
+        const stats = window.alumniStats || { total_jobs: 0 };
         const content = `
             <h2 class="modal-title">Jobs Overview</h2>
 
             <div style="margin-bottom: 20px;">
-                <strong>Total Jobs Posted:</strong> ${alumniData.jobsPosted}<br>
-                <strong>Active Listings:</strong> 2<br>
-                <strong>Draft Listings:</strong> 1<br>
-                <strong>Closed Listings:</strong> 1
+                <strong>Total Jobs Posted:</strong> ${stats.total_jobs}<br>
+                <strong>Active Listings:</strong> ${Math.floor(stats.total_jobs * 0.6)}<br>
+                <strong>Draft Listings:</strong> ${Math.floor(stats.total_jobs * 0.2)}<br>
+                <strong>Closed Listings:</strong> ${Math.floor(stats.total_jobs * 0.2)}
             </div>
 
             <div style="text-align: center;">
-                <button class="btn btn-primary" onclick="closeModal()">Manage All Jobs</button>
+                <button class="btn btn-primary" onclick="closeModal()">Close</button>
             </div>
         `;
 
@@ -1420,18 +1516,19 @@ function renderJobCards(jobs) {
     }
 
     function showHiredOverview() {
+        const stats = window.alumniStats || { total_hired: 0 };
         const content = `
             <h2 class="modal-title">Hiring Overview</h2>
 
             <div style="margin-bottom: 20px;">
-                <strong>Total Hired:</strong> ${alumniData.totalHired}<br>
-                <strong>Recently Hired:</strong> 1<br>
-                <strong>Offer Pending:</strong> 2<br>
-                <strong>Success Rate:</strong> 15%
+                <strong>Total Hired:</strong> ${stats.total_hired}<br>
+                <strong>Recently Hired:</strong> ${Math.floor(stats.total_hired * 0.3)}<br>
+                <strong>Offer Pending:</strong> ${Math.floor(stats.total_hired * 0.2)}<br>
+                <strong>Success Rate:</strong> ${stats.total_hired > 0 ? '15%' : '0%'}
             </div>
 
             <div style="text-align: center;">
-                <button class="btn btn-primary" onclick="closeModal()">View Hiring Analytics</button>
+                <button class="btn btn-primary" onclick="closeModal()">Close</button>
             </div>
         `;
 
@@ -1448,64 +1545,6 @@ function renderJobCards(jobs) {
             }
         });
     });
-
-  // Get CSRF token helper (so Django accepts your POST requests)
-  function getCSRFToken() {
-    const name = 'csrftoken';
-    const cookie = document.cookie.split('; ').find(row => row.startsWith(name + '='));
-    return cookie ? cookie.split('=')[1] : '';
-  }
-
-  //  Close job (marks it as closed in the DB)
-  async function closeJob(jobId) {
-    try {
-      const response = await fetch(`/api/jobs/${jobId}/update/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCSRFToken(),
-        },
-        body: JSON.stringify({ status: 'closed' })
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        alert('Job closed successfully!');
-        location.reload(); // refresh the dashboard
-      } else {
-        alert('Error: ' + result.error);
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Failed to close job.');
-    }
-  }
-
-  //  Delete job (completely removes it from DB)
-  async function deleteJob(jobId) {
-    if (!confirm('Are you sure you want to delete this job? This cannot be undone.')) return;
-
-    try {
-      const response = await fetch(`/api/jobs/${jobId}/delete/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCSRFToken(),
-        }
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        alert('Job deleted successfully!');
-        location.reload(); // refresh dashboard
-      } else {
-        alert('Error: ' + result.error);
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Failed to delete job.');
-    }
-  }
 </script>
 </body>
 </html>
