@@ -395,7 +395,7 @@ body {
 
               <div class="log-in-as-a-student-back-to-home">Login as Alumni</div>
            </div>
-            <form method="post" action="{% url 'alumni_dashboard' %}">
+            <form method="post">
             {% csrf_token %}
             <!-- Replace the static email/password fields with Django form fields -->
             <div class="frame-group">
