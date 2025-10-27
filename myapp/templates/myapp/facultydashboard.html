@@ -760,7 +760,7 @@
                 <section class="opportunities">
                     <div class="opportunities-header">
                         <h2 class="section-title">Your Opportunities</h2>
-                        <button class="post-opportunity-btn" id="postNewOpportunityBtn">+ Post New Opportunity</button>
+                        <a href="{% url 'post_opportunity_page' %}" class="post-opportunity-btn" id="postNewOpportunityBtn">+ Post New Opportunity</a>
                     </div>
 
                     <!-- Tabs -->
@@ -813,7 +813,7 @@
                             <span id="profileContact">Loading...</span>
                         </div>
                     </div>
-                    <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
+                    <a href="{% url 'faculty_profile' %}" class="edit-profile-btn" id="editProfileBtn">Edit Profile</a>
                 </section>
             </div>
         </div>
@@ -923,481 +923,646 @@
     </div>
 
     <script>
-        // CSRF token helper
-        function getCSRFToken() {
-            const name = 'csrftoken';
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
+// CSRF token helper
+function getCSRFToken() {
+    const name = 'csrftoken';
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-            return cookieValue;
         }
+    }
+    return cookieValue;
+}
 
-        // Current view state
-        let currentView = 'active';
-        let filteredOpportunities = [];
+// Current view state
+let currentView = 'active';
+let allOpportunities = [];
+let filteredOpportunities = [];
 
-        // Initialize dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Initializing Faculty Dashboard...');
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing Faculty Dashboard...');
 
-            // Load faculty data and opportunities
-            loadFacultyData();
-            loadFacultyStats();
-            loadOpportunities();
+    // Load all data
+    loadFacultyData();
+    loadFacultyStats();
+    loadOpportunities();
+    loadRecentApplicants();
 
-            // Set up event listeners
-            setupEventListeners();
+    // Set up event listeners
+    setupEventListeners();
 
-            // Initialize view
-            updateActiveTab();
+    // Initialize view
+    updateActiveTab();
+});
+
+// Load faculty profile data
+async function loadFacultyData() {
+    try {
+        const response = await fetch('/api/faculty/profile/');
+        if (!response.ok) throw new Error('Failed to load faculty data');
+
+        const data = await response.json();
+
+        if (data.success) {
+            const faculty = data.faculty;
+
+            // Update welcome message and profile info
+            document.getElementById('facultyName').textContent = faculty.full_name;
+            document.getElementById('profileName').textContent = faculty.full_name;
+            document.getElementById('profilePosition').textContent = faculty.position;
+            document.getElementById('profileEmail').textContent = faculty.email;
+            document.getElementById('profileOffice').textContent = faculty.office;
+            document.getElementById('profileContact').textContent = faculty.contact;
+
+            // Update profile avatar with initials
+            const initials = getInitials(faculty.first_name, faculty.last_name);
+            document.getElementById('profileAvatar').textContent = initials;
+        } else {
+            throw new Error(data.error || 'Failed to load faculty data');
+        }
+    } catch (error) {
+        console.error('Error loading faculty data:', error);
+        showError('Failed to load profile information');
+        // Set fallback values
+        document.getElementById('facultyName').textContent = 'Faculty Member';
+        document.getElementById('profileName').textContent = 'Faculty Member';
+        document.getElementById('profilePosition').textContent = 'Professor';
+        document.getElementById('profileEmail').textContent = 'faculty@uap-bd.edu';
+        document.getElementById('profileOffice').textContent = '7th floor, CSE dept. university campus';
+        document.getElementById('profileContact').textContent = '+88-0167593251';
+    }
+}
+
+// Helper function to get initials
+function getInitials(firstName, lastName) {
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+}
+
+// Load faculty statistics
+async function loadFacultyStats() {
+    try {
+        const response = await fetch('/api/faculty/stats/');
+        if (!response.ok) throw new Error('Failed to load statistics');
+
+        const stats = await response.json();
+
+        document.getElementById('totalStudents').textContent = stats.total_students || 0;
+        document.getElementById('totalOpportunities').textContent = stats.total_opportunities || 0;
+        document.getElementById('totalHired').textContent = stats.total_hired || 0;
+        document.getElementById('totalApplied').textContent = stats.total_applied || 0;
+    } catch (error) {
+        console.error('Error loading faculty stats:', error);
+        showError('Failed to load statistics');
+
+        // Set defaults on error
+        document.getElementById('totalStudents').textContent = '0';
+        document.getElementById('totalOpportunities').textContent = '0';
+        document.getElementById('totalHired').textContent = '0';
+        document.getElementById('totalApplied').textContent = '0';
+    }
+}
+
+// Load opportunities from API
+async function loadOpportunities() {
+    try {
+        showLoading('opportunityCardsContainer');
+
+        const response = await fetch('/api/faculty/opportunities/');
+        if (!response.ok) throw new Error('Failed to load opportunities');
+
+        const opportunities = await response.json();
+        allOpportunities = opportunities;
+        filterOpportunitiesByView();
+    } catch (error) {
+        console.error('Error loading opportunities:', error);
+        showError('Failed to load opportunities');
+        renderOpportunityCards([]);
+    }
+}
+
+// Load recent applicants
+async function loadRecentApplicants() {
+    try {
+        const response = await fetch('/api/faculty/recent-applicants/');
+        if (!response.ok) throw new Error('Failed to load recent applicants');
+
+        const applicants = await response.json();
+        renderRecentApplicants(applicants);
+    } catch (error) {
+        console.error('Error loading recent applicants:', error);
+        renderRecentApplicants([]);
+    }
+}
+
+// Render recent applicants in sidebar
+function renderRecentApplicants(applicants) {
+    const container = document.getElementById('recentApplicantsList');
+    container.innerHTML = '';
+
+    if (applicants.length === 0) {
+        container.innerHTML = `
+            <div class="applicant-item" style="text-align: center; color: var(--color-silver);">
+                No recent applicants
+            </div>
+        `;
+        return;
+    }
+
+    applicants.forEach(applicant => {
+        const applicantItem = document.createElement('div');
+        applicantItem.className = 'applicant-item';
+        applicantItem.innerHTML = `
+            <div class="applicant-name">${applicant.name}</div>
+            <div class="applicant-position">${applicant.position}</div>
+            <div class="applicant-time">${applicant.date} at ${applicant.time}</div>
+        `;
+        container.appendChild(applicantItem);
+    });
+}
+
+// Filter opportunities based on current view
+function filterOpportunitiesByView() {
+    switch(currentView) {
+        case 'active':
+            filteredOpportunities = allOpportunities.filter(opportunity => opportunity.status === 'active');
+            break;
+        case 'pending':
+            filteredOpportunities = allOpportunities.filter(opportunity => opportunity.status === 'pending');
+            break;
+        case 'closed':
+            filteredOpportunities = allOpportunities.filter(opportunity => opportunity.status === 'closed');
+            break;
+        default:
+            filteredOpportunities = allOpportunities;
+    }
+    renderOpportunityCards(filteredOpportunities);
+}
+
+// Render opportunity cards
+function renderOpportunityCards(opportunities) {
+    const container = document.getElementById('opportunityCardsContainer');
+    container.innerHTML = '';
+
+    if (opportunities.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue-200); font-size: var(--fs-20);">
+                No ${currentView} opportunities found.
+                ${currentView === 'active' ? '<br><button class="post-opportunity-btn" style="margin-top: 20px;" id="postNewOpportunityBtnEmpty">Post Your First Opportunity</button>' : ''}
+            </div>
+        `;
+
+        // Re-attach event listener if button was recreated
+        const postBtn = document.getElementById('postNewOpportunityBtnEmpty');
+        if (postBtn) {
+            postBtn.addEventListener('click', openPostOpportunityModal);
+        }
+        return;
+    }
+
+    opportunities.forEach((opportunity) => {
+        const opportunityCard = document.createElement('div');
+        opportunityCard.className = 'opportunity-card';
+        opportunityCard.setAttribute('data-opportunity-id', opportunity.id);
+
+        opportunityCard.innerHTML = `
+            <div class="opportunity-card-content" style="position: relative; height: 100%;">
+                ${getStatusBadge(opportunity.status)}
+
+                <div class="opportunity-header">
+                    <div>
+                        <h3 class="opportunity-title">${escapeHtml(opportunity.title)}</h3>
+                        <p class="opportunity-department">${escapeHtml(opportunity.department)}</p>
+                    </div>
+                </div>
+
+                <div class="opportunity-details">
+                    <div><strong>Type:</strong> ${getOpportunityTypeDisplay(opportunity.opportunity_type)}</div>
+                    <div><strong>Applicants:</strong> ${opportunity.applicants_count}</div>
+                </div>
+
+                <div class="opportunity-meta">
+                    <div><strong>Posted:</strong> ${opportunity.posted_date}</div>
+                    <div><strong>Deadline:</strong> ${opportunity.deadline}</div>
+                </div>
+
+                <div class="opportunity-meta">
+                    <div class="opportunity-tag">${getOpportunityTypeDisplay(opportunity.opportunity_type)}</div>
+                    <div class="opportunity-tag">${opportunity.applicants_count} Applicants</div>
+                </div>
+
+                <div class="opportunity-actions">
+                    <button class="action-btn view-applicants" onclick="event.stopPropagation(); viewApplicants(${opportunity.id})">
+                        View Applicants (${opportunity.applicants_count})
+                    </button>
+                    <button class="action-btn edit-opportunity" onclick="event.stopPropagation(); editOpportunity(${opportunity.id})">
+                        Edit Listing
+                    </button>
+                    <button class="action-btn close-opportunity" onclick="event.stopPropagation(); ${opportunity.status === 'active' ? 'closeOpportunity' : 'deleteOpportunity'}(${opportunity.id})">
+                        ${opportunity.status === 'active' ? 'Close Opportunity' : 'Delete'}
+                    </button>
+                </div>
+            </div>
+        `;
+
+        opportunityCard.addEventListener('click', function(e) {
+            if (!e.target.closest('.opportunity-actions')) {
+                viewOpportunityDetails(opportunity.id);
+            }
         });
 
-        // Load faculty data
-        async function loadFacultyData() {
-            try {
-                // In a real implementation, you might want to fetch faculty details from an API
-                // For now, we'll use the session data
-                document.getElementById('facultyName').textContent = 'Faculty Member';
-                document.getElementById('profileName').textContent = 'Faculty Member';
-                document.getElementById('profilePosition').textContent = 'Professor';
-                document.getElementById('profileEmail').textContent = 'faculty@uap-bd.edu';
-                document.getElementById('profileOffice').textContent = '7th floor, CSE dept. university campus';
-                document.getElementById('profileContact').textContent = '+88-0167593251';
-            } catch (error) {
-                console.error('Error loading faculty data:', error);
-            }
-        }
+        container.appendChild(opportunityCard);
+    });
+}
 
-        // Load faculty statistics
-        async function loadFacultyStats() {
-            try {
-                const response = await fetch('/api/faculty/stats/');
-                const stats = await response.json();
+// Helper function to get status badge HTML
+function getStatusBadge(status) {
+    const statusConfig = {
+        'active': { text: 'Active', class: 'active' },
+        'pending': { text: 'Pending Approval', class: 'pending' },
+        'closed': { text: 'Closed', class: 'closed' },
+        'draft': { text: 'Draft', class: 'draft' }
+    };
 
-                document.getElementById('totalStudents').textContent = stats.total_students;
-                document.getElementById('totalOpportunities').textContent = stats.total_opportunities;
-                document.getElementById('totalHired').textContent = stats.total_hired;
-                document.getElementById('totalApplied').textContent = stats.total_applied;
-            } catch (error) {
-                console.error('Error loading faculty stats:', error);
-            }
-        }
+    const config = statusConfig[status] || { text: status, class: 'default' };
 
-        // Load opportunities from API
-        async function loadOpportunities() {
-            try {
-                const response = await fetch('/api/opportunities/faculty/');
-                const opportunities = await response.json();
-                filteredOpportunities = opportunities;
-                renderOpportunityCards(filteredOpportunities);
-            } catch (error) {
-                console.error('Error loading opportunities:', error);
-                renderOpportunityCards([]);
-            }
-        }
+    return `
+        <div style="position: absolute; top: 20px; right: 20px;
+                    background: ${getStatusColor(status)};
+                    color: ${getStatusTextColor(status)};
+                    padding: 5px 12px; border-radius: var(--br-10);
+                    font-weight: 600; font-size: 14px;">
+            ${config.text}
+        </div>
+    `;
+}
 
-        // Render opportunity cards
-        function renderOpportunityCards(opportunities) {
-            const container = document.getElementById('opportunityCardsContainer');
-            container.innerHTML = '';
+// Helper function to get status color
+function getStatusColor(status) {
+    const colors = {
+        'active': 'var(--color-lightgreen)',
+        'pending': 'var(--color-silver)',
+        'closed': 'var(--color-firebrick)',
+        'draft': 'var(--color-lightsteelblue-200)'
+    };
+    return colors[status] || 'var(--color-silver)';
+}
 
-            if (opportunities.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue-200); font-size: var(--fs-20);">
-                        No opportunities found in this category.
-                    </div>
-                `;
-                return;
-            }
+// Helper function to get status text color
+function getStatusTextColor(status) {
+    return status === 'active' ? 'var(--color-darkgreen)' : 'white';
+}
 
-            opportunities.forEach((opportunity) => {
-                const opportunityCard = document.createElement('div');
-                opportunityCard.className = 'opportunity-card';
-                opportunityCard.setAttribute('data-opportunity-id', opportunity.id);
+// Helper function to escape HTML
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
-                opportunityCard.innerHTML = `
-                    <div class="opportunity-card-content" style="position: relative; height: 100%;">
-                        ${opportunity.status === 'active' ? `
-                        <div style="position: absolute; top: 20px; right: 20px; background: var(--color-lightgreen); color: var(--color-darkgreen); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
-                            Active
-                        </div>
-                        ` : opportunity.status === 'pending' ? `
-                        <div style="position: absolute; top: 20px; right: 20px; background: var(--color-silver); color: var(--color-black); padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
-                            Pending
-                        </div>
-                        ` : `
-                        <div style="position: absolute; top: 20px; right: 20px; background: var(--color-firebrick); color: white; padding: 5px 12px; border-radius: var(--br-10); font-weight: 600;">
-                            Closed
-                        </div>
-                        `}
+// Helper function to display opportunity type
+function getOpportunityTypeDisplay(type) {
+    const typeMap = {
+        'teaching': 'Teaching Assistant',
+        'research': 'Research Assistant',
+        'part_time': 'Part Time',
+        'internship': 'Internship'
+    };
+    return typeMap[type] || type;
+}
 
-                        <div class="opportunity-header">
-                            <div>
-                                <h3 class="opportunity-title">${opportunity.title}</h3>
-                                <p class="opportunity-department">${opportunity.department}</p>
-                            </div>
-                        </div>
+// Update active tab styling and filter
+function updateActiveTab() {
+    const activeTab = document.getElementById('activeTab');
+    const pendingTab = document.getElementById('pendingTab');
+    const closedTab = document.getElementById('closedTab');
 
-                        <div class="opportunity-details">
-                            <div><strong>Type:</strong> ${getOpportunityTypeDisplay(opportunity.opportunity_type)}</div>
-                            <div><strong>Applicants:</strong> ${opportunity.applicants_count}</div>
-                        </div>
+    // Remove active class from all tabs
+    [activeTab, pendingTab, closedTab].forEach(tab => {
+        tab.classList.remove('active');
+    });
 
-                        <div class="opportunity-meta">
-                            <div><strong>Posted:</strong> ${opportunity.posted_date}</div>
-                            <div><strong>Deadline:</strong> ${opportunity.deadline}</div>
-                        </div>
+    // Add active class to current tab
+    document.getElementById(currentView + 'Tab').classList.add('active');
 
-                        <div class="opportunity-meta">
-                            <div class="opportunity-tag">${getOpportunityTypeDisplay(opportunity.opportunity_type)}</div>
-                            <div class="opportunity-tag">${opportunity.applicants_count} Applicants</div>
-                        </div>
+    // Filter opportunities
+    filterOpportunitiesByView();
+}
 
-                        <div class="opportunity-actions">
-                            <button class="action-btn view-applicants" onclick="event.stopPropagation(); viewApplicants(${opportunity.id})">
-                                View Applicants (${opportunity.applicants_count})
-                            </button>
-                            <button class="action-btn edit-opportunity" onclick="event.stopPropagation(); editOpportunity(${opportunity.id})">
-                                Edit Listing
-                            </button>
-                            <button class="action-btn close-opportunity" onclick="event.stopPropagation(); ${opportunity.status === 'active' ? 'closeOpportunity' : 'deleteOpportunity'}(${opportunity.id})">
-                                ${opportunity.status === 'active' ? 'Close Opportunity' : 'Delete'}
-                            </button>
-                        </div>
-                    </div>
-                `;
+// Set up event listeners
+function setupEventListeners() {
+    // Tab switching
+    const activeTab = document.getElementById('activeTab');
+    const pendingTab = document.getElementById('pendingTab');
+    const closedTab = document.getElementById('closedTab');
 
-                opportunityCard.addEventListener('click', function(e) {
-                    if (!e.target.closest('.opportunity-actions')) {
-                        viewOpportunityDetails(opportunity.id);
-                    }
-                });
+    activeTab.addEventListener('click', function() {
+        currentView = 'active';
+        updateActiveTab();
+    });
 
-                container.appendChild(opportunityCard);
-            });
-        }
+    pendingTab.addEventListener('click', function() {
+        currentView = 'pending';
+        updateActiveTab();
+    });
 
-        // Helper function to display opportunity type
-        function getOpportunityTypeDisplay(type) {
-            const typeMap = {
-                'teaching': 'Teaching Assistant',
-                'research': 'Research Assistant',
-                'part_time': 'Part Time',
-                'internship': 'Internship'
-            };
-            return typeMap[type] || type;
-        }
+    closedTab.addEventListener('click', function() {
+        currentView = 'closed';
+        updateActiveTab();
+    });
 
-        // Filter opportunities based on current view
-        function filterOpportunities() {
-            switch(currentView) {
-                case 'active':
-                    filteredOpportunities = filteredOpportunities.filter(opportunity => opportunity.status === 'active');
-                    break;
-                case 'pending':
-                    filteredOpportunities = filteredOpportunities.filter(opportunity => opportunity.status === 'pending');
-                    break;
-                case 'closed':
-                    filteredOpportunities = filteredOpportunities.filter(opportunity => opportunity.status === 'closed');
-                    break;
-            }
-            renderOpportunityCards(filteredOpportunities);
-        }
+    // Post new opportunity button
+    const postNewOpportunityBtn = document.getElementById('postNewOpportunityBtn');
+    postNewOpportunityBtn.addEventListener('click', openPostOpportunityModal);
 
-        // Update active tab styling
-        function updateActiveTab() {
-            const activeTab = document.getElementById('activeTab');
-            const pendingTab = document.getElementById('pendingTab');
-            const closedTab = document.getElementById('closedTab');
+    // Edit profile button
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    editProfileBtn.addEventListener('click', editProfile);
 
-            // Remove active class from all tabs
-            [activeTab, pendingTab, closedTab].forEach(tab => {
-                tab.classList.remove('active');
-            });
+    // View all applicants button
+    const viewAllApplicantsBtn = document.getElementById('viewAllApplicantsBtn');
+    viewAllApplicantsBtn.addEventListener('click', viewAllApplicants);
 
-            // Add active class to current tab
-            document.getElementById(currentView + 'Tab').classList.add('active');
-        }
-
-        // Set up event listeners
-        function setupEventListeners() {
-            // Tab switching
-            const activeTab = document.getElementById('activeTab');
-            const pendingTab = document.getElementById('pendingTab');
-            const closedTab = document.getElementById('closedTab');
-
-            activeTab.addEventListener('click', function() {
-                currentView = 'active';
-                updateActiveTab();
-                loadOpportunities(); // Reload to get filtered data
-            });
-
-            pendingTab.addEventListener('click', function() {
-                currentView = 'pending';
-                updateActiveTab();
-                loadOpportunities(); // Reload to get filtered data
-            });
-
-            closedTab.addEventListener('click', function() {
-                currentView = 'closed';
-                updateActiveTab();
-                loadOpportunities(); // Reload to get filtered data
-            });
-
-            // Post new opportunity button
-            const postNewOpportunityBtn = document.getElementById('postNewOpportunityBtn');
-            postNewOpportunityBtn.addEventListener('click', function() {
-                openPostOpportunityModal();
-            });
-
-            // Edit profile button
-            const editProfileBtn = document.getElementById('editProfileBtn');
-            editProfileBtn.addEventListener('click', function() {
-                editProfile();
-            });
-
-            // View all applicants button
-            const viewAllApplicantsBtn = document.getElementById('viewAllApplicantsBtn');
-            viewAllApplicantsBtn.addEventListener('click', function() {
-                viewAllApplicants();
-            });
-
-            // New opportunity form submission
-            const newOpportunityForm = document.getElementById('newOpportunityForm');
-            if (newOpportunityForm) {
-                newOpportunityForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    submitNewOpportunity();
-                });
-            }
-        }
-
-        // Modal functions
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
-
-        function closeModal() {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                modal.style.display = 'none';
-            });
-        }
-
-        function openPostOpportunityModal() {
-            showModal('postOpportunityModal');
-        }
-
-        // Opportunity management functions
-        function viewOpportunityDetails(opportunityId) {
-            const opportunity = filteredOpportunities.find(o => o.id === opportunityId);
-            if (opportunity) {
-                const opportunityDetails = `
-                    <h2 class="modal-title">${opportunity.title}</h2>
-                    <h3 style="color: var(--color-gray); margin-bottom: 15px;">${opportunity.department}</h3>
-
-                    <div style="margin-bottom: 15px;">
-                        <strong>Type:</strong> ${getOpportunityTypeDisplay(opportunity.opportunity_type)}<br>
-                        <strong>Applicants:</strong> ${opportunity.applicants_count}<br>
-                        <strong>Expected Applicants:</strong> ${opportunity.expected_applicants}<br>
-                        <strong>Deadline:</strong> ${opportunity.deadline}<br>
-                        <strong>Posted:</strong> ${opportunity.posted_date}<br>
-                        <strong>Status:</strong> ${opportunity.status.charAt(0).toUpperCase() + opportunity.status.slice(1)}
-                    </div>
-
-                    <div style="margin-bottom: 20px;">
-                        <strong>Description:</strong><br>
-                        ${opportunity.description}
-                    </div>
-
-                    ${opportunity.requirements && opportunity.requirements.length > 0 ? `
-                    <div style="margin-bottom: 20px;">
-                        <strong>Requirements:</strong><br>
-                        ${opportunity.requirements.map(req => `• ${req}`).join('<br>')}
-                    </div>
-                    ` : ''}
-
-                    <div style="text-align: center;">
-                        <button class="btn btn-primary" onclick="editOpportunity(${opportunity.id})">Edit Opportunity</button>
-                        <button class="btn btn-cancel" onclick="${opportunity.status === 'active' ? 'closeOpportunity' : 'deleteOpportunity'}(${opportunity.id})">
-                            ${opportunity.status === 'active' ? 'Close Opportunity' : 'Delete Opportunity'}
-                        </button>
-                    </div>
-                `;
-
-                document.getElementById('modalContent').innerHTML = opportunityDetails;
-                showModal('opportunityModal');
-            }
-        }
-
-        async function viewApplicants(opportunityId) {
-            try {
-                const response = await fetch(`/api/opportunities/${opportunityId}/applicants/`);
-                const applicants = await response.json();
-
-                const opportunity = filteredOpportunities.find(o => o.id === opportunityId);
-                const applicantsContent = `
-                    <h2 class="modal-title">Applicants for ${opportunity.title}</h2>
-                    <h3 style="color: var(--color-gray); margin-bottom: 15px;">${applicants.length} Applicants</h3>
-
-                    <div style="max-height: 400px; overflow-y: auto;">
-                        ${applicants.length > 0 ? applicants.map(applicant => `
-                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 5px; margin-bottom: 10px;">
-                                <strong>${applicant.name}</strong><br>
-                                <small>Student ID: ${applicant.student_id}</small><br>
-                                <small>Email: ${applicant.email}</small><br>
-                                <small>Graduation Year: ${applicant.graduation_year}</small><br>
-                                <small>Applied: ${applicant.applied_at}</small><br>
-                                <small>Status: ${applicant.status}</small>
-                            </div>
-                        `).join('') : `
-                            <div style="text-align: center; padding: 20px; color: var(--color-silver);">
-                                No applicants yet.
-                            </div>
-                        `}
-                    </div>
-                `;
-
-                document.getElementById('modalContent').innerHTML = applicantsContent;
-                showModal('opportunityModal');
-            } catch (error) {
-                console.error('Error loading applicants:', error);
-                alert('Failed to load applicants.');
-            }
-        }
-
-        function editOpportunity(opportunityId) {
-            const opportunity = filteredOpportunities.find(o => o.id === opportunityId);
-            alert(`Editing opportunity: ${opportunity.title}`);
-            closeModal();
-        }
-
-        async function closeOpportunity(opportunityId) {
-            const opportunity = filteredOpportunities.find(o => o.id === opportunityId);
-            if (opportunity && confirm(`Are you sure you want to close "${opportunity.title}"?`)) {
-                try {
-                    const response = await fetch(`/api/opportunities/${opportunityId}/update/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': getCSRFToken(),
-                        },
-                        body: JSON.stringify({ status: 'closed' })
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        alert(`Opportunity "${opportunity.title}" has been closed.`);
-                        closeModal();
-                        loadOpportunities(); // Reload opportunities
-                        loadFacultyStats(); // Reload stats
-                    } else {
-                        alert('Error: ' + result.error);
-                    }
-                } catch (error) {
-                    console.error('Error closing opportunity:', error);
-                    alert('Failed to close opportunity. Please try again.');
-                }
-            }
-        }
-
-        async function deleteOpportunity(opportunityId) {
-            const opportunity = filteredOpportunities.find(o => o.id === opportunityId);
-            if (opportunity && confirm(`Are you sure you want to delete "${opportunity.title}"? This action cannot be undone.`)) {
-                try {
-                    const response = await fetch(`/api/opportunities/${opportunityId}/delete/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': getCSRFToken(),
-                        }
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        alert(`Opportunity "${opportunity.title}" has been deleted.`);
-                        closeModal();
-                        loadOpportunities(); // Reload opportunities
-                        loadFacultyStats(); // Reload stats
-                    } else {
-                        alert('Error: ' + result.error);
-                    }
-                } catch (error) {
-                    console.error('Error deleting opportunity:', error);
-                    alert('Failed to delete opportunity. Please try again.');
-                }
-            }
-        }
-
-        async function submitNewOpportunity() {
-            const form = document.getElementById('newOpportunityForm');
-
-            const opportunityData = {
-                title: document.getElementById('opportunityTitle').value,
-                department: document.getElementById('opportunityDepartment').value,
-                opportunity_type: document.getElementById('opportunityType').value,
-                description: document.getElementById('opportunityDescription').value,
-                expected_applicants: parseInt(document.getElementById('opportunityApplicants').value) || 0,
-                deadline: document.getElementById('opportunityDeadline').value,
-                status: 'active'
-            };
-
-            try {
-                const response = await fetch('/api/opportunities/post/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCSRFToken(),
-                    },
-                    body: JSON.stringify(opportunityData)
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Opportunity posted successfully!');
-                    closeModal();
-                    form.reset();
-                    loadOpportunities(); // Reload opportunities
-                    loadFacultyStats(); // Reload stats
-                } else {
-                    alert('Error: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Error posting opportunity:', error);
-                alert('Failed to post opportunity. Please try again.');
-            }
-        }
-
-        function saveAsDraft() {
-            alert('Opportunity saved as draft!');
-            closeModal();
-        }
-
-        function editProfile() {
-            alert('Edit profile functionality would go here.');
-        }
-
-        function viewAllApplicants() {
-            alert('View all applicants functionality would go here.');
-        }
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(e) {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            });
+    // New opportunity form submission
+    const newOpportunityForm = document.getElementById('newOpportunityForm');
+    if (newOpportunityForm) {
+        newOpportunityForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitNewOpportunity();
         });
+    }
+}
+
+// Modal functions
+function showModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+
+function closeModal() {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.style.display = 'none';
+    });
+}
+
+function openPostOpportunityModal() {
+    showModal('postOpportunityModal');
+}
+
+// Opportunity management functions
+function viewOpportunityDetails(opportunityId) {
+    const opportunity = allOpportunities.find(o => o.id === opportunityId);
+    if (opportunity) {
+        const opportunityDetails = `
+            <h2 class="modal-title">${opportunity.title}</h2>
+            <h3 style="color: var(--color-gray); margin-bottom: 15px;">${opportunity.department}</h3>
+
+            <div style="margin-bottom: 15px;">
+                <strong>Type:</strong> ${getOpportunityTypeDisplay(opportunity.opportunity_type)}<br>
+                <strong>Applicants:</strong> ${opportunity.applicants_count}<br>
+                <strong>Expected Applicants:</strong> ${opportunity.expected_applicants}<br>
+                <strong>Deadline:</strong> ${opportunity.deadline}<br>
+                <strong>Posted:</strong> ${opportunity.posted_date}<br>
+                <strong>Status:</strong> ${opportunity.status.charAt(0).toUpperCase() + opportunity.status.slice(1)}
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <strong>Description:</strong><br>
+                ${opportunity.description}
+            </div>
+
+            ${opportunity.requirements && opportunity.requirements.length > 0 ? `
+            <div style="margin-bottom: 20px;">
+                <strong>Requirements:</strong><br>
+                ${opportunity.requirements.map(req => `• ${req}`).join('<br>')}
+            </div>
+            ` : ''}
+
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="editOpportunity(${opportunity.id})">Edit Opportunity</button>
+                <button class="btn btn-cancel" onclick="${opportunity.status === 'active' ? 'closeOpportunity' : 'deleteOpportunity'}(${opportunity.id})">
+                    ${opportunity.status === 'active' ? 'Close Opportunity' : 'Delete Opportunity'}
+                </button>
+            </div>
+        `;
+
+        document.getElementById('modalContent').innerHTML = opportunityDetails;
+        showModal('opportunityModal');
+    }
+}
+
+async function viewApplicants(opportunityId) {
+    try {
+        const response = await fetch(`/api/opportunities/${opportunityId}/applicants/`);
+        if (!response.ok) throw new Error('Failed to load applicants');
+
+        const applicants = await response.json();
+
+        const opportunity = allOpportunities.find(o => o.id === opportunityId);
+        const applicantsContent = `
+            <h2 class="modal-title">Applicants for ${opportunity.title}</h2>
+            <h3 style="color: var(--color-gray); margin-bottom: 15px;">${applicants.length} Applicants</h3>
+
+            <div style="max-height: 400px; overflow-y: auto;">
+                ${applicants.length > 0 ? applicants.map(applicant => `
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 5px; margin-bottom: 10px;">
+                        <strong>${applicant.name}</strong><br>
+                        <small>Student ID: ${applicant.student_id}</small><br>
+                        <small>Email: ${applicant.email}</small><br>
+                        <small>Graduation Year: ${applicant.graduation_year}</small><br>
+                        <small>Applied: ${applicant.applied_at}</small><br>
+                        <small>Status: ${applicant.status}</small>
+                    </div>
+                `).join('') : `
+                    <div style="text-align: center; padding: 20px; color: var(--color-silver);">
+                        No applicants yet.
+                    </div>
+                `}
+            </div>
+        `;
+
+        document.getElementById('modalContent').innerHTML = applicantsContent;
+        showModal('opportunityModal');
+    } catch (error) {
+        console.error('Error loading applicants:', error);
+        alert('Failed to load applicants.');
+    }
+}
+
+function editOpportunity(opportunityId) {
+    const opportunity = allOpportunities.find(o => o.id === opportunityId);
+    alert(`Editing opportunity: ${opportunity.title}`);
+    closeModal();
+}
+
+async function closeOpportunity(opportunityId) {
+    const opportunity = allOpportunities.find(o => o.id === opportunityId);
+    if (opportunity && confirm(`Are you sure you want to close "${opportunity.title}"?`)) {
+        try {
+            const response = await fetch(`/api/opportunities/${opportunityId}/update/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: JSON.stringify({ status: 'closed' })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(`Opportunity "${opportunity.title}" has been closed.`);
+                closeModal();
+                loadOpportunities(); // Reload opportunities
+                loadFacultyStats(); // Reload stats
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error closing opportunity:', error);
+            alert('Failed to close opportunity. Please try again.');
+        }
+    }
+}
+
+async function deleteOpportunity(opportunityId) {
+    const opportunity = allOpportunities.find(o => o.id === opportunityId);
+    if (opportunity && confirm(`Are you sure you want to delete "${opportunity.title}"? This action cannot be undone.`)) {
+        try {
+            const response = await fetch(`/api/opportunities/${opportunityId}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(),
+                }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(`Opportunity "${opportunity.title}" has been deleted.`);
+                closeModal();
+                loadOpportunities(); // Reload opportunities
+                loadFacultyStats(); // Reload stats
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error deleting opportunity:', error);
+            alert('Failed to delete opportunity. Please try again.');
+        }
+    }
+}
+
+async function submitNewOpportunity() {
+    const form = document.getElementById('newOpportunityForm');
+
+    const opportunityData = {
+        title: document.getElementById('opportunityTitle').value,
+        department: document.getElementById('opportunityDepartment').value,
+        opportunity_type: document.getElementById('opportunityType').value,
+        description: document.getElementById('opportunityDescription').value,
+        expected_applicants: parseInt(document.getElementById('opportunityApplicants').value) || 0,
+        deadline: document.getElementById('opportunityDeadline').value,
+
+    };
+
+    try {
+        const response = await fetch('/api/faculty/opportunities/post/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify(opportunityData)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Opportunity posted successfully!');
+            closeModal();
+            form.reset();
+            loadOpportunities(); // Reload opportunities
+            loadFacultyStats(); // Reload stats
+        } else {
+            alert('Error: ' + result.error);
+        }
+    } catch (error) {
+        console.error('Error posting opportunity:', error);
+        alert('Failed to post opportunity. Please try again.');
+    }
+}
+
+function saveAsDraft() {
+    alert('Opportunity saved as draft!');
+    closeModal();
+}
+
+function editProfile() {
+    alert('Edit profile functionality would go here.');
+}
+
+function viewAllApplicants() {
+    alert('View all applicants functionality would go here.');
+}
+
+// Show loading state
+function showLoading(containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: var(--color-lightsteelblue-200);">
+            <div style="font-size: 18px; margin-bottom: 10px;">Loading...</div>
+            <div class="loading-spinner"></div>
+        </div>
+    `;
+}
+
+// Show error message
+function showError(message) {
+    // You can implement a toast notification system here
+    console.error('Error:', message);
+    alert(message); // Simple alert for now
+}
+
+// Add loading spinner CSS
+const loadingStyles = `
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+`;
+
+// Inject loading styles
+const styleSheet = document.createElement("style");
+styleSheet.innerText = loadingStyles;
+document.head.appendChild(styleSheet);
+
+// Close modal when clicking outside
+window.addEventListener('click', function(e) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+});
     </script>
 </body>
 </html>
