@@ -1,1207 +1,1520 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<meta charset="utf-8">
-  	<meta name="viewport" content="initial-scale=1, width=device-width">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
 
 
-  	<link rel="stylesheet" href="./global.css" />
-  	<link rel="stylesheet"  href="./index.css" />
-  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
-  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
-  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
-  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="./global.css" />
+    <link rel="stylesheet"  href="./index.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=[object Object]&display=swap" />
 
 
 <style>
 
 body {
-  	margin: 0;
-  	line-height: normal;
+    margin: 0;
+    line-height: normal;
 }
 
 
 :root {
 
-  	/* Common Style Variables */
+    /* Common Style Variables */
 
-  	/* Color */
-  	--color-darkslateblue-100: #6d68ab;
-  	--color-darkslateblue-200: #46479d;
-  	--color-forestgreen: #078035;
-  	--color-gainsboro: #d9d9d9;
-  	--color-gold: #f2d203;
-  	--color-gray: #fefefe;
-  	--color-lightsteelblue: #969dc9;
-  	--color-midnightblue-100: #21287d;
-  	--color-midnightblue-200: #131a73;
-  	--color-midnightblue-300: rgba(33, 40, 125, 0.2);
-  	--color-snow: #fffcfc;
-  	--color-white: #fff;
+    /* Color */
+    --color-darkslateblue-100: #6d68ab;
+    --color-darkslateblue-200: #46479d;
+    --color-forestgreen: #078035;
+    --color-gainsboro: #d9d9d9;
+    --color-gold: #f2d203;
+    --color-gray: #fefefe;
+    --color-lightsteelblue: #969dc9;
+    --color-midnightblue-100: #21287d;
+    --color-midnightblue-200: #131a73;
+    --color-midnightblue-300: rgba(33, 40, 125, 0.2);
+    --color-snow: #fffcfc;
+    --color-white: #fff;
 
-  	/* Gap */
-  	--gap-3: 3px;
-  	--gap-10: 10px;
+    /* Gap */
+    --gap-3: 3px;
+    --gap-10: 10px;
 
-  	/* Padding */
-  	--padding-3: 3px;
-  	--padding-10: 10px;
+    /* Padding */
+    --padding-3: 3px;
+    --padding-10: 10px;
 
-  	/* BorderRadius */
-  	--br-6: 6px;
-  	--br-14: 14px;
+    /* BorderRadius */
+    --br-6: 6px;
+    --br-14: 14px;
 
-  	/* Font */
-  	--font-inter: Inter;
-  	--font-lato: Lato;
-  	--font-poppins: Poppins;
-  	--font-roboto: Roboto;
+    /* Font */
+    --font-inter: Inter;
+    --font-lato: Lato;
+    --font-poppins: Poppins;
+    --font-roboto: Roboto;
 
-  	/* FontSize */
-  	--fs-15: 15px;
-  	--fs-16: 16px;
-  	--fs-20: 20px;
-  	--fs-22: 22px;
-  	--fs-24: 24px;
-  	--fs-30: 30px;
-  	--fs-32: 32px;
+    /* FontSize */
+    --fs-15: 15px;
+    --fs-16: 16px;
+    --fs-20: 20px;
+    --fs-22: 22px;
+    --fs-24: 24px;
+    --fs-30: 30px;
+    --fs-32: 32px;
 
-  	/* Shadows */
-  	--shadow-drop: 5px 4px 4px rgba(0, 0, 0, 0.25);
-  	--text-shadow-1: 0px 4px 4px rgba(0, 0, 0, 0.2);
-  	--text-shadow-2: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    /* Shadows */
+    --shadow-drop: 5px 4px 4px rgba(0, 0, 0, 0.25);
+    --text-shadow-1: 0px 4px 4px rgba(0, 0, 0, 0.2);
+    --text-shadow-2: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-  	/* WidthHeights */
-  	--height-1: 1px;
-  	--height-24: 24px;
-  	--height-25: 25px;
-  	--height-30: 30px;
-  	--height-48: 48px;
-  	--width-24: 24px;
-  	--width-48: 48px;
+    /* WidthHeights */
+    --height-1: 1px;
+    --height-24: 24px;
+    --height-25: 25px;
+    --height-30: 30px;
+    --height-48: 48px;
+    --width-24: 24px;
+    --width-48: 48px;
 
 }
 .jobid {
-  	width: 100%;
-  	position: relative;
-  	background: linear-gradient(180deg, rgba(48, 58, 149, 0.2), rgba(118, 25, 125, 0.2) 25%, rgba(173, 0, 107, 0.2) 66%), linear-gradient(rgba(14, 82, 150, 0.2), rgba(14, 82, 150, 0.2)), #303a95;
-  	height: 1727px;
-  	overflow: hidden;
-  	text-align: left;
-  	font-size: var(--fs-15);
-  	color: var(--color-white);
-  	font-family: var(--font-inter);
+    width: 100%;
+    position: relative;
+    background: linear-gradient(180deg, rgba(48, 58, 149, 0.2), rgba(118, 25, 125, 0.2) 25%, rgba(173, 0, 107, 0.2) 66%), linear-gradient(rgba(14, 82, 150, 0.2), rgba(14, 82, 150, 0.2)), #303a95;
+    height: 1727px;
+    overflow: hidden;
+    text-align: left;
+    font-size: var(--fs-15);
+    color: var(--color-white);
+    font-family: var(--font-inter);
 }
 .back-to-home {
-  	position: absolute;
-  	top: 202px;
-  	left: 182px;
-  	font-size: var(--fs-32);
-  	font-weight: 600;
-  	font-family: var(--font-poppins);
+    position: absolute;
+    top: 202px;
+    left: 182px;
+    font-size: var(--fs-32);
+    font-weight: 600;
+    font-family: var(--font-poppins);
 }
 .frame-icon {
-  	position: absolute;
-  	top: 205px;
-  	left: 137px;
-  	width: 36px;
-  	height: 32px;
+    position: absolute;
+    top: 205px;
+    left: 137px;
+    width: 36px;
+    height: 32px;
 }
 .frame-parent {
-  	position: absolute;
-  	top: 283px;
-  	left: 127px;
-  	width: 1232px;
-  	height: 267px;
-  	font-size: var(--fs-20);
-  	font-family: var(--font-lato);
+    position: absolute;
+    top: 283px;
+    left: 127px;
+    width: 1232px;
+    height: 267px;
+    font-size: var(--fs-20);
+    font-family: var(--font-lato);
 }
 .group-wrapper {
-  	position: absolute;
-  	top: -1px;
-  	left: -1px;
-  	border-radius: var(--br-14);
-  	border: 2px solid var(--color-lightsteelblue);
-  	box-sizing: border-box;
-  	width: 1233px;
-  	height: 266px;
-  	overflow: hidden;
-  	text-align: center;
-  	font-size: var(--fs-24);
-  	font-family: var(--font-inter);
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    border-radius: var(--br-14);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 1233px;
+    height: 266px;
+    overflow: hidden;
+    text-align: center;
+    font-size: var(--fs-24);
+    font-family: var(--font-inter);
 }
 .frame-group {
-  	position: absolute;
-  	top: 191px;
-  	left: 778px;
-  	width: 374px;
-  	height: 50px;
+    position: absolute;
+    top: 191px;
+    left: 778px;
+    width: 374px;
+    height: 50px;
 }
 .apply-now-wrapper {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	box-shadow: var(--shadow-drop);
-  	border-radius: var(--br-6);
-  	background-color: var(--color-midnightblue-200);
-  	width: 177px;
-  	height: 50px;
-  	cursor: pointer;
+    position: absolute;
+    top: 0px;
+    left: 250px;
+    box-shadow: var(--shadow-drop);
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-200);
+    width: 177px;
+    height: 50px;
+    cursor: pointer;
 }
 .apply-now {
-  	position: absolute;
-  	top: 11px;
-  	left: 25px;
+    position: absolute;
+    top: 11px;
+    left: 25px;
 }
 .edit-listings-wrapper {
-  	position: absolute;
-  	top: -4px;
-  	left: 193px;
-  	box-shadow: var(--shadow-drop);
-  	border-radius: var(--br-6);
-  	background-color: var(--color-midnightblue-300);
-  	border: 4px solid var(--color-midnightblue-100);
-  	box-sizing: border-box;
-  	width: 185px;
-  	height: 58px;
-  	display: flex;
-  	align-items: center;
-  	justify-content: center;
-  	padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
-  	text-align: left;
+    position: absolute;
+    top: -4px;
+    left: 193px;
+    box-shadow: var(--shadow-drop);
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-300);
+    border: 4px solid var(--color-midnightblue-100);
+    box-sizing: border-box;
+    width: 185px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
+    text-align: left;
 }
 .edit-listings {
-  	width: 149px;
-  	position: relative;
-  	display: inline-block;
-  	height: var(--height-30);
-  	flex-shrink: 0;
+    width: 149px;
+    position: relative;
+    display: inline-block;
+    height: var(--height-30);
+    flex-shrink: 0;
 }
 .jobid-frame-icon {
-  	position: absolute;
-  	top: 149px;
-  	left: 96px;
-  	width: var(--width-24);
-  	height: var(--height-24);
+    position: absolute;
+    top: 149px;
+    left: 96px;
+    width: var(--width-24);
+    height: var(--height-24);
 }
 .posted-10 {
-  	position: absolute;
-  	top: 149px;
-  	left: 126px;
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 189px;
-  	height: var(--height-24);
+    position: absolute;
+    top: 149px;
+    left: 126px;
+    font-weight: 300;
+    display: inline-block;
+    width: 189px;
+    height: var(--height-24);
 }
 .frame-icon2 {
-  	position: absolute;
-  	top: 116px;
-  	left: 96px;
-  	width: var(--width-24);
-  	height: var(--height-24);
+    position: absolute;
+    top: 116px;
+    left: 96px;
+    width: var(--width-24);
+    height: var(--height-24);
 }
 .dhakabd {
-  	position: absolute;
-  	top: 113px;
-  	left: 126px;
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 88px;
-  	height: var(--height-24);
+    position: absolute;
+    top: 113px;
+    left: 126px;
+    font-weight: 300;
+    display: inline-block;
+    width: 300px;
+    height: var(--height-24);
 }
 .image-3-icon {
-  	position: absolute;
-  	top: 32px;
-  	left: 19px;
-  	width: 58px;
-  	height: 58px;
-	background: #383790;
-	border: 1px solid white;
-	border-radius: 8px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-weight: bold;
-	color: white;
-	font-size: 20px;
-	opacity: 0.8;
+    position: absolute;
+    top: 32px;
+    left: 19px;
+    width: 58px;
+    height: 58px;
+    background: #383790;
+    border: 1px solid white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: 20px;
+    opacity: 0.8;
 }
 .disystem {
-  	position: absolute;
-  	top: 66px;
-  	left: 102px;
-  	font-size: var(--fs-30);
-  	font-weight: 300;
-  	font-family: var(--font-roboto);
-  	color: var(--color-gray);
-  	display: inline-block;
-  	width: 150px;
-  	height: 35px;
+    position: absolute;
+    top: 66px;
+    left: 102px;
+    font-size: var(--fs-30);
+    font-weight: 300;
+    font-family: var(--font-roboto);
+    color: var(--color-gray);
+    display: inline-block;
+    width: 560px;
+    height: 35px;
 }
 .junior-backend-developer {
-  	position: absolute;
-  	top: 24px;
-  	left: 102px;
-  	font-size: var(--fs-32);
-  	font-weight: 600;
-  	display: inline-block;
-  	width: 560px;
-  	height: 38px;
+    position: absolute;
+    top: 24px;
+    left: 102px;
+    font-size: var(--fs-32);
+    font-weight: 600;
+    display: inline-block;
+    width: 860px;
+    height: 38px;
 }
 .frame-container {
-  	position: absolute;
-  	top: 3px;
-  	left: 1176px;
-  	width: 52px;
-  	height: 29px;
-  	font-size: var(--fs-16);
+    position: absolute;
+    top: 3px;
+    left: 1176px;
+    width: 52px;
+    height: 29px;
+    font-size: var(--fs-16);
 }
 .group-child {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	border-radius: 0px 9px 0px 0px;
-  	background-color: var(--color-forestgreen);
-  	width: 52px;
-  	height: 29px;
-  	overflow: hidden;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 0px 9px 0px 0px;
+    background-color: var(--color-forestgreen);
+    width: 52px;
+    height: 29px;
+    overflow: hidden;
 }
 .new {
-  	position: absolute;
-  	top: 5px;
-  	left: 6px;
-  	font-weight: 600;
-  	display: inline-block;
-  	width: 39px;
-  	height: 19px;
+    position: absolute;
+    top: 5px;
+    left: 6px;
+    font-weight: 600;
+    display: inline-block;
+    width: 39px;
+    height: 19px;
 }
 .deadline-august-2 {
-  	position: absolute;
-  	top: 149px;
-  	left: 350px;
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 220px;
-  	height: var(--height-24);
+    position: absolute;
+    top: 149px;
+    left: 350px;
+    font-weight: 300;
+    display: inline-block;
+    width: 220px;
+    height: var(--height-24);
 }
 .new-job-postings-matching-your-parent {
-  	position: absolute;
-  	top: 575px;
-  	left: 127px;
-  	border-radius: var(--br-14);
-  	border: 2px solid var(--color-lightsteelblue);
-  	box-sizing: border-box;
-  	width: 1233px;
-  	height: 794px;
-  	overflow: hidden;
+    position: absolute;
+    top: 575px;
+    left: 127px;
+    border-radius: var(--br-14);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 1233px;
+    height: 794px;
+    overflow: hidden;
+    color: white;
 }
 .new-job-postings {
-  	position: absolute;
-  	top: 23px;
-  	left: 71px;
-  	font-size: var(--fs-24);
-  	font-weight: 300;
-  	font-family: var(--font-roboto);
-  	display: none;
+    position: absolute;
+    top: 23px;
+    left: 71px;
+    font-size: var(--fs-24);
+    font-weight: 300;
+    font-family: var(--font-roboto);
+    display: none;
 }
 .job-description {
-  	position: absolute;
-  	top: 24px;
-  	left: 42px;
-  	font-size: var(--fs-32);
-  	font-weight: 600;
-  	font-family: var(--font-poppins);
+    position: absolute;
+    top: 24px;
+    left: 42px;
+    font-size: var(--fs-32);
+    font-weight: 600;
+    font-family: var(--font-poppins);
 }
 .required-skills {
-  	position: absolute;
-  	top: 697px;
-  	left: 46px;
-  	font-size: var(--fs-20);
-  	font-weight: 600;
-  	font-family: var(--font-poppins);
-  	display: inline-block;
-  	width: 168px;
-  	height: var(--height-30);
+    position: absolute;
+    top: 697px;
+    left: 46px;
+    font-size: var(--fs-20);
+    font-weight: 600;
+    font-family: var(--font-poppins);
+    display: inline-block;
+    width: 168px;
+    height: var(--height-30);
 }
 .javascript-wrapper {
-  	position: absolute;
-  	top: 744px;
-  	left: 46px;
-  	border-radius: var(--br-6);
-  	background-color: var(--color-midnightblue-200);
-  	width: 90px;
-  	height: var(--height-25);
-  	text-align: center;
+    position: absolute;
+    top: 744px;
+    left: 46px;
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-200);
+    width: 90px;
+    height: var(--height-25);
+    text-align: center;
 }
 .javascript {
-  	position: absolute;
-  	top: 4px;
-  	left: 7px;
+    position: absolute;
+    top: 4px;
+    left: 7px;
 }
 .python-wrapper {
-  	position: absolute;
-  	top: 744px;
-  	left: 164px;
-  	border-radius: var(--br-6);
-  	background-color: var(--color-midnightblue-200);
-  	width: 90px;
-  	height: var(--height-25);
-  	text-align: center;
+    position: absolute;
+    top: 744px;
+    left: 164px;
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-200);
+    width: 90px;
+    height: var(--height-25);
+    text-align: center;
 }
 .python {
-  	position: absolute;
-  	top: 4px;
-  	left: 19px;
+    position: absolute;
+    top: 4px;
+    left: 19px;
 }
 .data-structures-wrapper {
-  	position: absolute;
-  	top: 744px;
-  	left: 282px;
-  	border-radius: var(--br-6);
-  	background-color: var(--color-midnightblue-200);
-  	width: 125px;
-  	height: var(--height-25);
-  	text-align: center;
+    position: absolute;
+    top: 744px;
+    left: 282px;
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-200);
+    width: 125px;
+    height: var(--height-25);
+    text-align: center;
 }
 .we-are-seeking {
-  	position: absolute;
-  	top: 662px;
-  	left: 170px;
-  	font-size: var(--fs-22);
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 1167px;
+    position: absolute;
+    top: 640px;  /* Moved up from 662px */
+    left: 170px;
+    font-size: var(--fs-22);
+    font-weight: 300;
+    display: inline-block;
+    width: 1167px;
+    max-height: 300px; /* Limit height */
+    overflow-y: auto; /* Add scroll if needed */
+    line-height: 1.6;
+    color: white;
 }
 .line-parent {
-  	position: absolute;
-  	top: 970px;
-  	left: 1455px;
-  	width: 380px;
-  	height: 367px;
-  	font-size: var(--fs-16);
-  	font-family: var(--font-roboto);
+    position: absolute;
+    top: 970px;
+    left: 1455px;
+    width: 380px;
+    height: 367px;
+    font-size: var(--fs-16);
+    font-family: var(--font-roboto);
 }
 .group-item {
-  	position: absolute;
-  	top: 202.5px;
-  	left: -0.5px;
-  	border-top: 1px solid var(--color-white);
-  	box-sizing: border-box;
-  	width: 381px;
-  	height: var(--height-1);
+    position: absolute;
+    top: 202.5px;
+    left: -0.5px;
+    border-top: 1px solid var(--color-white);
+    box-sizing: border-box;
+    width: 381px;
+    height: var(--height-1);
 }
 .upcoming-deadlines {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	width: 380px;
-  	height: 367px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 380px;
+    height: 367px;
+    color: white;
 }
 .upcoming-deadlines-child {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	border-radius: var(--br-6);
-  	border: 2px solid var(--color-lightsteelblue);
-  	box-sizing: border-box;
-  	width: 382px;
-  	height: 369px;
-  	overflow: hidden;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: var(--br-6);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 382px;
+    height: 369px;
+    overflow: hidden;
 }
 .similar-jobs {
-  	position: absolute;
-  	top: 29.51px;
-  	left: 26px;
-  	font-size: var(--fs-24);
-  	display: inline-block;
-  	font-family: var(--font-poppins);
-  	text-align: center;
-  	width: 152px;
-  	height: 35.4px;
+    position: absolute;
+    top: 29.51px;
+    left: 26px;
+    font-size: var(--fs-24);
+    display: inline-block;
+    font-family: var(--font-poppins);
+    text-align: center;
+    width: 152px;
+    height: 35.4px;
 }
 .frame-div {
-  	position: absolute;
-  	top: 231px;
-  	left: 29px;
-  	width: 288px;
-  	height: 66.9px;
-  	display: flex;
-  	align-items: flex-start;
-  	gap: var(--gap-10);
+    position: absolute;
+    top: 231px;
+    left: 29px;
+    width: 288px;
+    height: 66.9px;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-10);
 }
 .frame-child {
-  	height: var(--height-48);
-  	width: var(--width-48);
-  	border-radius: 29.5px;
-  	display: flex;
-  	align-items: center;
+    height: var(--height-48);
+    width: var(--width-48);
+    border-radius: 29.5px;
+    display: flex;
+    align-items: center;
 }
 .wordpress-developer-parent {
-  	width: 230px;
-  	display: flex;
-  	flex-direction: column;
-  	align-items: flex-start;
-  	gap: var(--gap-3);
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gap-3);
 }
 .wordpress-developer {
-  	width: 178px;
-  	position: relative;
-  	font-family: var(--font-poppins);
-  	text-align: center;
-  	display: inline-block;
+    width: 178px;
+    position: relative;
+    font-family: var(--font-poppins);
+    text-align: center;
+    display: inline-block;
 }
 .workspace-infotech-limited {
-  	align-self: stretch;
-  	position: relative;
-  	font-weight: 100;
+    align-self: stretch;
+    position: relative;
+    font-weight: 100;
 }
 .deadline-october-25 {
-  	align-self: stretch;
-  	position: relative;
-  	color: var(--color-gold);
+    align-self: stretch;
+    position: relative;
+    color: var(--color-gold);
 }
 .jobid-frame-parent {
-  	position: absolute;
-  	top: 115px;
-  	left: 29px;
-  	width: 288px;
-  	height: 66.9px;
-  	display: flex;
-  	align-items: flex-start;
-  	gap: var(--gap-10);
+    position: absolute;
+    top: 115px;
+    left: 29px;
+    width: 288px;
+    height: 66.9px;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-10);
 }
 .junior-developer-as {
-  	align-self: stretch;
-  	position: relative;
-  	font-family: var(--font-poppins);
+    align-self: stretch;
+    position: relative;
+    font-family: var(--font-poppins);
 }
 .collabhero {
-  	align-self: stretch;
-  	position: relative;
-  	color: var(--color-gray);
+    align-self: stretch;
+    position: relative;
+    color: var(--color-gray);
 }
 .jobid-collabhero {
-  	font-weight: 100;
+    font-weight: 100;
 }
 .span {
-  	font-weight: 300;
+    font-weight: 300;
 }
 .deadline-july-28 {
-  	align-self: stretch;
-  	position: relative;
-  	color: var(--color-gold);
-  	text-shadow: var(--text-shadow-1);
+    align-self: stretch;
+    position: relative;
+    color: var(--color-gold);
+    text-shadow: var(--text-shadow-1);
 }
 .group-inner {
-  	position: absolute;
-  	top: 79.5px;
-  	left: -0.5px;
-  	border-top: 1px solid var(--color-white);
-  	box-sizing: border-box;
-  	width: 381px;
-  	height: var(--height-1);
+    position: absolute;
+    top: 79.5px;
+    left: -0.5px;
+    border-top: 1px solid var(--color-white);
+    box-sizing: border-box;
+    width: 381px;
+    height: var(--height-1);
 }
 .group-div {
-  	position: absolute;
-  	top: 283px;
-  	left: 1446px;
-  	width: 389px;
-  	height: 625px;
-  	font-size: var(--fs-22);
-  	font-family: var(--font-roboto);
+    position: absolute;
+    top: 283px;
+    left: 1446px;
+    width: 389px;
+    height: 625px;
+    font-size: var(--fs-22);
+    font-family: var(--font-roboto);
+    color: white;
 }
 .new-job-postings-matching-your-group {
-  	position: absolute;
-  	top: -1px;
-  	left: -1px;
-  	border-radius: var(--br-6);
-  	border: 2px solid var(--color-lightsteelblue);
-  	box-sizing: border-box;
-  	width: 391px;
-  	height: 627px;
-  	overflow: hidden;
-  	font-size: var(--fs-24);
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    border-radius: var(--br-6);
+    border: 2px solid var(--color-lightsteelblue);
+    box-sizing: border-box;
+    width: 391px;
+    height: 627px;
+    overflow: hidden;
+    font-size: var(--fs-24);
+    color: white;
 }
 .jobid-new-job-postings {
-  	position: absolute;
-  	top: 23px;
-  	left: 71px;
-  	font-weight: 300;
-  	display: none;
+    position: absolute;
+    top: 23px;
+    left: 71px;
+    font-weight: 300;
+    display: none;
+    color: white;
 }
 .view-all {
-  	position: absolute;
-  	top: 22px;
-  	left: 1085px;
-  	display: none;
-  	font-family: var(--font-lato);
+    position: absolute;
+    top: 22px;
+    left: 1085px;
+    display: none;
+    font-family: var(--font-lato);
 }
 .frame-icon3 {
-  	position: absolute;
-  	top: 25px;
-  	left: 30px;
-  	width: var(--width-24);
-  	height: var(--height-24);
-  	display: none;
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    width: var(--width-24);
+    height: var(--height-24);
+    display: none;
 }
 .frame-inner {
-  	position: absolute;
-  	top: 72px;
-  	left: -0.5px;
-  	border-top: 1px solid var(--color-white);
-  	box-sizing: border-box;
-  	width: 389px;
-  	height: var(--height-1);
+    position: absolute;
+    top: 72px;
+    left: -0.5px;
+    border-top: 1px solid var(--color-white);
+    box-sizing: border-box;
+    width: 389px;
+    height: var(--height-1);
 }
 .july-24-2025 {
-  	position: absolute;
-  	top: 564px;
-  	left: 40px;
-  	font-weight: 600;
-  	font-family: var(--font-lato);
-  	display: inline-block;
-  	width: 155px;
+    position: absolute;
+    top: 564px;
+    left: 40px;
+    font-weight: 600;
+    font-family: var(--font-lato);
+    display: inline-block;
+    width: 155px;
 }
 .posted-on {
-  	position: absolute;
-  	top: 541px;
-  	left: 40px;
-  	font-size: var(--fs-20);
-  	font-weight: 300;
+    position: absolute;
+    top: 541px;
+    left: 40px;
+    font-size: var(--fs-20);
+    font-weight: 300;
 }
 .august-2-2025 {
-  	position: absolute;
-  	top: 495px;
-  	left: 40px;
-  	font-weight: 600;
-  	font-family: var(--font-lato);
-  	display: inline-block;
-  	width: 155px;
+    position: absolute;
+    top: 495px;
+    left: 40px;
+    font-weight: 600;
+    font-family: var(--font-lato);
+    display: inline-block;
+    width: 155px;
 }
 .application-deadline {
-  	position: absolute;
-  	top: 472px;
-  	left: 41px;
-  	font-size: var(--fs-20);
-  	font-weight: 300;
+    position: absolute;
+    top: 472px;
+    left: 41px;
+    font-size: var(--fs-20);
+    font-weight: 300;
 }
 .k-bdt-depends {
-  	position: absolute;
-  	top: 400px;
-  	left: 43px;
-  	font-weight: 600;
-  	font-family: var(--font-lato);
-  	display: inline-block;
-  	width: 339px;
+    position: absolute;
+    top: 400px;
+    left: 43px;
+    font-weight: 600;
+    font-family: var(--font-lato);
+    display: inline-block;
+    width: 339px;
 }
 .salary {
-  	position: absolute;
-  	top: 374px;
-  	left: 44px;
-  	font-size: var(--fs-20);
-  	font-weight: 300;
+    position: absolute;
+    top: 374px;
+    left: 44px;
+    font-size: var(--fs-20);
+    font-weight: 300;
 }
 .full-time {
-  	position: absolute;
-  	top: 324px;
-  	left: 44px;
-  	font-weight: 600;
-  	font-family: var(--font-lato);
-  	display: inline-block;
-  	width: 99px;
+    position: absolute;
+    top: 324px;
+    left: 44px;
+    font-weight: 600;
+    font-family: var(--font-lato);
+    display: inline-block;
+    width: 99px;
 }
 .job-type {
-  	position: absolute;
-  	top: 301px;
-  	left: 43px;
-  	font-size: var(--fs-20);
-  	font-weight: 300;
+    position: absolute;
+    top: 301px;
+    left: 43px;
+    font-size: var(--fs-20);
+    font-weight: 300;
 }
 .dhaka-bangladesh {
-  	position: absolute;
-  	top: 245px;
-  	left: 43px;
-  	font-weight: 600;
-  	font-family: var(--font-lato);
-  	display: inline-block;
-  	width: 203px;
+    position: absolute;
+    top: 245px;
+    left: 43px;
+    font-weight: 600;
+    font-family: var(--font-lato);
+    display: inline-block;
+    width: 203px;
 }
 .location {
-  	position: absolute;
-  	top: 223px;
-  	left: 43px;
-  	font-size: var(--fs-20);
-  	font-weight: 300;
+    position: absolute;
+    top: 230px;
+    left: 43px;
+    font-size: var(--fs-20);
+    font-weight: 300;
 }
 .jobid-disystem {
-  	position: absolute;
-  	top: 181px;
-  	left: 41px;
-  	font-weight: 600;
-  	font-family: var(--font-lato);
-  	display: inline-block;
-  	width: 121px;
+    position: absolute;
+    top: 181px;
+    left: 41px;
+    font-weight: 600;
+    font-family: var(--font-lato);
+    display: inline-block;
+    width: 300px;
 }
 .company {
-  	position: absolute;
-  	top: 160px;
-  	left: 43px;
-  	font-size: var(--fs-20);
-  	font-weight: 300;
+    position: absolute;
+    top: 160px;
+    left: 43px;
+    font-size: var(--fs-20);
+    font-weight: 300;
 }
 .jobid-junior-backend-developer {
-  	position: absolute;
-  	top: 115px;
-  	left: 41px;
-  	font-weight: 600;
-  	font-family: var(--font-lato);
-  	display: inline-block;
-  	width: 293px;
+    position: absolute;
+    top: 115px;
+    left: 41px;
+    font-weight: 600;
+    font-family: var(--font-lato);
+    display: inline-block;
+    width: 293px;
 }
 .job-summary {
-  	position: absolute;
-  	top: 27px;
-  	left: 23px;
-  	font-size: var(--fs-24);
-  	display: inline-block;
-  	font-family: var(--font-poppins);
-  	text-align: center;
-  	width: 212px;
-  	height: 35px;
+    position: absolute;
+    top: 27px;
+    left: 23px;
+    font-size: var(--fs-24);
+    display: inline-block;
+    font-family: var(--font-poppins);
+    text-align: center;
+    width: 212px;
+    height: 35px;
 }
 .job-title {
-  	position: absolute;
-  	top: 93px;
-  	left: 41px;
-  	font-size: var(--fs-20);
-  	font-weight: 300;
+    position: absolute;
+    top: 93px;
+    left: 41px;
+    font-size: var(--fs-20);
+    font-weight: 300;
 }
 .footer-section {
-  	position: absolute;
-  	top: 1430px;
-  	left: 0px;
-  	background: linear-gradient(-51.63deg, #363795 19.62%);
+    position: absolute;
+    top: 1430px;
+    left: 0px;
+    background: linear-gradient(-51.63deg, #363795 19.62%);
         border: 2px solid var(--color-darkslateblue-100);
-  	box-sizing: border-box;
-  	width: 1920px;
-  	height: 297px;
-  	display: flex;
-  	align-items: flex-start;
-  	flex-wrap: wrap;
-  	align-content: flex-start;
-  	padding: 34px 135px;
-  	gap: 26px 194px;
-  	font-size: var(--fs-24);
-  	font-family: var(--font-roboto);
+    box-sizing: border-box;
+    width: 1920px;
+    height: 297px;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 34px 135px;
+    gap: 26px 194px;
+    font-size: var(--fs-24);
+    font-family: var(--font-roboto);
 }
 .cse-job-portal {
-  	width: 571.5px;
-  	position: relative;
-  	height: 93px;
+    width: 571.5px;
+    position: relative;
+    height: 93px;
+    color: white;
 }
 .jobid-cse-job-portal {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	display: inline-block;
-  	width: 303px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+    width: 303px;
 }
 .connecting-cse-students {
-  	position: absolute;
-  	top: 47px;
-  	left: 0px;
-  	font-size: var(--fs-20);
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 571.5px;
+    position: absolute;
+    top: 47px;
+    left: 0px;
+    font-size: var(--fs-20);
+    font-weight: 300;
+    display: inline-block;
+    width: 571.5px;
 }
 .quick-links {
-  	width: 241px;
-  	position: relative;
-  	height: 163px;
-  	font-size: var(--fs-20);
+    width: 241px;
+    position: relative;
+    height: 163px;
+    font-size: var(--fs-20);
+    color: white;
 }
 .jobid-quick-links {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	font-size: var(--fs-24);
-  	display: inline-block;
-  	width: 241px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: var(--fs-24);
+    display: inline-block;
+    width: 241px;
 }
 .home {
-  	position: absolute;
-  	top: 44px;
-  	left: 3.44px;
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 93px;
+    position: absolute;
+    top: 44px;
+    left: 3.44px;
+    font-weight: 300;
+    display: inline-block;
+    width: 93px;
         text-decoration: none;
         color: white;
 }
 .jobs {
-  	position: absolute;
-  	top: 76px;
-  	left: 3.44px;
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 75.7px;
+    position: absolute;
+    top: 76px;
+    left: 3.44px;
+    font-weight: 300;
+    display: inline-block;
+    width: 75.7px;
         text-decoration: none;
         color: white;
 }
 .login {
-  	position: absolute;
-  	top: 108px;
-  	left: 6.89px;
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 84.4px;
+    position: absolute;
+    top: 108px;
+    left: 6.89px;
+    font-weight: 300;
+    display: inline-block;
+    width: 84.4px;
         text-decoration: none;
         color: white;
 }
 .register {
-  	position: absolute;
-  	top: 140px;
-  	left: 6.89px;
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 125.7px;
+    position: absolute;
+    top: 140px;
+    left: 6.89px;
+    font-weight: 300;
+    display: inline-block;
+    width: 125.7px;
         text-decoration: none;
         color: white;
 }
 .contact-us {
-  	width: 388.4px;
-  	position: relative;
-  	height: 101px;
-  	font-size: var(--fs-22);
+    width: 388.4px;
+    position: relative;
+    height: 101px;
+    font-size: var(--fs-22);
+    color: white;
 }
 .jobid-contact-us {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	font-size: var(--fs-24);
-  	display: inline-block;
-  	width: 234.1px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: var(--fs-24);
+    display: inline-block;
+    width: 234.1px;
 }
 .div {
-  	position: absolute;
-  	top: 36px;
-  	left: 28.44px;
-  	font-weight: 300;
-  	color: var(--color-snow);
-  	display: inline-block;
-  	width: 141px;
+    position: absolute;
+    top: 36px;
+    left: 28.44px;
+    font-weight: 300;
+    color: var(--color-snow);
+    display: inline-block;
+    width: 141px;
 }
 .cse-jobsuap-bdedu {
-  	position: absolute;
-  	top: 73px;
-  	left: 28.44px;
-  	font-weight: 300;
-  	display: inline-block;
-  	width: 360px;
-  	height: var(--height-24);
+    position: absolute;
+    top: 73px;
+    left: 28.44px;
+    font-weight: 300;
+    display: inline-block;
+    width: 360px;
+    height: var(--height-24);
 }
 .frame-icon4 {
-  	position: absolute;
-  	top: 38px;
-  	left: 0.44px;
-  	width: 25px;
-  	height: var(--height-25);
+    position: absolute;
+    top: 38px;
+    left: 0.44px;
+    width: 25px;
+    height: var(--height-25);
 }
 .frame-icon5 {
-  	position: absolute;
-  	top: 76px;
-  	left: 0.44px;
-  	width: 25px;
-  	height: var(--height-25);
+    position: absolute;
+    top: 76px;
+    left: 0.44px;
+    width: 25px;
+    height: var(--height-25);
 }
 .copyright {
-  	flex: 1;
-  	display: flex;
-  	align-items: flex-start;
-  	justify-content: center;
-  	font-size: 20px;
-  	font-family: var(--font-inter);
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 20px;
+    font-family: var(--font-inter);
 }
 .frame-parent2 {
-  	width: 669.7px;
-  	height: 22px;
-  	display: flex;
-  	align-items: flex-end;
+    width: 669.7px;
+    height: 22px;
+    display: flex;
+    align-items: flex-end;
 }
 .frame-icon6 {
-  	width: 21px;
-  	position: relative;
-  	height: 21px;
+    width: 21px;
+    position: relative;
+    height: 21px;
 }
 .cse-department-job {
-  	position: relative;
-  	font-weight: 600;
-  	background: linear-gradient(90deg, rgba(255, 255, 255, 0.5), rgba(153, 153, 153, 0.5));
-  	-webkit-background-clip: text;
-  	-webkit-text-fill-color: white;
+    position: relative;
+    font-weight: 600;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.5), rgba(153, 153, 153, 0.5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: white;
 }
 .logo-parent {
-  	position: absolute;
-  	top: 73px;
-  	left: 120px;
-  	display: flex;
-  	align-items: center;
-  	gap: 6px;
-  	text-align: center;
-  	font-size: var(--fs-30);
-  	color: var(--color-darkslateblue-200);
-  	font-family: var(--font-roboto);
+    position: absolute;
+    top: 73px;
+    left: 120px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    font-size: var(--fs-30);
+    color: var(--color-darkslateblue-200);
+    font-family: var(--font-roboto);
 }
 .logo {
-  	width: 87px;
-  	position: relative;
-  	height: 85px;
+    width: 87px;
+    position: relative;
+    height: 85px;
 }
 .ellipse {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	border-radius: 50%;
-  	background-color: var(--color-gainsboro);
-  	width: 87px;
-  	height: 85px;
-  	opacity: 0.9;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+    background-color: var(--color-gainsboro);
+    width: 87px;
+    height: 85px;
+    opacity: 0.9;
 }
 .cse {
-  	position: absolute;
-  	top: 24px;
-  	left: 12px;
-  	font-weight: 600;
-  	display: inline-block;
-  	width: 63px;
-  	height: 23px;
+    position: absolute;
+    top: 24px;
+    left: 12px;
+    font-weight: 600;
+    display: inline-block;
+    width: 63px;
+    height: 23px;
 }
 .job-portal {
-  	position: relative;
-  	font-weight: 600;
-  	color: var(--color-white);
+    position: relative;
+    font-weight: 600;
+    color: var(--color-white);
 }
 .home-parent {
-  	position: absolute;
-  	top: 88px;
-  	left: 1256px;
-  	display: flex;
-  	align-items: center;
-  	gap: 48px;
-  	font-size: var(--fs-30);
-  	font-family: var(--font-lato);
+    position: absolute;
+    top: 88px;
+    left: 1256px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    font-size: var(--fs-30);
+    font-family: var(--font-lato);
+    color: white;
 }
 .jobid-home {
-  	position: relative;
+    position: relative;
 }
 .dashboard-wrapper {
-  	width: 197px;
-  	border-radius: var(--br-6);
-  	background-color: var(--color-midnightblue-300);
-  	border: 6px solid var(--color-midnightblue-100);
-  	box-sizing: border-box;
-  	display: flex;
-  	align-items: center;
-  	justify-content: center;
-  	padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
+    width: 197px;
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-300);
+    border: 6px solid var(--color-midnightblue-100);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-10) var(--padding-3) var(--padding-10) var(--padding-10);
 }
 .dashboard {
-  	width: 149px;
-  	position: relative;
-  	display: inline-block;
-  	flex-shrink: 0;
-  	text-shadow: var(--text-shadow-2);
+    width: 149px;
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    text-shadow: var(--text-shadow-2);
 }
 .requirements-currently-pursui-container {
-  	position: absolute;
-  	top: 842px;
-  	left: 172px;
-  	font-size: var(--fs-20);
-  	display: inline-block;
-  	width: 750px;
-  	height: 420px;
-  	font-family: var(--font-poppins);
+    position: absolute;
+    top: 842px;
+    left: 172px;
+    font-size: var(--fs-20);
+    display: inline-block;
+    width: 750px;
+    height: 420px;
+    font-family: var(--font-poppins);
 }
 .requirements {
-  	margin: 0;
-  	font-weight: 600;
+    margin: 0;
+    font-weight: 600;
 }
 .currently-pursuing-a-degree-in {
-  	margin: 0;
-  	font-size: inherit;
-  	padding-left: 27px;
+    margin: 0;
+    font-size: inherit;
+    padding-left: 27px;
 }
 .jobid-currently-pursuing-a-degree-in {
-  	margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 .algorithms-wrapper {
-  	position: absolute;
-  	top: 1319px;
-  	left: 563px;
-  	border-radius: var(--br-6);
-  	background-color: var(--color-midnightblue-200);
-  	width: 90px;
-  	height: var(--height-25);
-  	text-align: center;
+    position: absolute;
+    top: 1319px;
+    left: 563px;
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-200);
+    width: 90px;
+    height: var(--height-25);
+    text-align: center;
 }
 .algorithms {
-  	position: absolute;
-  	top: 4px;
-  	left: 6px;
+    position: absolute;
+    top: 4px;
+    left: 6px;
 }
 .web-developement-wrapper {
-  	position: absolute;
-  	top: 1319px;
-  	left: 689px;
-  	border-radius: var(--br-6);
-  	background-color: var(--color-midnightblue-200);
-  	width: 149px;
-  	height: var(--height-25);
-  	text-align: center;
+    position: absolute;
+    top: 1319px;
+    left: 689px;
+    border-radius: var(--br-6);
+    background-color: var(--color-midnightblue-200);
+    width: 149px;
+    height: var(--height-25);
+    text-align: center;
 }
 .web-developement {
-  	position: absolute;
-  	top: 4px;
-  	left: 5px;
+    position: absolute;
+    top: 4px;
+    left: 5px;
+}
+/* Requirements Section Styles */
+.requirements-section {
+    position: absolute;
+    top: 1020px;
+    left: 180px;
+    width: 1100px;
 }
 
+.requirements-title {
+    font-size: var(--fs-20);
+    font-weight: 600;
+    font-family: var(--font-poppins);
+    margin-bottom: 15px;
+    display: inline-block;
+    width: 168px;
+    height: var(--height-30);
+}
+
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.requirement-item {
+    font-size: var(--fs-18);
+    font-weight: 300;
+    font-family: var(--font-poppins);
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.requirement-item::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-lightsteelblue);
+    font-size: 20px;
+}
+
+.skills-section {
+    margin-top: 30px;
+}
+
+.skills-title {
+    font-size: var(--fs-20);
+    font-weight: 600;
+    font-family: var(--font-poppins);
+    margin-bottom: 15px;
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill-tag {
+    background-color: var(--color-midnightblue-200);
+    color: var(--color-white);
+    padding: 6px 12px;
+    border-radius: var(--br-6);
+    font-size: var(--fs-14);
+    font-weight: 500;
+}
 
 </style>
+    {% csrf_token %}
 </head>
 <body>
 
-  	<div class="jobid">
-    		<div class="back-to-home">Back to Home</div>
+    <div class="jobid">
+           <div class="back-to-home">Back to Home</div>
                               <a href="{% url 'browse_opportunities' %}" class="frame-icon">
-    		                             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="32" viewBox="0 0 36 32" fill="none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="32" viewBox="0 0 36 32" fill="none">
   <path d="M11.7426 14.6665H30V17.3332H11.7426L19.7886 24.4851L17.6673 26.3707L6 15.9999L17.6673 5.62891L19.7886 7.51452L11.7426 14.6665Z" fill="white"/>
 </svg>
                 </a>
 
-    		<div class="frame-parent">
-      			<div class="group-wrapper">
-        				<div class="frame-group">
-          					<div class="apply-now-wrapper" id="frameContainer">
-            						<b class="apply-now">Apply Now</b>
-          					</div>
-          					<div class="edit-listings-wrapper">
-            						<b class="edit-listings">Edit Listings</b>
-          					</div>
-        				</div>
-      			</div>
-      			                        <div class="jobid-frame-icon">
-                           <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                    <path d="M19 3H18V1H16V3H8V1H6V3H5C3.89 3 3.01 3.9 3.01 5L3 19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V8H19V19Z"/>
-                    <path d="M7 10H11V14H7V10Z"/>
+          <div class="frame-parent">
+             <div class="group-wrapper">
+                <div class="frame-group">
+                   <div class="apply-now-wrapper" id="applyNowBtn">
+                      <b class="apply-now">Apply Now</b>
+                   </div>
+                </div>
+             </div>
+
+             <!-- Dynamic Job Data -->
+             {% if job %}
+             <div class="jobid-frame-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                   <path d="M19 3H18V1H16V3H8V1H6V3H5C3.89 3 3.01 3.9 3.01 5L3 19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V8H19V19Z"/>
+                   <path d="M7 10H11V14H7V10Z"/>
                 </svg>
-      			</div>
-      			<div class="posted-10">Posted : 10 hours ago</div>
-      			                        <div class="frame-icon2">
-                           <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
+             </div>
+             <div class="posted-10">
+                Posted :
+                {% if job_type == 'faculty_opportunity' %}
+                   {{ job.posted_date|date:"F j, Y" }}
+                {% elif job_type == 'company_job' %}
+                   {{ job.posted_date|date:"F j, Y" }}
+                {% else %}
+                   {{ job.created_at|date:"F j, Y" }}
+                {% endif %}
+             </div>
+
+             <div class="frame-icon2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                   <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
                 </svg>
+             </div>
+
+             <div class="dhakabd">
+                {% if job_type == 'faculty_opportunity' %}
+                   University Campus
+                {% elif job_type == 'company_job' %}
+                   {{ job.location }}
+                {% else %}
+                   {{ job.location }}
+                {% endif %}
+             </div>
+
+             <div class="image-3-icon">
+                {% if job_type == 'faculty_opportunity' %}
+                   U
+                {% elif job_type == 'company_job' %}
+                   {{ job.company.company_name|first|upper }}
+                {% else %}
+                   {{ job.company|first|upper }}
+                {% endif %}
+             </div>
+
+             <div class="disystem">
+                {% if job_type == 'faculty_opportunity' %}
+                   {{ job.department }}
+                {% elif job_type == 'company_job' %}
+                   {{ job.company.company_name }}
+                {% else %}
+                   {{ job.company }}
+                {% endif %}
+             </div>
+
+             <div class="junior-backend-developer">{{ job.title }}</div>
+
+             {% if job.is_new %}
+             <div class="frame-container">
+                <div class="group-child"></div>
+                <div class="new">NEW</div>
+             </div>
+             {% endif %}
+
+             <div class="deadline-august-2">
+                Deadline:
+                {% if job_type == 'faculty_opportunity' %}
+                   {{ job.deadline|date:"F j, Y" }}
+                {% elif job_type == 'company_job' %}
+                   {{ job.deadline|date:"F j, Y" }}
+                {% else %}
+                   {{ job.deadline|date:"F j, Y" }}
+                {% endif %}
+             </div>
+             {% else %}
+             <div style="color: white; text-align: center; padding: 20px;">
+                Job not found or has been removed.
+             </div>
+             {% endif %}
+          </div>
+           <div class="new-job-postings-matching-your-parent">
+              <div class="new-job-postings">Search for jobs, companies or keywords...</div>
+              <div class="job-description">Job Description</div>
+
+              </div>
+           <!-- Requirements Section -->
+<div class="requirements-section">
+    <div class="requirements-title">Requirements</div>
+
+    {% if job %}
+        {% if job.requirements %}
+            <ul class="requirements-list">
+                {% if job_type == 'faculty_opportunity' or job_type == 'company_job' %}
+                    <!-- For faculty opportunities and company jobs with requirements as text -->
+                    {% for requirement in job.requirements.splitlines %}
+                        {% if requirement.strip %}
+                            <li class="requirement-item">{{ requirement.strip }}</li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <!-- For alumni jobs with requirements as list -->
+                    {% if job.requirements %}
+                        {% for requirement in job.requirements.splitlines %}
+                            {% if requirement.strip %}
+                                <li class="requirement-item">{{ requirement.strip }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <li class="requirement-item">No specific requirements listed</li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        {% else %}
+            <div class="requirements-list">
+                <li class="requirement-item">No specific requirements listed</li>
+            </div>
+        {% endif %}
+
+        <!-- Skills/Tags Section -->
+        <div class="skills-section">
+            <div class="skills-title">Skills</div>
+            <div class="skills-container">
+                <!-- Job Type Tag -->
+                <div class="skill-tag">
+                    {% if job_type == 'faculty_opportunity' %}
+                        {{ job.opportunity_type|title }}
+                    {% else %}
+                        {{ job.job_type|title }}
+                    {% endif %}
+                </div>
+
+                <!-- Location Tag -->
+                <div class="skill-tag">
+                    {% if job_type == 'faculty_opportunity' %}
+                        University Campus
+                    {% elif job_type == 'company_job' %}
+                        {{ job.location }}
+                    {% else %}
+                        {{ job.location }}
+                    {% endif %}
+                </div>
+
+                <!-- Dynamic Skills based on job title/content -->
+                {% if "backend" in job.title.lower %}
+                    <div class="skill-tag">Backend</div>
+                    <div class="skill-tag">API Development</div>
+                {% endif %}
+
+                {% if "frontend" in job.title.lower or "developer" in job.title.lower %}
+                    <div class="skill-tag">Web Development</div>
+                {% endif %}
+
+                {% if "laravel" in job.title.lower or "laravel" in job.description.lower %}
+                    <div class="skill-tag">Laravel</div>
+                    <div class="skill-tag">PHP</div>
+                {% endif %}
+
+                {% if "python" in job.title.lower or "python" in job.description.lower %}
+                    <div class="skill-tag">Python</div>
+                {% endif %}
+
+                {% if "javascript" in job.title.lower or "javascript" in job.description.lower %}
+                    <div class="skill-tag">JavaScript</div>
+                {% endif %}
+
+                {% if "django" in job.title.lower or "django" in job.description.lower %}
+                    <div class="skill-tag">Django</div>
+                {% endif %}
+
+                <!-- Default skills if no specific ones detected -->
+                {% if not "backend" in job.title.lower and not "frontend" in job.title.lower and not "laravel" in job.title.lower %}
+                    <div class="skill-tag">Problem Solving</div>
+                    <div class="skill-tag">Teamwork</div>
+                    <div class="skill-tag">Communication</div>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="requirements-list">
+            <li class="requirement-item">Requirements not available</li>
+        </div>
+    {% endif %}
+</div>
+           </div>
+           <div class="we-are-seeking">
+                   {% if job %}
+             {{ job.description }}
+          {% else %}
+             Job description not available.
+          {% endif %}
+          </div>
+           <div class="line-parent">
+              <div class="group-item">
+              </div>
+              <div class="upcoming-deadlines">
+                     <div class="upcoming-deadlines-child">
+                     </div>
+                     <b class="similar-jobs">Similar Jobs</b>
+                     <div class="frame-div">
+                      <div class="frame-child">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 16 16" fill="none">
+  <path d="M12.0582 8.08203C11.4032 8.08203 10.7844 8.29559 10.2687 8.69963C10.221 8.73829 10.1904 8.79415 10.1835 8.85516C10.1766 8.91617 10.194 8.97744 10.2319 9.02577C10.2697 9.0741 10.3251 9.10561 10.386 9.11351C10.4469 9.12141 10.5084 9.10507 10.5574 9.068C10.9899 8.72912 11.5089 8.55 12.0582 8.55C13.4017 8.55 14.4947 9.64297 14.4947 10.9864C14.4947 12.3298 13.4017 13.4228 12.0582 13.4228C10.7148 13.4228 9.62184 12.3298 9.62184 10.9864C9.62154 10.5281 9.75094 10.079 9.99509 9.69106C10.0277 9.63855 10.0382 9.57526 10.0243 9.51503C10.0104 9.4548 9.97323 9.40252 9.92091 9.3696C9.86859 9.33668 9.80538 9.32579 9.74506 9.33932C9.68475 9.35285 9.63224 9.3897 9.599 9.44181C9.30783 9.90436 9.15349 10.4398 9.15381 10.9864C9.15381 12.5879 10.4567 13.8908 12.0582 13.8908C13.6598 13.8908 14.9627 12.5879 14.9627 10.9864C14.9627 9.38497 13.6598 8.08203 12.0582 8.08203Z" fill="white"/>
+  <path d="M13.8935 11.102H12.2922V9.50071C12.2912 9.43932 12.2661 9.38077 12.2223 9.33771C12.1786 9.29464 12.1196 9.27051 12.0582 9.27051C11.9968 9.27051 11.9379 9.29464 11.8941 9.33771C11.8503 9.38077 11.8252 9.43932 11.8242 9.50071V11.3361C11.8242 11.3981 11.8489 11.4576 11.8928 11.5015C11.9366 11.5454 11.9962 11.57 12.0582 11.5701H13.8935C13.9551 11.5693 14.014 11.5444 14.0573 11.5006C14.1006 11.4568 14.1249 11.3976 14.1249 11.336C14.1249 11.2744 14.1006 11.2153 14.0573 11.1715C14.014 11.1277 13.9551 11.1027 13.8935 11.102Z" fill="white"/>
+  <path d="M14.2981 7.7452V3.68611C14.2981 3.07617 13.8018 2.57992 13.1919 2.57992H12.6897V2.00402C12.6897 1.49023 12.2717 1.07227 11.7579 1.07227C11.2441 1.07227 10.8262 1.49023 10.8262 2.00402V2.57989H9.61712V2.00402C9.61712 1.49023 9.19916 1.07227 8.68538 1.07227C8.17159 1.07227 7.75362 1.49023 7.75362 2.00402V2.57989H6.54459V2.00402C6.54459 1.49023 6.12662 1.07227 5.61284 1.07227C5.09906 1.07227 4.68109 1.49023 4.68109 2.00402V2.57989H3.47206V2.00402C3.47206 1.49023 3.05409 1.07227 2.54031 1.07227C2.02653 1.07227 1.60847 1.49023 1.60847 2.00402V2.57989H1.10619C0.49625 2.57989 0 3.07611 0 3.68611V3.80155C0.00100347 3.86295 0.0260983 3.92149 0.0698726 3.96455C0.113647 4.00762 0.172593 4.03175 0.234 4.03175C0.295407 4.03175 0.354353 4.00762 0.398127 3.96455C0.441902 3.92149 0.466997 3.86295 0.468 3.80155V3.68611C0.468 3.33423 0.754312 3.04792 1.10619 3.04792H1.60841V3.6238C1.60841 4.13758 2.02638 4.55555 2.54016 4.55555C3.05394 4.55555 3.47191 4.13758 3.47191 3.62377V3.04792H4.68094V3.6238C4.68094 4.13758 5.09891 4.55555 5.61269 4.55555C6.12647 4.55555 6.54444 4.13758 6.54444 3.62377V3.04792H7.75347V3.6238C7.75347 4.13758 8.17144 4.55555 8.68522 4.55555C9.199 4.55555 9.61697 4.13758 9.61697 3.62377V3.04792H10.826V3.6238C10.826 4.13758 11.244 4.55555 11.7577 4.55555C12.2715 4.55555 12.6895 4.13758 12.6895 3.62377V3.04792H13.1917C13.5436 3.04792 13.8299 3.33423 13.8299 3.68611V5.33767H0.468V4.73755C0.466997 4.67615 0.441902 4.6176 0.398127 4.57454C0.354353 4.53147 0.295407 4.50734 0.234 4.50734C0.172593 4.50734 0.113647 4.53147 0.0698726 4.57454C0.0260983 4.6176 0.00100347 4.67615 0 4.73755L0 12.8132C0 13.4232 0.49625 13.9195 1.10619 13.9195H9.42791C10.1261 14.5463 11.0484 14.9283 12.0584 14.9283C12.9017 14.9283 13.7063 14.6655 14.3851 14.1683C14.4342 14.1313 14.4668 14.0764 14.4757 14.0156C14.4847 13.9547 14.4693 13.8928 14.433 13.8432C14.3966 13.7936 14.3422 13.7602 14.2815 13.7504C14.2208 13.7406 14.1586 13.7551 14.1085 13.7908C13.5105 14.2288 12.8016 14.4603 12.0584 14.4603C10.143 14.4603 8.58481 12.902 8.58481 10.9867C8.58481 9.07142 10.1431 7.51317 12.0584 7.51317C12.4049 7.51317 12.7501 7.56502 13.0814 7.66695C13.0879 7.66895 13.0944 7.67105 13.101 7.67311C14.5085 8.11695 15.532 9.43448 15.532 10.9867C15.532 11.7876 15.2528 12.5691 14.746 13.1873C14.7262 13.2111 14.7114 13.2385 14.7023 13.268C14.6932 13.2974 14.69 13.3284 14.693 13.3592C14.6959 13.3899 14.7049 13.4197 14.7194 13.447C14.7339 13.4742 14.7537 13.4983 14.7775 13.5179C14.8014 13.5374 14.8289 13.5521 14.8584 13.561C14.888 13.5699 14.919 13.5728 14.9497 13.5697C14.9804 13.5666 15.0102 13.5574 15.0373 13.5427C15.0645 13.528 15.0884 13.5081 15.1078 13.4841C15.6832 12.7824 16 11.8955 16 10.9867C16 9.6447 15.3256 8.45733 14.2981 7.7452ZM3.00391 3.62377C3.00391 3.87948 2.79588 4.08752 2.54016 4.08752C2.28444 4.08752 2.07641 3.87952 2.07641 3.62377V2.00402C2.07641 1.7483 2.28441 1.54027 2.54016 1.54027C2.79588 1.54027 3.00391 1.74827 3.00391 2.00402V3.62377ZM6.07647 3.62377C6.07647 3.87948 5.86844 4.08752 5.61272 4.08752C5.357 4.08752 5.14897 3.87952 5.14897 3.62377V2.00402C5.14897 1.7483 5.357 1.54027 5.61272 1.54027C5.86844 1.54027 6.07647 1.74827 6.07647 2.00402V3.62377ZM9.14906 3.62377C9.14906 3.87948 8.94103 4.08752 8.68531 4.08752C8.42959 4.08752 8.22156 3.87952 8.22156 3.62377V2.00402C8.22156 1.7483 8.42959 1.54027 8.68531 1.54027C8.94103 1.54027 9.14906 1.74827 9.14906 2.00402V3.62377ZM12.2216 3.62377C12.2216 3.87948 12.0136 4.08752 11.7579 4.08752C11.5022 4.08752 11.2941 3.87952 11.2941 3.62377V2.00402C11.2941 1.7483 11.5022 1.54027 11.7579 1.54027C12.0136 1.54027 12.2216 1.74827 12.2216 2.00402V3.62377ZM6.00003 5.80567H8.29803V8.04223H6.00003V5.80567ZM2.766 13.4514H1.10619C0.754312 13.4514 0.468 13.1651 0.468 12.8132V11.2148H2.76597L2.766 13.4514ZM2.766 10.7468H0.468V8.51026H2.76597L2.766 10.7468ZM2.766 8.04223H0.468V5.80567H2.76597L2.766 8.04223ZM3.234 8.51026H5.53197V10.7468H3.234V8.51026ZM5.53203 13.4514H3.23406V11.2149H5.53203V13.4514ZM5.53203 8.04223H3.23406V5.80567H5.53203V8.04223ZM6 8.51026H8.298V9.80464C8.2018 10.1104 8.14348 10.4269 8.12434 10.7469H6V8.51026ZM8.98141 13.4514H6.00003V11.2149H8.12341C8.16978 12.0409 8.46753 12.814 8.98141 13.4514ZM8.76606 8.82227V8.51026H8.9945C8.91333 8.61049 8.8371 8.71462 8.76606 8.82227ZM11.064 7.17233C10.4531 7.3317 9.8995 7.63448 9.44125 8.04223H8.76606V5.80567H11.064V7.17233ZM13.8301 7.46498C13.6101 7.35431 13.3802 7.26462 13.1435 7.19708L13.1284 7.19276C12.7802 7.09468 12.4202 7.045 12.0585 7.04511C11.88 7.04514 11.7043 7.05727 11.5321 7.08036V5.80561H13.8301V7.46498Z" fill="white"/>
+</svg>
+                      </div>
+
+                        <div class="wordpress-developer-parent">
+                               <div class="wordpress-developer">Wordpress Developer</div>
+                               <div class="workspace-infotech-limited">Workspace InfoTech Limited</div>
+                               <div class="deadline-october-25">Deadline: October 25, 2025</div>
                         </div>
-
-      			<div class="dhakabd">Dhaka,BD</div>
-				<div class="image-3-icon">D</div>
-
-      			<div class="disystem">DISYSTEM </div>
-      			<div class="junior-backend-developer">Junior Backend Developer (Laravel)</div>
-      			<div class="frame-container">
-        				<div class="group-child">
-        				</div>
-        				<div class="new">NEW</div>
-      			</div>
-      			<div class="deadline-august-2">Deadline: August 2, 2025</div>
-    		</div>
-    		<div class="new-job-postings-matching-your-parent">
-      			<div class="new-job-postings">Search for jobs, companies or keywords...</div>
-      			<div class="job-description">Job Description</div>
-      			<div class="required-skills">Required Skills:</div>
-      			<div class="javascript-wrapper">
-        				<div class="javascript">JavaScript</div>
-      			</div>
-      			<div class="python-wrapper">
-        				<div class="python">Python</div>
-      			</div>
-      			<div class="data-structures-wrapper">
-        				<div class="javascript">Data Structures</div>
-      			</div>
-    		</div>
-    		<div class="we-are-seeking">We are seeking a Junior Backend Developer to assist in the development and maintenance of our web applications. The ideal candidate will have a foundational understanding of PHP and the Laravel framework. You will work closely with our senior developers and cross-functional teams to design, build, and implement robust backend solutions. This is an excellent opportunity for a developer looking to grow their career in a supportive and challenging environment.</div>
-    		<div class="line-parent">
-      			<div class="group-item">
-      			</div>
-      			<div class="upcoming-deadlines">
-        				<div class="upcoming-deadlines-child">
-        				</div>
-        				<b class="similar-jobs">Similar Jobs</b>
-        				<div class="frame-div">
-							<div class="frame-child">
-								<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 16 16" fill="none">
+                     </div>
+                     <div class="jobid-frame-parent">
+                        <div class="frame-child">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 16 16" fill="none">
   <path d="M12.0582 8.08203C11.4032 8.08203 10.7844 8.29559 10.2687 8.69963C10.221 8.73829 10.1904 8.79415 10.1835 8.85516C10.1766 8.91617 10.194 8.97744 10.2319 9.02577C10.2697 9.0741 10.3251 9.10561 10.386 9.11351C10.4469 9.12141 10.5084 9.10507 10.5574 9.068C10.9899 8.72912 11.5089 8.55 12.0582 8.55C13.4017 8.55 14.4947 9.64297 14.4947 10.9864C14.4947 12.3298 13.4017 13.4228 12.0582 13.4228C10.7148 13.4228 9.62184 12.3298 9.62184 10.9864C9.62154 10.5281 9.75094 10.079 9.99509 9.69106C10.0277 9.63855 10.0382 9.57526 10.0243 9.51503C10.0104 9.4548 9.97323 9.40252 9.92091 9.3696C9.86859 9.33668 9.80538 9.32579 9.74506 9.33932C9.68475 9.35285 9.63224 9.3897 9.599 9.44181C9.30783 9.90436 9.15349 10.4398 9.15381 10.9864C9.15381 12.5879 10.4567 13.8908 12.0582 13.8908C13.6598 13.8908 14.9627 12.5879 14.9627 10.9864C14.9627 9.38497 13.6598 8.08203 12.0582 8.08203Z" fill="white"/>
   <path d="M13.8935 11.102H12.2922V9.50071C12.2912 9.43932 12.2661 9.38077 12.2223 9.33771C12.1786 9.29464 12.1196 9.27051 12.0582 9.27051C11.9968 9.27051 11.9379 9.29464 11.8941 9.33771C11.8503 9.38077 11.8252 9.43932 11.8242 9.50071V11.3361C11.8242 11.3981 11.8489 11.4576 11.8928 11.5015C11.9366 11.5454 11.9962 11.57 12.0582 11.5701H13.8935C13.9551 11.5693 14.014 11.5444 14.0573 11.5006C14.1006 11.4568 14.1249 11.3976 14.1249 11.336C14.1249 11.2744 14.1006 11.2153 14.0573 11.1715C14.014 11.1277 13.9551 11.1027 13.8935 11.102Z" fill="white"/>
   <path d="M14.2981 7.7452V3.68611C14.2981 3.07617 13.8018 2.57992 13.1919 2.57992H12.6897V2.00402C12.6897 1.49023 12.2717 1.07227 11.7579 1.07227C11.2441 1.07227 10.8262 1.49023 10.8262 2.00402V2.57989H9.61712V2.00402C9.61712 1.49023 9.19916 1.07227 8.68538 1.07227C8.17159 1.07227 7.75362 1.49023 7.75362 2.00402V2.57989H6.54459V2.00402C6.54459 1.49023 6.12662 1.07227 5.61284 1.07227C5.09906 1.07227 4.68109 1.49023 4.68109 2.00402V2.57989H3.47206V2.00402C3.47206 1.49023 3.05409 1.07227 2.54031 1.07227C2.02653 1.07227 1.60847 1.49023 1.60847 2.00402V2.57989H1.10619C0.49625 2.57989 0 3.07611 0 3.68611V3.80155C0.00100347 3.86295 0.0260983 3.92149 0.0698726 3.96455C0.113647 4.00762 0.172593 4.03175 0.234 4.03175C0.295407 4.03175 0.354353 4.00762 0.398127 3.96455C0.441902 3.92149 0.466997 3.86295 0.468 3.80155V3.68611C0.468 3.33423 0.754312 3.04792 1.10619 3.04792H1.60841V3.6238C1.60841 4.13758 2.02638 4.55555 2.54016 4.55555C3.05394 4.55555 3.47191 4.13758 3.47191 3.62377V3.04792H4.68094V3.6238C4.68094 4.13758 5.09891 4.55555 5.61269 4.55555C6.12647 4.55555 6.54444 4.13758 6.54444 3.62377V3.04792H7.75347V3.6238C7.75347 4.13758 8.17144 4.55555 8.68522 4.55555C9.199 4.55555 9.61697 4.13758 9.61697 3.62377V3.04792H10.826V3.6238C10.826 4.13758 11.244 4.55555 11.7577 4.55555C12.2715 4.55555 12.6895 4.13758 12.6895 3.62377V3.04792H13.1917C13.5436 3.04792 13.8299 3.33423 13.8299 3.68611V5.33767H0.468V4.73755C0.466997 4.67615 0.441902 4.6176 0.398127 4.57454C0.354353 4.53147 0.295407 4.50734 0.234 4.50734C0.172593 4.50734 0.113647 4.53147 0.0698726 4.57454C0.0260983 4.6176 0.00100347 4.67615 0 4.73755L0 12.8132C0 13.4232 0.49625 13.9195 1.10619 13.9195H9.42791C10.1261 14.5463 11.0484 14.9283 12.0584 14.9283C12.9017 14.9283 13.7063 14.6655 14.3851 14.1683C14.4342 14.1313 14.4668 14.0764 14.4757 14.0156C14.4847 13.9547 14.4693 13.8928 14.433 13.8432C14.3966 13.7936 14.3422 13.7602 14.2815 13.7504C14.2208 13.7406 14.1586 13.7551 14.1085 13.7908C13.5105 14.2288 12.8016 14.4603 12.0584 14.4603C10.143 14.4603 8.58481 12.902 8.58481 10.9867C8.58481 9.07142 10.1431 7.51317 12.0584 7.51317C12.4049 7.51317 12.7501 7.56502 13.0814 7.66695C13.0879 7.66895 13.0944 7.67105 13.101 7.67311C14.5085 8.11695 15.532 9.43448 15.532 10.9867C15.532 11.7876 15.2528 12.5691 14.746 13.1873C14.7262 13.2111 14.7114 13.2385 14.7023 13.268C14.6932 13.2974 14.69 13.3284 14.693 13.3592C14.6959 13.3899 14.7049 13.4197 14.7194 13.447C14.7339 13.4742 14.7537 13.4983 14.7775 13.5179C14.8014 13.5374 14.8289 13.5521 14.8584 13.561C14.888 13.5699 14.919 13.5728 14.9497 13.5697C14.9804 13.5666 15.0102 13.5574 15.0373 13.5427C15.0645 13.528 15.0884 13.5081 15.1078 13.4841C15.6832 12.7824 16 11.8955 16 10.9867C16 9.6447 15.3256 8.45733 14.2981 7.7452ZM3.00391 3.62377C3.00391 3.87948 2.79588 4.08752 2.54016 4.08752C2.28444 4.08752 2.07641 3.87952 2.07641 3.62377V2.00402C2.07641 1.7483 2.28441 1.54027 2.54016 1.54027C2.79588 1.54027 3.00391 1.74827 3.00391 2.00402V3.62377ZM6.07647 3.62377C6.07647 3.87948 5.86844 4.08752 5.61272 4.08752C5.357 4.08752 5.14897 3.87952 5.14897 3.62377V2.00402C5.14897 1.7483 5.357 1.54027 5.61272 1.54027C5.86844 1.54027 6.07647 1.74827 6.07647 2.00402V3.62377ZM9.14906 3.62377C9.14906 3.87948 8.94103 4.08752 8.68531 4.08752C8.42959 4.08752 8.22156 3.87952 8.22156 3.62377V2.00402C8.22156 1.7483 8.42959 1.54027 8.68531 1.54027C8.94103 1.54027 9.14906 1.74827 9.14906 2.00402V3.62377ZM12.2216 3.62377C12.2216 3.87948 12.0136 4.08752 11.7579 4.08752C11.5022 4.08752 11.2941 3.87952 11.2941 3.62377V2.00402C11.2941 1.7483 11.5022 1.54027 11.7579 1.54027C12.0136 1.54027 12.2216 1.74827 12.2216 2.00402V3.62377ZM6.00003 5.80567H8.29803V8.04223H6.00003V5.80567ZM2.766 13.4514H1.10619C0.754312 13.4514 0.468 13.1651 0.468 12.8132V11.2148H2.76597L2.766 13.4514ZM2.766 10.7468H0.468V8.51026H2.76597L2.766 10.7468ZM2.766 8.04223H0.468V5.80567H2.76597L2.766 8.04223ZM3.234 8.51026H5.53197V10.7468H3.234V8.51026ZM5.53203 13.4514H3.23406V11.2149H5.53203V13.4514ZM5.53203 8.04223H3.23406V5.80567H5.53203V8.04223ZM6 8.51026H8.298V9.80464C8.2018 10.1104 8.14348 10.4269 8.12434 10.7469H6V8.51026ZM8.98141 13.4514H6.00003V11.2149H8.12341C8.16978 12.0409 8.46753 12.814 8.98141 13.4514ZM8.76606 8.82227V8.51026H8.9945C8.91333 8.61049 8.8371 8.71462 8.76606 8.82227ZM11.064 7.17233C10.4531 7.3317 9.8995 7.63448 9.44125 8.04223H8.76606V5.80567H11.064V7.17233ZM13.8301 7.46498C13.6101 7.35431 13.3802 7.26462 13.1435 7.19708L13.1284 7.19276C12.7802 7.09468 12.4202 7.045 12.0585 7.04511C11.88 7.04514 11.7043 7.05727 11.5321 7.08036V5.80561H13.8301V7.46498Z" fill="white"/>
 </svg>
-							</div>
+                      </div>
 
-          					<div class="wordpress-developer-parent">
-            						<div class="wordpress-developer">Wordpress Developer</div>
-            						<div class="workspace-infotech-limited">Workspace InfoTech Limited</div>
-            						<div class="deadline-october-25">Deadline: October 25, 2025</div>
-          					</div>
-        				</div>
-        				<div class="jobid-frame-parent">
-          					<div class="frame-child">
-								<svg xmlns="http://www.w3.org/2000/svg" width="80" height="60" viewBox="0 0 16 16" fill="none">
-  <path d="M12.0582 8.08203C11.4032 8.08203 10.7844 8.29559 10.2687 8.69963C10.221 8.73829 10.1904 8.79415 10.1835 8.85516C10.1766 8.91617 10.194 8.97744 10.2319 9.02577C10.2697 9.0741 10.3251 9.10561 10.386 9.11351C10.4469 9.12141 10.5084 9.10507 10.5574 9.068C10.9899 8.72912 11.5089 8.55 12.0582 8.55C13.4017 8.55 14.4947 9.64297 14.4947 10.9864C14.4947 12.3298 13.4017 13.4228 12.0582 13.4228C10.7148 13.4228 9.62184 12.3298 9.62184 10.9864C9.62154 10.5281 9.75094 10.079 9.99509 9.69106C10.0277 9.63855 10.0382 9.57526 10.0243 9.51503C10.0104 9.4548 9.97323 9.40252 9.92091 9.3696C9.86859 9.33668 9.80538 9.32579 9.74506 9.33932C9.68475 9.35285 9.63224 9.3897 9.599 9.44181C9.30783 9.90436 9.15349 10.4398 9.15381 10.9864C9.15381 12.5879 10.4567 13.8908 12.0582 13.8908C13.6598 13.8908 14.9627 12.5879 14.9627 10.9864C14.9627 9.38497 13.6598 8.08203 12.0582 8.08203Z" fill="white"/>
-  <path d="M13.8935 11.102H12.2922V9.50071C12.2912 9.43932 12.2661 9.38077 12.2223 9.33771C12.1786 9.29464 12.1196 9.27051 12.0582 9.27051C11.9968 9.27051 11.9379 9.29464 11.8941 9.33771C11.8503 9.38077 11.8252 9.43932 11.8242 9.50071V11.3361C11.8242 11.3981 11.8489 11.4576 11.8928 11.5015C11.9366 11.5454 11.9962 11.57 12.0582 11.5701H13.8935C13.9551 11.5693 14.014 11.5444 14.0573 11.5006C14.1006 11.4568 14.1249 11.3976 14.1249 11.336C14.1249 11.2744 14.1006 11.2153 14.0573 11.1715C14.014 11.1277 13.9551 11.1027 13.8935 11.102Z" fill="white"/>
-  <path d="M14.2981 7.7452V3.68611C14.2981 3.07617 13.8018 2.57992 13.1919 2.57992H12.6897V2.00402C12.6897 1.49023 12.2717 1.07227 11.7579 1.07227C11.2441 1.07227 10.8262 1.49023 10.8262 2.00402V2.57989H9.61712V2.00402C9.61712 1.49023 9.19916 1.07227 8.68538 1.07227C8.17159 1.07227 7.75362 1.49023 7.75362 2.00402V2.57989H6.54459V2.00402C6.54459 1.49023 6.12662 1.07227 5.61284 1.07227C5.09906 1.07227 4.68109 1.49023 4.68109 2.00402V2.57989H3.47206V2.00402C3.47206 1.49023 3.05409 1.07227 2.54031 1.07227C2.02653 1.07227 1.60847 1.49023 1.60847 2.00402V2.57989H1.10619C0.49625 2.57989 0 3.07611 0 3.68611V3.80155C0.00100347 3.86295 0.0260983 3.92149 0.0698726 3.96455C0.113647 4.00762 0.172593 4.03175 0.234 4.03175C0.295407 4.03175 0.354353 4.00762 0.398127 3.96455C0.441902 3.92149 0.466997 3.86295 0.468 3.80155V3.68611C0.468 3.33423 0.754312 3.04792 1.10619 3.04792H1.60841V3.6238C1.60841 4.13758 2.02638 4.55555 2.54016 4.55555C3.05394 4.55555 3.47191 4.13758 3.47191 3.62377V3.04792H4.68094V3.6238C4.68094 4.13758 5.09891 4.55555 5.61269 4.55555C6.12647 4.55555 6.54444 4.13758 6.54444 3.62377V3.04792H7.75347V3.6238C7.75347 4.13758 8.17144 4.55555 8.68522 4.55555C9.199 4.55555 9.61697 4.13758 9.61697 3.62377V3.04792H10.826V3.6238C10.826 4.13758 11.244 4.55555 11.7577 4.55555C12.2715 4.55555 12.6895 4.13758 12.6895 3.62377V3.04792H13.1917C13.5436 3.04792 13.8299 3.33423 13.8299 3.68611V5.33767H0.468V4.73755C0.466997 4.67615 0.441902 4.6176 0.398127 4.57454C0.354353 4.53147 0.295407 4.50734 0.234 4.50734C0.172593 4.50734 0.113647 4.53147 0.0698726 4.57454C0.0260983 4.6176 0.00100347 4.67615 0 4.73755L0 12.8132C0 13.4232 0.49625 13.9195 1.10619 13.9195H9.42791C10.1261 14.5463 11.0484 14.9283 12.0584 14.9283C12.9017 14.9283 13.7063 14.6655 14.3851 14.1683C14.4342 14.1313 14.4668 14.0764 14.4757 14.0156C14.4847 13.9547 14.4693 13.8928 14.433 13.8432C14.3966 13.7936 14.3422 13.7602 14.2815 13.7504C14.2208 13.7406 14.1586 13.7551 14.1085 13.7908C13.5105 14.2288 12.8016 14.4603 12.0584 14.4603C10.143 14.4603 8.58481 12.902 8.58481 10.9867C8.58481 9.07142 10.1431 7.51317 12.0584 7.51317C12.4049 7.51317 12.7501 7.56502 13.0814 7.66695C13.0879 7.66895 13.0944 7.67105 13.101 7.67311C14.5085 8.11695 15.532 9.43448 15.532 10.9867C15.532 11.7876 15.2528 12.5691 14.746 13.1873C14.7262 13.2111 14.7114 13.2385 14.7023 13.268C14.6932 13.2974 14.69 13.3284 14.693 13.3592C14.6959 13.3899 14.7049 13.4197 14.7194 13.447C14.7339 13.4742 14.7537 13.4983 14.7775 13.5179C14.8014 13.5374 14.8289 13.5521 14.8584 13.561C14.888 13.5699 14.919 13.5728 14.9497 13.5697C14.9804 13.5666 15.0102 13.5574 15.0373 13.5427C15.0645 13.528 15.0884 13.5081 15.1078 13.4841C15.6832 12.7824 16 11.8955 16 10.9867C16 9.6447 15.3256 8.45733 14.2981 7.7452ZM3.00391 3.62377C3.00391 3.87948 2.79588 4.08752 2.54016 4.08752C2.28444 4.08752 2.07641 3.87952 2.07641 3.62377V2.00402C2.07641 1.7483 2.28441 1.54027 2.54016 1.54027C2.79588 1.54027 3.00391 1.74827 3.00391 2.00402V3.62377ZM6.07647 3.62377C6.07647 3.87948 5.86844 4.08752 5.61272 4.08752C5.357 4.08752 5.14897 3.87952 5.14897 3.62377V2.00402C5.14897 1.7483 5.357 1.54027 5.61272 1.54027C5.86844 1.54027 6.07647 1.74827 6.07647 2.00402V3.62377ZM9.14906 3.62377C9.14906 3.87948 8.94103 4.08752 8.68531 4.08752C8.42959 4.08752 8.22156 3.87952 8.22156 3.62377V2.00402C8.22156 1.7483 8.42959 1.54027 8.68531 1.54027C8.94103 1.54027 9.14906 1.74827 9.14906 2.00402V3.62377ZM12.2216 3.62377C12.2216 3.87948 12.0136 4.08752 11.7579 4.08752C11.5022 4.08752 11.2941 3.87952 11.2941 3.62377V2.00402C11.2941 1.7483 11.5022 1.54027 11.7579 1.54027C12.0136 1.54027 12.2216 1.74827 12.2216 2.00402V3.62377ZM6.00003 5.80567H8.29803V8.04223H6.00003V5.80567ZM2.766 13.4514H1.10619C0.754312 13.4514 0.468 13.1651 0.468 12.8132V11.2148H2.76597L2.766 13.4514ZM2.766 10.7468H0.468V8.51026H2.76597L2.766 10.7468ZM2.766 8.04223H0.468V5.80567H2.76597L2.766 8.04223ZM3.234 8.51026H5.53197V10.7468H3.234V8.51026ZM5.53203 13.4514H3.23406V11.2149H5.53203V13.4514ZM5.53203 8.04223H3.23406V5.80567H5.53203V8.04223ZM6 8.51026H8.298V9.80464C8.2018 10.1104 8.14348 10.4269 8.12434 10.7469H6V8.51026ZM8.98141 13.4514H6.00003V11.2149H8.12341C8.16978 12.0409 8.46753 12.814 8.98141 13.4514ZM8.76606 8.82227V8.51026H8.9945C8.91333 8.61049 8.8371 8.71462 8.76606 8.82227ZM11.064 7.17233C10.4531 7.3317 9.8995 7.63448 9.44125 8.04223H8.76606V5.80567H11.064V7.17233ZM13.8301 7.46498C13.6101 7.35431 13.3802 7.26462 13.1435 7.19708L13.1284 7.19276C12.7802 7.09468 12.4202 7.045 12.0585 7.04511C11.88 7.04514 11.7043 7.05727 11.5321 7.08036V5.80561H13.8301V7.46498Z" fill="white"/>
-</svg>
-							</div>
+                        <div class="wordpress-developer-parent">
+                               <div class="junior-developer-as">Junior Developer as Intern</div>
+                               <div class="collabhero">
+                                  <span class="jobid-collabhero">Collabhero</span>
+                                  <span class="span"> </span>
+                               </div>
+                               <div class="deadline-july-28">Deadline: July 28, 2025</div>
+                        </div>
+                     </div>
+              </div>
+              <div class="group-inner">
+              </div>
+           </div>
+           <div class="group-div">
+              <div class="new-job-postings-matching-your-group">
+                     <div class="jobid-new-job-postings">Search for jobs, companies or keywords...</div>
+                     <b class="view-all">View All</b>
+                     <img class="frame-icon3" alt="">
 
-          					<div class="wordpress-developer-parent">
-            						<div class="junior-developer-as">Junior Developer as Intern</div>
-            						<div class="collabhero">
-              							<span class="jobid-collabhero">Collabhero</span>
-              							<span class="span"> </span>
-            						</div>
-            						<div class="deadline-july-28">Deadline: July 28, 2025</div>
-          					</div>
-        				</div>
-      			</div>
-      			<div class="group-inner">
-      			</div>
-    		</div>
-    		<div class="group-div">
-      			<div class="new-job-postings-matching-your-group">
-        				<div class="jobid-new-job-postings">Search for jobs, companies or keywords...</div>
-        				<b class="view-all">View All</b>
-        				<img class="frame-icon3" alt="">
+                     <div class="frame-inner">
+                     </div>
+              </div>
+                 {% if job %}
+                <div class="july-24-2025">
+                   {% if job_type == 'faculty_opportunity' %}
+                      {{ job.posted_date|date:"F j, Y" }}
+                   {% elif job_type == 'company_job' %}
+                      {{ job.posted_date|date:"F j, Y" }}
+                   {% else %}
+                      {{ job.created_at|date:"F j, Y" }}
+                   {% endif %}
+                </div>
+                <div class="posted-on">Posted on </div>
 
-        				<div class="frame-inner">
-        				</div>
-      			</div>
-      			<div class="july-24-2025">July 24, 2025</div>
-      			<div class="posted-on">Posted on </div>
-      			<div class="august-2-2025">August 2, 2025</div>
-      			<div class="application-deadline">Application Deadline</div>
-      			<div class="k-bdt-depends">25-30k BDT (Depends on skills & experience</div>
-      			<div class="salary">Salary</div>
-      			<div class="full-time">Full-time</div>
-      			<div class="job-type">Job Type</div>
-      			<div class="dhaka-bangladesh">Dhaka, Bangladesh</div>
-      			<div class="location">Location</div>
-      			<div class="jobid-disystem">DISYSTEM</div>
-      			<div class="company">Company</div>
-      			<div class="jobid-junior-backend-developer">Junior Backend Developer </div>
-      			<b class="job-summary">Job Summary</b>
-      			<div class="job-title">Job Title</div>
-    		</div>
-    		<div class="footer-section">
-      			<div class="cse-job-portal">
-        				<b class="jobid-cse-job-portal">CSE Job Portal</b>
-        				<div class="connecting-cse-students">Connecting CSE students and alumni with career opportunities in the industry.</div>
-      			</div>
-      			<div class="quick-links">
-        				<b class="jobid-quick-links">Quick Links</b>
+                <div class="august-2-2025">
+                   {% if job_type == 'faculty_opportunity' %}
+                      {{ job.deadline|date:"F j, Y" }}
+                   {% elif job_type == 'company_job' %}
+                      {{ job.deadline|date:"F j, Y" }}
+                   {% else %}
+                      {{ job.deadline|date:"F j, Y" }}
+                   {% endif %}
+                </div>
+                <div class="application-deadline">Application Deadline</div>
+
+                <div class="k-bdt-depends">
+                   {% if job.salary %}
+                      {{ job.salary }}
+                   {% elif job_type == 'faculty_opportunity' %}
+                      University Stipend
+                   {% else %}
+                      Negotiable
+                   {% endif %}
+                </div>
+                <div class="salary">Salary</div>
+
+                <div class="full-time">
+                   {% if job_type == 'faculty_opportunity' %}
+                      {{ job.opportunity_type|title }}
+                   {% else %}
+                      {{ job.job_type|title }}
+                   {% endif %}
+                </div>
+                <div class="job-type">Job Type</div>
+
+                <div class="dhaka-bangladesh">
+                   {% if job_type == 'faculty_opportunity' %}
+                      University Campus
+                   {% elif job_type == 'company_job' %}
+                      {{ job.location }}
+                   {% else %}
+                      {{ job.location }}
+                   {% endif %}
+                </div>
+                <div class="location">Location</div>
+
+                <div class="jobid-disystem">
+                   {% if job_type == 'faculty_opportunity' %}
+                      {{ job.department }}
+                   {% elif job_type == 'company_job' %}
+                      {{ job.company.company_name }}
+                   {% else %}
+                      {{ job.company }}
+                   {% endif %}
+                </div>
+                <div class="company">Company</div>
+
+                <div class="jobid-junior-backend-developer">{{ job.title }}</div>
+                <b class="job-summary">Job Summary</b>
+                <div class="job-title">Job Title</div>
+                {% endif %}
+           </div>
+           <div class="footer-section">
+              <div class="cse-job-portal">
+                     <b class="jobid-cse-job-portal">CSE Job Portal</b>
+                     <div class="connecting-cse-students">Connecting CSE students and alumni with career opportunities in the industry.</div>
+              </div>
+              <div class="quick-links">
+                     <b class="jobid-quick-links">Quick Links</b>
                                         <a href="{% url 'home' %}" class="home">Home </a>
-        				<div class="jobs">Jobs</div>
+                     <div class="jobs">Jobs</div>
                                         <a href="{% url 'login' %}" class="login">Login</a>
                                         <a href="{% url 'register' %}" class="register">Register</a>
-      			</div>
-      			<div class="contact-us">
-        				<b class="jobid-contact-us">Contact Us</b>
-        				<div class="div">02-58157091</div>
-        				<div class="cse-jobsuap-bdedu">cse-jobs@uap-bd.edu</div>
-        				                                        <div class="frame-icon4">
+              </div>
+              <div class="contact-us">
+                     <b class="jobid-contact-us">Contact Us</b>
+                     <div class="div">02-58157091</div>
+                     <div class="cse-jobsuap-bdedu">cse-jobs@uap-bd.edu</div>
+                                                             <div class="frame-icon4">
                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
   <path d="M9.75579 11.1272C10.7312 12.8425 12.1575 14.2688 13.8728 15.2442L14.7942 13.9543C15.1005 13.5255 15.6787 13.393 16.1412 13.6456C17.6067 14.4461 19.2261 14.9326 20.9155 15.0664C21.4573 15.1093 21.875 15.5614 21.875 16.1048V20.7535C21.875 21.2876 21.471 21.7351 20.9398 21.7897C20.3878 21.8465 19.8309 21.875 19.2708 21.875C10.3537 21.875 3.125 14.6462 3.125 5.72917C3.125 5.16903 3.15356 4.6122 3.2103 4.06017C3.2649 3.52891 3.71244 3.125 4.24651 3.125H8.89523C9.43865 3.125 9.89076 3.54275 9.93365 4.08447C10.0674 5.77383 10.5539 7.39337 11.3544 8.85879C11.607 9.32125 11.4745 9.89952 11.0457 10.2058L9.75579 11.1272ZM7.12943 10.4429L9.10854 9.02926C8.54736 7.81785 8.16279 6.53316 7.96591 5.20833H5.21778C5.21149 5.38158 5.20833 5.55521 5.20833 5.72917C5.20833 13.4956 11.5044 19.7917 19.2708 19.7917C19.4448 19.7917 19.6184 19.7885 19.7917 19.7822V17.0341C18.4669 16.8372 17.1822 16.4526 15.9707 15.8915L14.5571 17.8706C13.9852 17.6484 13.4329 17.387 12.9035 17.0897L12.843 17.0552C10.8018 15.8945 9.10556 14.1982 7.94479 12.157L7.91035 12.0965C7.61301 11.5671 7.3516 11.0148 7.12943 10.4429Z" fill="white"/>
 </svg>
-        				</div>
-        				                                        <div class="frame-icon5">
+                     </div>
+                                                             <div class="frame-icon5">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
   <path d="M3.12492 3.125H21.8749C22.4502 3.125 22.9166 3.59137 22.9166 4.16667V20.8333C22.9166 21.4086 22.4502 21.875 21.8749 21.875H3.12492C2.54963 21.875 2.08325 21.4086 2.08325 20.8333V4.16667C2.08325 3.59137 2.54963 3.125 3.12492 3.125ZM12.563 12.1697L5.88244 6.4976L4.53406 8.08573L12.5761 14.9136L20.4733 8.07933L19.1099 6.504L12.563 12.1697Z" fill="white"/>
 </svg>
-        				</div>
-      			</div>
-      			<div class="copyright">
-        				<div class="frame-parent2">
+                     </div>
+              </div>
+              <div class="copyright">
+                     <div class="frame-parent2">
 
-          					<div class="cse-department-job">&copy;2025 CSE Department Job Portal.All rights reserved.</div>
-        				</div>
-      			</div>
-    		</div>
-    		<div class="logo-parent">
-      			<div class="logo">
-        				<div class="ellipse">
-        				</div>
-        				<div class="cse">CSE</div>
-      			</div>
-      			<div class="job-portal">Job Portal</div>
-    		</div>
-    		<div class="home-parent">
-      			<b class="jobid-home">Home</b>
-      			<b class="jobid-home">Jobs</b>
-      			<b class="jobid-home">About</b>
-      			<div class="dashboard-wrapper">
-        				<b class="dashboard">Dashboard</b>
-      			</div>
-    		</div>
-    		<div class="requirements-currently-pursui-container">
-      			<p class="requirements">Requirements:</p>
-      			<ul class="currently-pursuing-a-degree-in">
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Currently pursuing a degree in Computer Science or related field</span>
-        				</li>
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Strong knowledge of data structures and algorithms</span>
-        				</li>
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Experience with at least one programming language (e.g., Java, Python, C++)</span>
-        				</li>
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Familiarity with web technologies (HTML, CSS, JavaScript) is a plus</span>
-        				</li>
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Good problem-solving skills and attention to detail</span>
-        				</li>
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Excellent communication and teamwork abilities</span>
-        				</li>
-      			</ul>
-      			<p class="requirements">Benefits:</p>
-      			<ul class="currently-pursuing-a-degree-in">
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Competitive hourly pay</span>
-        				</li>
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Flexible work hours</span>
-        				</li>
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Mentorship from experienced engineers</span>
-        				</li>
-        				<li class="jobid-currently-pursuing-a-degree-in">
-          					<span class="span">Opportunity for full-time employment after graduation</span>
-        				</li>
-        				<li>
-          					<span class="span">Fun and collaborative work environment</span>
-        				</li>
-      			</ul>
-    		</div>
-    		<div class="algorithms-wrapper">
-      			<div class="algorithms">Algorithms</div>
-    		</div>
-    		<div class="web-developement-wrapper">
-      			<div class="web-developement">Web Developement</div>
-    		</div>
-  	</div>
-  	<script>
-    		var frameContainer = document.getElementById("frameContainer");
-    		if(frameContainer) {
-      			frameContainer.addEventListener("click", function (e) {
-        				// Add your code here
-      			});
-    		}</script></body>
+                        <div class="cse-department-job">&copy;2025 CSE Department Job Portal.All rights reserved.</div>
+                     </div>
+              </div>
+           </div>
+           <div class="logo-parent">
+              <div class="logo">
+                     <div class="ellipse">
+                     </div>
+                     <div class="cse">CSE</div>
+              </div>
+              <div class="job-portal">Job Portal</div>
+           </div>
+           <div class="home-parent">
+              <b class="jobid-home">Home</b>
+              <b class="jobid-home">Jobs</b>
+              <b class="jobid-home">About</b>
+              <div class="dashboard-wrapper">
+                     <b class="dashboard">Dashboard</b>
+              </div>
+           </div>
+    </div>
+    <script>
+           var frameContainer = document.getElementById("frameContainer");
+           if(frameContainer) {
+              frameContainer.addEventListener("click", function (e) {
+                     // Add your code here
+              });
+           }
+               document.addEventListener('DOMContentLoaded', function() {
+        const applyBtn = document.getElementById('applyNowBtn');
+        if (applyBtn) {
+            applyBtn.addEventListener('click', function() {
+                applyToJob({{ job.id }}, '{{ job_type }}');
+            });
+        }
+    });
+
+    async function applyToJob(jobId, jobType) {
+    try {
+        let url = '';
+        let payload = {};
+
+        if (jobType === 'alumni_job') {
+            url = '/api/jobs/apply/';
+            payload = { job_id: jobId };
+        } else if (jobType === 'faculty_opportunity') {
+            url = '/api/opportunities/apply/';
+            payload = { opportunity_id: jobId };
+        } else if (jobType === 'company_job') {
+            url = '/api/company/jobs/apply/';
+            payload = { job_id: jobId };
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Application submitted successfully!');
+
+            // Update button state
+            const applyBtn = document.getElementById('applyNowBtn');
+            applyBtn.style.background = 'var(--color-forestgreen)';
+            applyBtn.style.cursor = 'not-allowed';
+            applyBtn.querySelector('.apply-now').textContent = 'Applied ✓';
+
+            // Disable further clicks
+            applyBtn.onclick = null;
+
+            // Optional: Show a message that it will appear in applied tab
+            setTimeout(() => {
+                alert('Your application has been submitted! You can view it in the "Applied Jobs" tab of your dashboard.');
+            }, 500);
+
+        } else {
+            alert('Error: ' + result.error);
+        }
+    } catch (error) {
+        console.error('Error applying to job:', error);
+        alert('Failed to apply. Please try again.');
+    }
+}
+
+    function getCSRFToken() {
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    </script>
+</body>
 </html>
