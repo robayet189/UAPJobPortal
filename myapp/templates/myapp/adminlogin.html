@@ -395,7 +395,7 @@ body {
 
               <div class="log-in-as-a-student-back-to-home">Login as Admin</div>
            </div>
-            <form method="post" action="{% url 'adminlog' %}">
+            <form method="post">
             {% csrf_token %}
             <!-- Replace the static email/password fields with Django form fields -->
             <div class="frame-group">
