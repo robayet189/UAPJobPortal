@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post New Job - Alumni Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-black: #000;
+            --color-darkgreen: #1b6700;
+            --color-darkslateblue-100: #6d68ab;
+            --color-darkslateblue-200: #46479d;
+            --color-firebrick: #a31e1e;
+            --color-gainsboro: #d9d9d9;
+            --color-gray: #fefefe;
+            --color-honeydew: #d1f0d2;
+            --color-lightgreen: #51d784;
+            --color-lightsteelblue-100: #a3b9e9;
+            --color-lightsteelblue-200: #969dc9;
+            --color-midnightblue-100: #21287d;
+            --color-midnightblue-200: #131a73;
+            --color-midnightblue-300: rgba(33, 40, 125, 0.2);
+            --color-plum: #d5b6f0;
+            --color-silver: #d9c3c3;
+            --color-skyblue: #90d1f1;
+            --color-snow: #fffcfc;
+            --color-white: #fff;
+            --br-6: 6px;
+            --br-10: 10px;
+            --br-14: 14px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, rgba(48, 58, 149, 0.2), rgba(118, 25, 125, 0.2) 25%, rgba(173, 0, 107, 0.2) 66%),
+                        linear-gradient(rgba(14, 82, 150, 0.2), rgba(14, 82, 150, 0.2)), #303a95;
+            color: var(--color-white);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background-color: var(--color-gainsboro);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--color-darkslateblue-200);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--color-white);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: var(--br-6);
+            transition: background-color 0.3s;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links a.active {
+            background-color: var(--color-midnightblue-200);
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--color-lightsteelblue-200);
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--color-lightsteelblue-200);
+            border-radius: var(--br-14);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: var(--br-6);
+            border: 1px solid var(--color-lightsteelblue-200);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--color-white);
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-skyblue);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: var(--br-6);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background-color: var(--color-lightgreen);
+            color: var(--color-darkgreen);
+        }
+
+        .btn-primary:hover {
+            background-color: #45c570;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-midnightblue-300);
+            color: var(--color-white);
+            border: 2px solid var(--color-midnightblue-100);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            background-color: transparent;
+            color: var(--color-white);
+            border: 2px solid var(--color-firebrick);
+        }
+
+        .btn-cancel:hover {
+            background-color: rgba(163, 30, 30, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px;
+            border-radius: var(--br-6);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: var(--color-honeydew);
+            color: var(--color-darkgreen);
+            border: 1px solid var(--color-lightgreen);
+        }
+
+        .alert-error {
+            background-color: rgba(163, 30, 30, 0.1);
+            color: var(--color-white);
+            border: 1px solid var(--color-firebrick);
+        }
+
+        /* Loading State */
+        .btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">CSE</div>
+                <div class="logo-text">Job Portal</div>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'alumni_dashboard' %}">Dashboard</a>
+                <a href="{% url 'post_job_page' %}" class="active">Post Job</a>
+                <a href="{% url 'alumni_profile' %}">Profile</a>
+                <a href="{% url 'almlog' %}">Logout</a>
+            </div>
+        </header>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Post a New Job</h1>
+            <p class="page-subtitle">Fill out the form below to create a new job listing</p>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alertMessage" class="alert" style="display: none;"></div>
+
+        <!-- Job Post Form -->
+        <div class="form-container">
+            <form id="jobPostForm">
+                <div class="form-group">
+                    <label for="jobTitle">Job Title *</label>
+                    <input type="text" id="jobTitle" class="form-control" placeholder="e.g., Junior Backend Developer" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobCompany">Company *</label>
+                    <input type="text" id="jobCompany" class="form-control" placeholder="e.g., Tech Solutions Inc." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobDescription">Job Description *</label>
+                    <textarea id="jobDescription" class="form-control" placeholder="Describe the role, responsibilities, and what you're looking for in a candidate..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobType">Job Type *</label>
+                        <select id="jobType" class="form-control" required>
+                            <option value="">Select Job Type</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Internship">Internship</option>
+                            <option value="Contract">Contract</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobSalary">Salary Range</label>
+                        <input type="text" id="jobSalary" class="form-control" placeholder="e.g., ৳50,000 - ৳80,000">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobLocation">Location *</label>
+                        <input type="text" id="jobLocation" class="form-control" placeholder="e.g., Dhaka, Bangladesh" value="Dhaka, Bangladesh" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobDeadline">Application Deadline *</label>
+                        <input type="date" id="jobDeadline" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobRequirements">Requirements (one per line)</label>
+                    <textarea id="jobRequirements" class="form-control" placeholder="Bachelor's degree in Computer Science&#10;2+ years of experience&#10;Knowledge of Python/Django..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        Post Job
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="saveDraftBtn">
+                        Save as Draft
+                    </button>
+                    <a href="{% url 'alumni_dashboard' %}" class="btn btn-cancel">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // CSRF token helper
+        function getCSRFToken() {
+            const name = 'csrftoken';
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Show alert message
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.style.display = 'block';
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Set minimum date to today
+        document.getElementById('jobDeadline').min = new Date().toISOString().split('T')[0];
+
+        // Form submission
+        document.getElementById('jobPostForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await submitJob('active');
+        });
+
+        // Save as draft
+        document.getElementById('saveDraftBtn').addEventListener('click', async function() {
+            await submitJob('draft');
+        });
+
+        async function submitJob(status) {
+            const submitBtn = document.getElementById('submitBtn');
+            const saveDraftBtn = document.getElementById('saveDraftBtn');
+            const originalText = submitBtn.textContent;
+            const draftText = saveDraftBtn.textContent;
+
+            try {
+                // Show loading state
+                submitBtn.textContent = 'Posting...';
+                saveDraftBtn.textContent = 'Saving...';
+                submitBtn.disabled = true;
+                saveDraftBtn.disabled = true;
+                submitBtn.classList.add('loading');
+                saveDraftBtn.classList.add('loading');
+
+                const jobData = {
+                    title: document.getElementById('jobTitle').value,
+                    company: document.getElementById('jobCompany').value,
+                    location: document.getElementById('jobLocation').value,
+                    deadline: document.getElementById('jobDeadline').value,
+                    job_type: document.getElementById('jobType').value,
+                    description: document.getElementById('jobDescription').value,
+                    salary: document.getElementById('jobSalary').value,
+                    requirements: document.getElementById('jobRequirements').value.split('\n').filter(req => req.trim() !== ''),
+                    status: status
+                };
+
+                const response = await fetch('/api/jobs/post/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                    body: JSON.stringify(jobData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const message = status === 'active'
+                        ? 'Job posted successfully! Redirecting to dashboard...'
+                        : 'Job saved as draft successfully! Redirecting to dashboard...';
+
+                    showAlert(message, 'success');
+
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = "{% url 'alumni_dashboard' %}";
+                    }, 2000);
+                } else {
+                    showAlert('Error: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error posting job:', error);
+                showAlert('Failed to post job. Please try again.', 'error');
+            } finally {
+                // Reset buttons
+                submitBtn.textContent = originalText;
+                saveDraftBtn.textContent = draftText;
+                submitBtn.disabled = false;
+                saveDraftBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                saveDraftBtn.classList.remove('loading');
+            }
+        }
+
+        // Add some sample data for testing (optional)
+        function fillSampleData() {
+            // Remove this function in production
+            document.getElementById('jobTitle').value = 'Junior Backend Developer';
+            document.getElementById('jobCompany').value = 'Tech Solutions Inc.';
+            document.getElementById('jobDescription').value = 'We are looking for a passionate Junior Backend Developer to join our dynamic team. You will be responsible for developing and maintaining server-side logic, ensuring high performance and responsiveness to requests from the front-end.';
+            document.getElementById('jobType').value = 'Full-time';
+            document.getElementById('jobSalary').value = '৳50,000 - ৳80,000';
+            document.getElementById('jobLocation').value = 'Dhaka, Bangladesh';
+
+            const nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            document.getElementById('jobDeadline').value = nextWeek.toISOString().split('T')[0];
+
+            document.getElementById('jobRequirements').value = 'Bachelor\'s degree in Computer Science or related field\n1-2 years of experience in backend development\nStrong knowledge of Python and Django framework\nExperience with REST API development\nFamiliarity with database technologies (PostgreSQL, MySQL)\nGood understanding of version control systems (Git)';
+        }
+
+        // Uncomment the line below to enable sample data filling for testing
+        // fillSampleData();
+    </script>
+</body>
+</html>
