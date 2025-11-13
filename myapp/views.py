@@ -113,7 +113,6 @@ def adminregistration(request):
     return render(request, 'myapp/adminregistration.html', {'form': form})
 
 
-
 def studentlogin(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -126,16 +125,25 @@ def studentlogin(request):
             return redirect("stdlog")
 
         if check_password(password, student.password):
-            # store session info
+            # ✅ FORCE SESSION CREATION
+            if not request.session.session_key:
+                request.session.create()
+
+            # ✅ SET SESSION DATA
             request.session["student_id"] = student.id
+            request.session.set_expiry(86400)
+
+            # ✅ DEBUG
+            print(f"✅ LOGIN SUCCESS: Session created - {request.session.session_key}")
+            print(f"✅ Session data: {dict(request.session)}")
+
             messages.success(request, "Login successful!")
-            return redirect("dashboard")  # replace with your dashboard/homepage
+            return redirect("dashboard")
         else:
             messages.error(request, "Invalid email or password.")
             return redirect("stdlog")
 
     return render(request, "myapp/studentlogin.html")
-
 
 # views.py
 def alumnilogin(request):
@@ -174,7 +182,7 @@ def facultylogin(request):
             # store session info
             request.session["faculty_id"] = faculty.id
             messages.success(request, "Login successful!")
-            return redirect("dashboard")  # replace with your dashboard/homepage
+            return redirect("faculty_dashboard")  # replace with your dashboard/homepage
         else:
             messages.error(request, "Invalid email or password.")
             return redirect("fcltlog")
@@ -210,23 +218,27 @@ def adminlogin(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
+        print(f"Admin login attempt: {email}")  # Debug print
+
         try:
             admin = Administrator.objects.get(email=email)
+
+            if check_password(password, admin.password):
+                request.session["admin_id"] = admin.id
+                print(f"✅ ADMIN LOGIN SUCCESS: Session created - {request.session.session_key}")  # Debug print
+                print(f"✅ Admin session data: {dict(request.session)}")  # Debug print
+
+                messages.success(request, "Login successful!")
+                return redirect("custom_admin_dashboard")
+            else:
+                messages.error(request, "Invalid email or password.")
+                return redirect("adminlog")
+
         except Administrator.DoesNotExist:
             messages.error(request, "Invalid email or password or not registered yet.")
             return redirect("adminlog")
 
-        if check_password(password, admin.password):
-            # store session info
-            request.session["admin_id"] = admin.id
-            messages.success(request, "Login successful!")
-            return redirect("custom_admin_dashboard")  # replace with your dashboard/homepage
-        else:
-            messages.error(request, "Invalid email or password.")
-            return redirect("adminlog")
-
     return render(request, "myapp/adminlogin.html")
-
 
 
 
@@ -386,8 +398,94 @@ def search_jobs(request):
 
     return JsonResponse(jobs_data, safe=False)
 
-def job_id(request):
-    return render(request, 'myapp/job_id.html')
+
+def job_detail(request, job_id):
+    """Dynamic job detail page"""
+    try:
+        # Try to find the job in different models
+        job = None
+        job_type = None
+
+        # Check alumni jobs
+        if Job.objects.filter(id=job_id).exists():
+            job = Job.objects.get(id=job_id)
+            job_type = 'alumni_job'
+        # Check faculty opportunities
+        elif FacultyOpportunity.objects.filter(id=job_id).exists():
+            job = FacultyOpportunity.objects.get(id=job_id)
+            job_type = 'faculty_opportunity'
+        # Check company jobs
+        elif CompanyJob.objects.filter(id=job_id).exists():
+            job = CompanyJob.objects.get(id=job_id)
+            job_type = 'company_job'
+
+        if job:
+            # Get similar jobs for the sidebar
+            similar_jobs = get_similar_jobs(job, job_type)
+
+            context = {
+                'job': job,
+                'job_type': job_type,
+                'similar_jobs': similar_jobs,
+            }
+            return render(request, 'myapp/job_id.html', context)
+        else:
+            return render(request, 'myapp/job_id.html', {'error': 'Job not found'})
+
+    except Exception as e:
+        return render(request, 'myapp/job_id.html', {'error': str(e)})
+
+
+def get_similar_jobs(main_job, job_type):
+    """Get similar jobs based on the main job"""
+    similar_jobs = []
+
+    if job_type == 'alumni_job':
+        # Get other alumni jobs with similar titles
+        similar = Job.objects.filter(
+            status='active'
+        ).exclude(id=main_job.id).order_by('-created_at')[:2]
+
+        for job in similar:
+            similar_jobs.append({
+                'id': job.id,
+                'title': job.title,
+                'company': job.company,
+                'deadline': job.deadline.strftime('%B %d, %Y'),
+                'type': 'alumni_job'
+            })
+
+    elif job_type == 'faculty_opportunity':
+        # Get other faculty opportunities
+        similar = FacultyOpportunity.objects.filter(
+            status='active'
+        ).exclude(id=main_job.id).order_by('-created_at')[:2]
+
+        for opportunity in similar:
+            similar_jobs.append({
+                'id': opportunity.id,
+                'title': opportunity.title,
+                'company': opportunity.department,
+                'deadline': opportunity.deadline.strftime('%B %d, %Y'),
+                'type': 'faculty_opportunity'
+            })
+
+    elif job_type == 'company_job':
+        # Get other company jobs
+        similar = CompanyJob.objects.filter(
+            status='active'
+        ).exclude(id=main_job.id).order_by('-created_at')[:2]
+
+        for job in similar:
+            similar_jobs.append({
+                'id': job.id,
+                'title': job.title,
+                'company': job.company.company_name,
+                'deadline': job.deadline.strftime('%B %d, %Y'),
+                'type': 'company_job'
+            })
+
+    return similar_jobs
 
 def forgotpassword(request, source):
     # Map source to login URL names
@@ -566,37 +664,137 @@ def verify_code(request, source):
 
 from django.http import JsonResponse
 
-def dashboard(request):
-    return render(request, 'myapp/studentdashboard.html')
 
+def dashboard(request):
+    """Student dashboard page"""
+    # ✅ ADD THIS SESSION CHECK
+    if 'student_id' not in request.session:
+        print("❌ DASHBOARD: No student_id in session, redirecting to login")
+        return redirect('stdlog')
+
+    # ✅ DEBUG: Print session info
+    print(f"✅ DASHBOARD: Student ID in session: {request.session.get('student_id')}")
+    print(f"✅ DASHBOARD: Session key: {request.session.session_key}")
+
+    return render(request, 'myapp/studentdashboard.html')
 
 from django.http import JsonResponse
 from .models import Job, Application
-import json
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import cache_page
+
+
+def get_student_dashboard_data(request):
+    """API to get student data for dashboard profile section"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+
+        return JsonResponse({
+            'success': True,
+            'student': {
+                'id': student.id,
+                'first_name': student.first_name,
+                'last_name': student.last_name,
+                'full_name': f"{student.first_name} {student.last_name}",
+                'email': student.email,
+                'student_id': student.student_id,
+                'graduation_year': student.graduation_year,
+                'profile_picture_url': student.profile_picture.url if student.profile_picture else '/static/default-profile.png',
+            }
+        })
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 def get_jobs_for_students(request):
-    """Get active jobs for student dashboard"""
-    jobs = Job.objects.filter(status='active').order_by('-created_at')
+    """Active & approved only: alumni jobs, faculty opps, company jobs WITH applied status"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
 
-    jobs_data = []
-    for job in jobs:
-        jobs_data.append({
-            'id': job.id,
-            'title': job.title,
-            'company': job.company,
-            'location': job.location,
-            'posted': job.posted,
-            'deadline': job.deadline.strftime('%B %d, %Y'),
-            'job_type': job.job_type,
-            'description': job.description,
-            'salary': job.salary,
-            'requirements': job.requirements.split('\n') if job.requirements else [],
-            'is_new': job.is_new,
-        })
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
 
-    return JsonResponse(jobs_data, safe=False)
+        # Get applied job IDs for this student
+        applied_job_ids = set(Application.objects.filter(student=student).values_list('job_id', flat=True))
+        applied_faculty_opportunity_ids = set(
+            FacultyApplication.objects.filter(student=student).values_list('opportunity_id', flat=True))
+        applied_company_job_ids = set(
+            CompanyApplication.objects.filter(student=student).values_list('job_id', flat=True))
 
+        alumni_jobs = Job.objects.filter(status='active').order_by('-created_at')
+        company_jobs = CompanyJob.objects.filter(status='active').order_by('-created_at')
+        faculty_opportunities = FacultyOpportunity.objects.filter(status='active').order_by('-created_at')
+
+        jobs_data = []
+
+        # Alumni jobs
+        for job in alumni_jobs:
+            jobs_data.append({
+                'id': job.id,
+                'title': job.title,
+                'company': job.company,
+                'location': job.location,
+                'posted': job.posted,
+                'deadline': job.deadline.strftime('%B %d, %Y'),
+                'job_type': job.job_type,
+                'description': job.description,
+                'salary': job.salary,
+                'requirements': job.requirements.split('\n') if job.requirements else [],
+                'is_new': job.is_new,
+                'type': 'job',
+                'posted_by_name': 'Alumni',
+                'applied': job.id in applied_job_ids  # ADD THIS LINE
+            })
+
+        # Company jobs
+        from datetime import timedelta
+        from django.utils import timezone
+        for job in company_jobs:
+            jobs_data.append({
+                'id': job.id,
+                'title': job.title,
+                'company': job.company.company_name,
+                'location': job.location,
+                'posted_date': job.posted_date.strftime('%B %d, %Y'),
+                'deadline': job.deadline.strftime('%B %d, %Y'),
+                'job_type': job.job_type,
+                'description': job.description,
+                'salary': job.salary,
+                'requirements': job.requirements.split('\n') if job.requirements else [],
+                'is_new': job.posted_date >= timezone.now().date() - timedelta(days=7),
+                'type': 'company_job',
+                'posted_by_name': job.company.company_name,
+                'applied': job.id in applied_company_job_ids  # ADD THIS LINE
+            })
+
+        # Faculty opportunities
+        for opportunity in faculty_opportunities:
+            jobs_data.append({
+                'id': opportunity.id,
+                'title': opportunity.title,
+                'company': opportunity.department,
+                'location': "University Campus",
+                'posted_date': opportunity.posted_date.strftime('%B %d, %Y'),
+                'deadline': opportunity.deadline.strftime('%B %d, %Y'),
+                'job_type': opportunity.opportunity_type,
+                'description': opportunity.description,
+                'salary': 'University Stipend',
+                'requirements': opportunity.requirements.split('\n') if opportunity.requirements else [],
+                'is_new': opportunity.posted_date >= timezone.now().date() - timedelta(days=7),
+                'type': 'faculty_opportunity',
+                'posted_by_name': f"{opportunity.posted_by.first_name} {opportunity.posted_by.last_name}",
+                'applied': opportunity.id in applied_faculty_opportunity_ids  # ADD THIS LINE
+            })
+
+        return JsonResponse(jobs_data, safe=False)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 def get_alumni_jobs(request):
     """Get jobs for alumni dashboard (all jobs posted by this alumni)"""
@@ -653,6 +851,7 @@ def post_job(request):
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
 
+
 def apply_to_job(request):
     """Handle job applications from students"""
     if 'student_id' not in request.session:
@@ -668,12 +867,96 @@ def apply_to_job(request):
             if Application.objects.filter(student=student, job=job).exists():
                 return JsonResponse({'error': 'Already applied to this job'}, status=400)
 
-            Application.objects.create(student=student, job=job)
-            return JsonResponse({'success': True})
+            # Create the application
+            application = Application.objects.create(student=student, job=job)
+
+            # Return success with application data
+            return JsonResponse({
+                'success': True,
+                'application_id': application.id,
+                'message': 'Application submitted successfully!'
+            })
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+def get_applied_jobs(request):
+    """Get all jobs that the student has applied to (all types)"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+
+        applied_jobs_data = []
+
+        # 1. Get applied alumni jobs
+        alumni_applications = Application.objects.filter(student=student).select_related('job')
+        for application in alumni_applications:
+            job = application.job
+            applied_jobs_data.append({
+                'id': job.id,
+                'title': job.title,
+                'company': job.company,
+                'location': job.location,
+                'deadline': job.deadline.strftime('%B %d, %Y'),
+                'job_type': job.job_type,
+                'description': job.description,
+                'salary': job.salary,
+                'requirements': job.requirements.split('\n') if job.requirements else [],
+                'is_new': job.is_new,
+                'type': 'job',  # alumni job
+                'applied': True,
+                'applied_at': application.applied_at.strftime('%B %d, %Y %H:%M'),
+            })
+
+        # 2. Get applied faculty opportunities
+        faculty_applications = FacultyApplication.objects.filter(student=student).select_related('opportunity')
+        for application in faculty_applications:
+            opportunity = application.opportunity
+            applied_jobs_data.append({
+                'id': opportunity.id,
+                'title': opportunity.title,
+                'company': opportunity.department,
+                'location': "University Campus",
+                'deadline': opportunity.deadline.strftime('%B %d, %Y'),
+                'job_type': opportunity.opportunity_type,
+                'description': opportunity.description,
+                'salary': 'University Stipend',
+                'requirements': opportunity.requirements.split('\n') if opportunity.requirements else [],
+                'is_new': False,
+                'type': 'faculty_opportunity',
+                'applied': True,
+                'applied_at': application.applied_at.strftime('%B %d, %Y %H:%M'),
+            })
+
+        # 3. Get applied company jobs
+        company_applications = CompanyApplication.objects.filter(student=student).select_related('job')
+        for application in company_applications:
+            job = application.job
+            applied_jobs_data.append({
+                'id': job.id,
+                'title': job.title,
+                'company': job.company.company_name,
+                'location': job.location,
+                'deadline': job.deadline.strftime('%B %d, %Y'),
+                'job_type': job.job_type,
+                'description': job.description,
+                'salary': job.salary,
+                'requirements': job.requirements.split('\n') if job.requirements else [],
+                'is_new': job.posted_date >= timezone.now().date() - timedelta(days=7),
+                'type': 'company_job',
+                'applied': True,
+                'applied_at': application.applied_at.strftime('%B %d, %Y %H:%M'),
+            })
+
+        return JsonResponse(applied_jobs_data, safe=False)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
 
 # views.py
 def alumni_dashboard(request):
@@ -710,19 +993,43 @@ def update_job(request, job_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
+
 @require_POST
 def delete_job(request, job_id):
     """Delete a job owned by the logged-in alumni"""
+    print(f"🔍 DELETE JOB: Attempting to delete job {job_id}")
+
     if 'alumni_id' not in request.session:
+        print("❌ DELETE JOB: No alumni session found")
         return JsonResponse({'error': 'Not authenticated'}, status=401)
 
     try:
-        job = Job.objects.get(id=job_id, posted_by_id=request.session['alumni_id'])
+        alumni_id = request.session['alumni_id']
+        print(f"🔍 DELETE JOB: Alumni ID from session: {alumni_id}")
+
+        # Get the job and verify ownership
+        job = Job.objects.get(id=job_id, posted_by_id=alumni_id)
+        job_title = job.title
+
+        print(f"🔍 DELETE JOB: Found job '{job_title}' owned by alumni {alumni_id}")
+
+        # Delete the job
         job.delete()
-        return JsonResponse({'success': True})
+
+        print(f"✅ DELETE JOB: Successfully deleted job '{job_title}'")
+
+        return JsonResponse({
+            'success': True,
+            'message': f'Job "{job_title}" has been deleted successfully'
+        })
+
     except Job.DoesNotExist:
-        return JsonResponse({'error': 'Job not found'}, status=404)
+        print(f"❌ DELETE JOB: Job {job_id} not found or not owned by alumni {alumni_id}")
+        return JsonResponse({
+            'error': 'Job not found or you do not have permission to delete this job'
+        }, status=404)
     except Exception as e:
+        print(f"❌ DELETE JOB: Unexpected error: {str(e)}")
         return JsonResponse({'error': str(e)}, status=400)
 
 
@@ -775,11 +1082,11 @@ def post_opportunity(request):
                 department=data['department'],
                 opportunity_type=data['opportunity_type'],
                 description=data['description'],
-                requirements='\n'.join(data.get('requirements', [])),
+                requirements='\n'.join(data.get('requirements', [])),  # Handle requirements
                 expected_applicants=data.get('expected_applicants', 0),
                 deadline=data['deadline'],
                 posted_by=faculty,
-                status='pending'  # CHANGED: Needs admin approval
+                status=data.get('status', 'pending')
             )
 
             return JsonResponse({'success': True, 'opportunity_id': opportunity.id})
@@ -1684,3 +1991,1755 @@ def admin_dashboard(request):
     if 'admin_id' not in request.session:
         return redirect('adminlog')
     return render(request, 'myapp/admindashboard.html')
+
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from .models import Student, StudentEducation, StudentExperience, StudentProject, StudentSkill, ProjectTechnology
+from django.http import JsonResponse
+import json
+from django.shortcuts import render, redirect
+
+
+def student_profile(request):
+    """Student profile page"""
+    if 'student_id' not in request.session:
+        return redirect('stdlog')
+
+    return render(request, 'myapp/studentprofile.html')
+
+
+def get_student_profile(request):
+    """API endpoint to get student profile data"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+
+        # Get related data properly
+        education = student.education.all().values('degree', 'institution', 'period')
+        experience = student.experience.all().values('job_title', 'company', 'period', 'description')
+        projects_data = []
+
+        for project in student.projects.all():
+            technologies = list(project.technologies.all().values_list('name', flat=True))
+            projects_data.append({
+                'title': project.title,
+                'description': project.description,
+                'technologies': technologies
+            })
+
+        skills = list(student.skills.all().values_list('name', flat=True))
+
+        return JsonResponse({
+            'first_name': student.first_name,
+            'last_name': student.last_name,
+            'email': student.email,
+            'student_id': student.student_id,
+            'graduation_year': student.graduation_year,
+            'phone_number': student.phone_number or '',
+            'bio': student.bio or '',
+            'profile_picture_url': student.profile_picture.url if student.profile_picture else '',
+            'education': list(education),
+            'experience': list(experience),
+            'projects': projects_data,
+            'skills': skills,
+        })
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_student_profile(request):
+    """API endpoint to update student profile"""
+    try:
+        data = json.loads(request.body)
+        student = Student.objects.get(id=request.session['student_id'])
+
+        # Update basic fields
+        student.first_name = data.get('first_name', student.first_name)
+        student.last_name = data.get('last_name', student.last_name)
+        student.email = data.get('email', student.email)
+        student.phone_number = data.get('phone_number', student.phone_number)
+        student.student_id = data.get('student_id', student.student_id)
+        student.bio = data.get('bio', student.bio)
+
+        # Add graduation_year if needed
+        if 'graduation_year' in data:
+            student.graduation_year = data['graduation_year']
+
+        student.save()
+
+        return JsonResponse({'success': True, 'message': 'Profile updated successfully'})
+
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_student_education(request):
+    """Update student education"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+        data = json.loads(request.body)
+
+        # Clear existing education
+        student.education.all().delete()
+
+        # Add new education entries
+        for edu_data in data.get('education', []):
+            StudentEducation.objects.create(
+                student=student,
+                degree=edu_data.get('degree', ''),
+                institution=edu_data.get('institution', ''),
+                period=edu_data.get('period', '')
+            )
+
+        return JsonResponse({'success': True, 'message': 'Education updated successfully'})
+
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_student_experience(request):
+    """Update student experience"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+        data = json.loads(request.body)
+
+        # Clear existing experience
+        student.experience.all().delete()
+
+        # Add new experience entries
+        for exp_data in data.get('experience', []):
+            StudentExperience.objects.create(
+                student=student,
+                job_title=exp_data.get('job_title', ''),
+                company=exp_data.get('company', ''),
+                period=exp_data.get('period', ''),
+                description=exp_data.get('description', '')
+            )
+
+        return JsonResponse({'success': True, 'message': 'Experience updated successfully'})
+
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_student_projects(request):
+    """Update student projects"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+        data = json.loads(request.body)
+
+        # Clear existing projects and technologies
+        student.projects.all().delete()
+
+        # Add new projects with technologies
+        for project_data in data.get('projects', []):
+            project = StudentProject.objects.create(
+                student=student,
+                title=project_data.get('title', ''),
+                description=project_data.get('description', '')
+            )
+
+            # Add technologies for this project
+            for tech_name in project_data.get('technologies', []):
+                ProjectTechnology.objects.create(
+                    project=project,
+                    name=tech_name
+                )
+
+        return JsonResponse({'success': True, 'message': 'Projects updated successfully'})
+
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_student_skills(request):
+    """Update student skills"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+        data = json.loads(request.body)
+
+        # Clear existing skills
+        student.skills.all().delete()
+
+        # Add new skills
+        for skill_name in data.get('skills', []):
+            StudentSkill.objects.create(
+                student=student,
+                name=skill_name
+            )
+
+        return JsonResponse({'success': True, 'message': 'Skills updated successfully'})
+
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+import json
+import os
+from django.conf import settings
+from django.core.files.storage import default_storage
+
+@csrf_exempt
+@require_http_methods(["POST"])
+@require_POST
+def upload_profile_picture(request):
+    try:
+        if 'profile_picture' not in request.FILES:
+            return JsonResponse({'success': False, 'error': 'No file provided'})
+
+        profile_picture = request.FILES['profile_picture']
+
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+        if profile_picture.content_type not in allowed_types:
+            return JsonResponse({'success': False, 'error': 'Invalid file type. Please upload JPEG, PNG, or GIF.'})
+
+        # Validate file size (5MB max)
+        if profile_picture.size > 5 * 1024 * 1024:
+            return JsonResponse({'success': False, 'error': 'File size must be less than 5MB'})
+
+        # Save the file
+        file_path = f'profile_pictures/{request.user.username}_{profile_picture.name}'
+        saved_path = default_storage.save(file_path, profile_picture)
+
+        # Get the URL for the saved file
+        file_url = default_storage.url(saved_path)
+
+        # Update user's profile picture in database (if you have a UserProfile model)
+        # Example:
+        # profile = request.user.userprofile
+        # profile.profile_picture = saved_path
+        # profile.save()
+
+        return JsonResponse({
+            'success': True,
+            'profile_picture_url': file_url,
+            'message': 'Profile picture updated successfully'
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+# views.py - Add this function
+@require_POST
+def upload_cover_photo(request):
+    try:
+        if 'cover_photo' not in request.FILES:
+            return JsonResponse({'success': False, 'error': 'No file provided'})
+
+        cover_photo = request.FILES['cover_photo']
+
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+        if cover_photo.content_type not in allowed_types:
+            return JsonResponse({'success': False, 'error': 'Invalid file type. Please upload JPEG, PNG, or GIF.'})
+
+        # Validate file size (5MB max)
+        if cover_photo.size > 5 * 1024 * 1024:
+            return JsonResponse({'success': False, 'error': 'File size must be less than 5MB'})
+
+        # Save the file
+        file_path = f'cover_photos/{request.user.username}_cover_{cover_photo.name}'
+        saved_path = default_storage.save(file_path, cover_photo)
+
+        # Get the URL for the saved file
+        file_url = default_storage.url(saved_path)
+
+        # Update user's cover photo in database (if you have a UserProfile model)
+        # Example:
+        # profile = request.user.userprofile
+        # profile.cover_photo = saved_path
+        # profile.save()
+
+        return JsonResponse({
+            'success': True,
+            'cover_photo_url': file_url,
+            'message': 'Cover photo updated successfully'
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_resume(request):
+    """Upload resume"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+
+        if 'resume' in request.FILES:
+            student.resume = request.FILES['resume']
+            student.save()
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Resume updated successfully',
+                'resume_url': student.resume.url,
+                'resume_name': student.resume.name.split('/')[-1]
+            })
+        else:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+
+from django.http import FileResponse, Http404
+import os
+
+
+def download_resume(request):
+    """Download student resume"""
+    if 'student_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        student = Student.objects.get(id=request.session['student_id'])
+
+        if not student.resume:
+            return JsonResponse({'error': 'No resume uploaded'}, status=404)
+
+        # Serve the file for download
+        response = FileResponse(student.resume.open(), as_attachment=True, filename=student.resume.name.split('/')[-1])
+        return response
+
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+# Alumni Profile Views
+from .models import Alumni, AlumniEducation, AlumniExperience, AlumniProject, AlumniSkill, AlumniProjectTechnology
+
+def alumni_profile(request):
+    """Alumni profile page"""
+    if 'alumni_id' not in request.session:
+        return redirect('almlog')
+    return render(request, 'myapp/alumniprofile.html')
+
+# Alumni Profile APIs
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_alumni_profile_api(request):
+    """API endpoint to get complete alumni profile data"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+        # Get education data
+        education = []
+        for edu in alumni.education.all():
+            education.append({
+                'degree': edu.degree,
+                'institution': edu.institution,
+                'period': edu.period
+            })
+
+        # Get experience data
+        experience = []
+        for exp in alumni.experience.all():
+            experience.append({
+                'job_title': exp.job_title,
+                'company': exp.company,
+                'period': exp.period,
+                'description': exp.description
+            })
+
+        # Get projects data
+        projects = []
+        for project in alumni.projects.all():
+            technologies = [tech.name for tech in project.technologies.all()]
+            projects.append({
+                'title': project.title,
+                'description': project.description,
+                'technologies': technologies
+            })
+
+        # Get skills
+        skills = [skill.name for skill in alumni.skills.all()]
+
+        return JsonResponse({
+            'success': True,
+            'first_name': alumni.first_name,
+            'last_name': alumni.last_name,
+            'email': alumni.email,
+            'phone_number': alumni.phone_number or '',
+            'student_id': alumni.student_id or '',
+            'graduation_year': alumni.graduation_year or '',
+            'bio': alumni.bio or '',
+            'current_position': alumni.current_position or '',
+            'company': alumni.company or '',
+            'linkedin_url': alumni.linkedin_url or '',
+            'profile_picture_url': alumni.profile_picture.url if alumni.profile_picture else '',
+            'education': education,
+            'experience': experience,
+            'projects': projects,
+            'skills': skills,
+        })
+    except Alumni.DoesNotExist:
+        return JsonResponse({'error': 'Alumni not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_alumni_profile_api(request):
+    """API endpoint to update alumni profile basic info"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+        # Update basic profile fields
+        if 'first_name' in data:
+            alumni.first_name = data['first_name']
+        if 'last_name' in data:
+            alumni.last_name = data['last_name']
+        if 'email' in data:
+            alumni.email = data['email']
+        if 'phone_number' in data:
+            alumni.phone_number = data['phone_number']
+        if 'student_id' in data:
+            alumni.student_id = data['student_id']
+        if 'bio' in data:
+            alumni.bio = data['bio']
+        if 'current_position' in data:
+            alumni.current_position = data['current_position']
+        if 'company' in data:
+            alumni.company = data['company']
+        if 'linkedin_url' in data:
+            alumni.linkedin_url = data['linkedin_url']
+
+        alumni.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile updated successfully'
+        })
+
+    except Alumni.DoesNotExist:
+        return JsonResponse({'error': 'Alumni not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_alumni_education_api(request):
+    """API endpoint to update alumni education"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+        # Clear existing education
+        alumni.education.all().delete()
+
+        # Add new education entries
+        education_data = data.get('education', [])
+        for edu in education_data:
+            AlumniEducation.objects.create(
+                alumni=alumni,
+                degree=edu.get('degree', ''),
+                institution=edu.get('institution', ''),
+                period=edu.get('period', '')
+            )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Education updated successfully'
+        })
+
+    except Alumni.DoesNotExist:
+        return JsonResponse({'error': 'Alumni not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_alumni_experience_api(request):
+    """API endpoint to update alumni experience"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+        # Clear existing experience
+        alumni.experience.all().delete()
+
+        # Add new experience entries
+        experience_data = data.get('experience', [])
+        for exp in experience_data:
+            AlumniExperience.objects.create(
+                alumni=alumni,
+                job_title=exp.get('job_title', ''),
+                company=exp.get('company', ''),
+                period=exp.get('period', ''),
+                description=exp.get('description', '')
+            )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Experience updated successfully'
+        })
+
+    except Alumni.DoesNotExist:
+        return JsonResponse({'error': 'Alumni not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_alumni_projects_api(request):
+    """API endpoint to update alumni projects"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+        # Clear existing projects
+        alumni.projects.all().delete()
+
+        # Add new projects with technologies
+        projects_data = data.get('projects', [])
+        for proj in projects_data:
+            project = AlumniProject.objects.create(
+                alumni=alumni,
+                title=proj.get('title', ''),
+                description=proj.get('description', '')
+            )
+
+            # Add technologies
+            technologies = proj.get('technologies', [])
+            for tech in technologies:
+                AlumniProjectTechnology.objects.create(
+                    project=project,
+                    name=tech
+                )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Projects updated successfully'
+        })
+
+    except Alumni.DoesNotExist:
+        return JsonResponse({'error': 'Alumni not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_alumni_skills_api(request):
+    """API endpoint to update alumni skills"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+        # Clear existing skills
+        alumni.skills.all().delete()
+
+        # Add new skills
+        skills_data = data.get('skills', [])
+        for skill in skills_data:
+            AlumniSkill.objects.create(
+                alumni=alumni,
+                name=skill
+            )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Skills updated successfully'
+        })
+
+    except Alumni.DoesNotExist:
+        return JsonResponse({'error': 'Alumni not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_alumni_profile_picture_api(request):
+    """API endpoint to upload alumni profile picture"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+        if 'profile_picture' not in request.FILES:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+
+        profile_picture = request.FILES['profile_picture']
+
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+        if profile_picture.content_type not in allowed_types:
+            return JsonResponse({'error': 'Invalid file type'}, status=400)
+
+        # Validate file size (5MB max)
+        if profile_picture.size > 5 * 1024 * 1024:
+            return JsonResponse({'error': 'File size must be less than 5MB'}, status=400)
+
+        # Save the file
+        alumni.profile_picture = profile_picture
+        alumni.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile picture updated successfully',
+            'profile_picture_url': alumni.profile_picture.url
+        })
+
+    except Alumni.DoesNotExist:
+        return JsonResponse({'error': 'Alumni not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+# Add this to your views.py in the alumni section
+@require_http_methods(["GET"])
+def get_alumni_dashboard_data(request):
+    """API to get alumni data for dashboard"""
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+        # Count alumni's jobs by status
+        total_jobs = Job.objects.filter(posted_by=alumni).count()
+        active_jobs = Job.objects.filter(posted_by=alumni, status='active').count()
+        draft_jobs = Job.objects.filter(posted_by=alumni, status='draft').count()
+        closed_jobs = Job.objects.filter(posted_by=alumni, status='closed').count()
+
+        # Count total applicants across all jobs
+        total_applicants = Application.objects.filter(job__posted_by=alumni).count()
+
+        # Count hired (you might want to track this differently)
+        total_hired = Application.objects.filter(
+            job__posted_by=alumni,
+            status='accepted'
+        ).count()
+
+        return JsonResponse({
+            'success': True,
+            'alumni': {
+                'id': alumni.id,
+                'first_name': alumni.first_name,
+                'last_name': alumni.last_name,
+                'full_name': f"{alumni.first_name} {alumni.last_name}",
+                'email': alumni.email,
+                'student_id': alumni.student_id,
+                'graduation_year': alumni.graduation_year,
+                'current_position': alumni.current_position or '',
+                'company': alumni.company or '',
+            },
+            'stats': {
+                'total_jobs': total_jobs,
+                'active_jobs': active_jobs,
+                'draft_jobs': draft_jobs,
+                'closed_jobs': closed_jobs,
+                'total_applicants': total_applicants,
+                'total_hired': total_hired
+            }
+        })
+    except Alumni.DoesNotExist:
+        return JsonResponse({'error': 'Alumni not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+from .models import Faculty, FacultyEducation, FacultyExperience, FacultyProject, FacultyResearchInterest, FacultyCourse,ProjectResearchArea
+
+def faculty_profile(request):
+    """Faculty profile page"""
+    if 'faculty_id' not in request.session:
+        return redirect('fcltlog')
+    return render(request, 'myapp/facultyprofile.html')
+
+def get_faculty_profile(request):
+    """Get faculty profile data for dashboard"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+        return JsonResponse({
+            'success': True,
+            'faculty': {
+                'id': faculty.id,
+                'first_name': faculty.first_name,
+                'last_name': faculty.last_name,
+                'full_name': f"{faculty.first_name} {faculty.last_name}",
+                'email': faculty.email,
+                'position': faculty.position,
+                'office': faculty.office or '7th floor, CSE dept. university campus',
+                'contact': faculty.phone_number or '+88-0167593251',
+                'profile_picture_url': faculty.profile_picture.url if faculty.profile_picture else '',
+            }
+        })
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_faculty_opportunities_with_applicants(request):
+    """Get faculty opportunities with applicant counts"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        faculty_id = request.session['faculty_id']
+        opportunities = FacultyOpportunity.objects.filter(posted_by_id=faculty_id).order_by('-created_at')
+
+        opportunities_data = []
+        for opportunity in opportunities:
+            # Count applicants for this opportunity
+            applicants_count = FacultyApplication.objects.filter(opportunity=opportunity).count()
+
+            opportunities_data.append({
+                'id': opportunity.id,
+                'title': opportunity.title,
+                'department': opportunity.department,
+                'opportunity_type': opportunity.opportunity_type,
+                'description': opportunity.description,
+                'requirements': opportunity.requirements.split('\n') if opportunity.requirements else [],
+                'expected_applicants': opportunity.expected_applicants,
+                'posted_date': opportunity.posted_date.strftime('%B %d, %Y'),
+                'deadline': opportunity.deadline.strftime('%B %d, %Y'),
+                'status': opportunity.status,
+                'applicants_count': applicants_count,
+            })
+
+        return JsonResponse(opportunities_data, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_recent_applicants_faculty(request):
+    """Get recent applicants for faculty dashboard"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        faculty_id = request.session['faculty_id']
+
+        # Get recent applications for this faculty's opportunities
+        recent_applications = FacultyApplication.objects.filter(
+            opportunity__posted_by_id=faculty_id
+        ).select_related('student', 'opportunity').order_by('-applied_at')[:5]
+
+        applicants_data = []
+        for application in recent_applications:
+            applicants_data.append({
+                'name': f"{application.student.first_name} {application.student.last_name}",
+                'position': application.opportunity.title,
+                'time': application.applied_at.strftime('%H:%M'),
+                'date': application.applied_at.strftime('%b %d, %Y'),
+                'student_id': application.student.student_id,
+                'email': application.student.email
+            })
+
+        return JsonResponse(applicants_data, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+# Faculty Profile APIs
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_faculty_profile_api(request):
+    """API endpoint to get complete faculty profile data"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+        # Get education data
+        education = []
+        for edu in faculty.education.all():
+            education.append({
+                'degree': edu.degree,
+                'institution': edu.institution,
+                'period': edu.period
+            })
+
+        # Get experience data
+        experience = []
+        for exp in faculty.experience.all():
+            experience.append({
+                'job_title': exp.job_title,
+                'company': exp.company,
+                'period': exp.period,
+                'description': exp.description
+            })
+
+        # Get projects data
+        projects = []
+        for project in faculty.projects.all():
+            research_areas = [area.name for area in project.research_areas.all()]
+            projects.append({
+                'title': project.title,
+                'description': project.description,
+                'research_areas': research_areas
+            })
+
+        # Get research interests
+        research_interests = [interest.name for interest in faculty.research_interests.all()]
+
+        # Get courses
+        courses = [course.name for course in faculty.courses.all()]
+
+        return JsonResponse({
+            'success': True,
+            'first_name': faculty.first_name,
+            'last_name': faculty.last_name,
+            'email': faculty.email,
+            'phone_number': faculty.phone_number or '',
+            'position': faculty.position,
+            'office': faculty.office or '',
+            'bio': faculty.bio or '',
+            'profile_picture_url': faculty.profile_picture.url if faculty.profile_picture else '',
+            'education': education,
+            'experience': experience,
+            'projects': projects,
+            'research_interests': research_interests,
+            'courses': courses,
+        })
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_faculty_profile_api(request):
+    """API endpoint to update faculty profile basic info"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+        # Update basic profile fields
+        if 'first_name' in data:
+            faculty.first_name = data['first_name']
+        if 'last_name' in data:
+            faculty.last_name = data['last_name']
+        if 'email' in data:
+            faculty.email = data['email']
+        if 'phone_number' in data:
+            faculty.phone_number = data['phone_number']
+        if 'position' in data:
+            faculty.position = data['position']
+        if 'office' in data:
+            faculty.office = data['office']
+        if 'bio' in data:
+            faculty.bio = data['bio']
+
+        faculty.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile updated successfully'
+        })
+
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_faculty_education_api(request):
+    """API endpoint to update faculty education"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+        # Clear existing education
+        faculty.education.all().delete()
+
+        # Add new education entries
+        education_data = data.get('education', [])
+        for edu in education_data:
+            FacultyEducation.objects.create(
+                faculty=faculty,
+                degree=edu.get('degree', ''),
+                institution=edu.get('institution', ''),
+                period=edu.get('period', '')
+            )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Education updated successfully'
+        })
+
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_faculty_experience_api(request):
+    """API endpoint to update faculty experience"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+        # Clear existing experience
+        faculty.experience.all().delete()
+
+        # Add new experience entries
+        experience_data = data.get('experience', [])
+        for exp in experience_data:
+            FacultyExperience.objects.create(
+                faculty=faculty,
+                job_title=exp.get('job_title', ''),
+                company=exp.get('company', ''),
+                period=exp.get('period', ''),
+                description=exp.get('description', '')
+            )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Experience updated successfully'
+        })
+
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_faculty_projects_api(request):
+    """API endpoint to update faculty projects"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+        # Clear existing projects
+        faculty.projects.all().delete()
+
+        # Add new projects with research areas
+        projects_data = data.get('projects', [])
+        for proj in projects_data:
+            project = FacultyProject.objects.create(
+                faculty=faculty,
+                title=proj.get('title', ''),
+                description=proj.get('description', '')
+            )
+
+            # Add research areas
+            research_areas = proj.get('research_areas', [])
+            for area in research_areas:
+                ProjectResearchArea.objects.create(
+                    project=project,
+                    name=area
+                )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Projects updated successfully'
+        })
+
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_faculty_research_interests_api(request):
+    """API endpoint to update faculty research interests"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+        # Clear existing research interests
+        faculty.research_interests.all().delete()
+
+        # Add new research interests
+        research_interests_data = data.get('research_interests', [])
+        for interest in research_interests_data:
+            FacultyResearchInterest.objects.create(
+                faculty=faculty,
+                name=interest
+            )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Research interests updated successfully'
+        })
+
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_faculty_courses_api(request):
+    """API endpoint to update faculty courses"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+        # Clear existing courses
+        faculty.courses.all().delete()
+
+        # Add new courses
+        courses_data = data.get('courses', [])
+        for course in courses_data:
+            FacultyCourse.objects.create(
+                faculty=faculty,
+                name=course
+            )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Courses updated successfully'
+        })
+
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_faculty_profile_picture_api(request):
+    """API endpoint to upload faculty profile picture"""
+    if 'faculty_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        faculty = Faculty.objects.get(id=request.session['faculty_id'])
+
+        if 'profile_picture' not in request.FILES:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+
+        profile_picture = request.FILES['profile_picture']
+
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+        if profile_picture.content_type not in allowed_types:
+            return JsonResponse({'error': 'Invalid file type'}, status=400)
+
+        # Validate file size (5MB max)
+        if profile_picture.size > 5 * 1024 * 1024:
+            return JsonResponse({'error': 'File size must be less than 5MB'}, status=400)
+
+        # Save the file
+        faculty.profile_picture = profile_picture
+        faculty.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile picture updated successfully',
+            'profile_picture_url': faculty.profile_picture.url
+        })
+
+    except Faculty.DoesNotExist:
+        return JsonResponse({'error': 'Faculty not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+
+from .models import Company, CompanyProfile
+from .forms import CompanyLogoForm,CompanyCoverPhotoForm
+
+# Company Profile Page
+def company_profile_page(request):
+    """Company profile page"""
+    if 'company_id' not in request.session:
+        return redirect('comlog')
+    return render(request, 'myapp/companyprofile.html')
+
+
+def get_company_profile(request):
+    """Get company profile data - COMPLETE VERSION"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+
+        # Get or create company profile
+        profile, created = CompanyProfile.objects.get_or_create(company=company)
+
+        return JsonResponse({
+            'id': company.id,
+            'company_name': company.company_name,
+            'email': company.email,
+            'phone_number': company.phone_number,
+            'company_type': company.company_type,
+            'is_verified': company.is_verified,
+            'address': company.address if hasattr(company, 'address') else '',
+
+            # PROFILE DATA - This might be missing!
+            'profile': {
+                'description': profile.description,
+                'industry': profile.industry,
+                'company_size': profile.company_size,
+                'founded_year': profile.founded_year,
+                'website': profile.website,
+                'logo_url': profile.logo.url if profile.logo else '',
+                'cover_photo_url': profile.cover_photo.url if profile.cover_photo else '',
+                'linkedin_url': profile.linkedin_url,
+                'twitter_url': profile.twitter_url,
+                'facebook_url': profile.facebook_url,
+                'mission_statement': profile.mission_statement,
+                'company_values': profile.company_values,
+                'benefits': profile.get_benefits_list(),  # This returns a list
+                'city': profile.city,
+                'country': profile.country,
+            }
+        })
+
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+# Company Profile APIs
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_company_profile_api(request):
+    """API endpoint to get complete company profile data"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+
+        # Get or create company profile
+        profile, created = CompanyProfile.objects.get_or_create(company=company)
+
+        # Get company jobs for stats
+        active_jobs = CompanyJob.objects.filter(company=company, status='active').count()
+        total_jobs = CompanyJob.objects.filter(company=company).count()
+
+        return JsonResponse({
+            'success': True,
+            'company': {
+                'id': company.id,
+                'company_name': company.company_name,
+                'email': company.email,
+                'phone_number': company.phone_number,
+                'company_type': company.company_type,
+                'is_verified': company.is_verified,
+            },
+            'profile': {
+                'description': profile.description or '',
+                'industry': profile.industry or '',
+                'company_size': profile.company_size or '',
+                'founded_year': profile.founded_year or '',
+                'website': profile.website or '',
+                'address': profile.address or '',
+                'city': profile.city or '',
+                'country': profile.country or '',
+                'mission_statement': profile.mission_statement or '',
+                'company_values': profile.company_values or '',
+                'benefits': profile.get_benefits_list(),
+                'linkedin_url': profile.linkedin_url or '',
+                'twitter_url': profile.twitter_url or '',
+                'facebook_url': profile.facebook_url or '',
+                'logo_url': profile.logo.url if profile.logo else '',
+                'cover_photo_url': profile.cover_photo.url if profile.cover_photo else '',
+            },
+            'stats': {
+                'active_jobs': active_jobs,
+                'total_jobs': total_jobs,
+            }
+        })
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_company_profile_api(request):
+    """Update company profile information"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        company = Company.objects.get(id=request.session['company_id'])
+        profile = CompanyProfile.objects.get(company=company)
+
+        print(f"📝 Updating profile for: {company.company_name}")
+        print(f"📦 Received data: {data}")
+
+        # Update Company model fields
+        if 'company_name' in data:
+            company.company_name = data['company_name']
+        if 'email' in data:
+            company.email = data['email']
+        if 'phone_number' in data:
+            company.phone_number = data['phone_number']
+        if 'address' in data:
+            # If you have address in Company model, otherwise handle in profile
+            company.address = data['address']
+
+        company.save()
+
+        # Update CompanyProfile fields
+        update_fields = [
+            'description', 'industry', 'company_size', 'founded_year',
+            'website', 'linkedin_url', 'twitter_url', 'facebook_url',
+            'address', 'city', 'country', 'mission_statement', 'company_values'
+        ]
+
+        for field in update_fields:
+            if field in data:
+                setattr(profile, field, data[field])
+
+        # Handle benefits specifically
+        if 'benefits' in data and isinstance(data['benefits'], list):
+            profile.benefits = '\n'.join(data['benefits'])
+
+        profile.save()
+
+        print(f"✅ Successfully updated profile for: {company.company_name}")
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Company profile updated successfully'
+        })
+
+    except Exception as e:
+        print(f"❌ Error updating profile: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_company_basic_info_api(request):
+    """API endpoint to update company basic information"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        company = Company.objects.get(id=request.session['company_id'])
+
+        # Update basic company fields
+        if 'company_name' in data:
+            company.company_name = data['company_name']
+        if 'email' in data:
+            company.email = data['email']
+        if 'phone_number' in data:
+            company.phone_number = data['phone_number']
+        if 'company_type' in data:
+            company.company_type = data['company_type']
+
+        company.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Company information updated successfully'
+        })
+
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_company_logo_api(request):
+    """API endpoint to upload company logo"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+        profile = CompanyProfile.objects.get(company=company)
+
+        if 'logo' not in request.FILES:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+
+        logo = request.FILES['logo']
+
+        # Validate file using form
+        form = CompanyLogoForm(files=request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({
+                'success': True,
+                'message': 'Logo updated successfully',
+                'logo_url': profile.logo.url
+            })
+        else:
+            return JsonResponse({'error': form.errors}, status=400)
+
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+    except CompanyProfile.DoesNotExist:
+        return JsonResponse({'error': 'Company profile not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_company_cover_photo_api(request):
+    """API endpoint to upload company cover photo"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+        profile = CompanyProfile.objects.get(company=company)
+
+        if 'cover_photo' not in request.FILES:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+
+        cover_photo = request.FILES['cover_photo']
+
+        # Validate file using form
+        form = CompanyCoverPhotoForm(files=request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({
+                'success': True,
+                'message': 'Cover photo updated successfully',
+                'cover_photo_url': profile.cover_photo.url
+            })
+        else:
+            return JsonResponse({'error': form.errors}, status=400)
+
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+    except CompanyProfile.DoesNotExist:
+        return JsonResponse({'error': 'Company profile not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_company_dashboard_data(request):
+    """API to get company data for dashboard with profile info"""
+    if 'company_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        company = Company.objects.get(id=request.session['company_id'])
+        profile, created = CompanyProfile.objects.get_or_create(company=company)
+
+        # Count company's jobs by status
+        total_jobs = CompanyJob.objects.filter(company=company).count()
+        active_jobs = CompanyJob.objects.filter(company=company, status='active').count()
+        pending_jobs = CompanyJob.objects.filter(company=company, status='pending').count()
+        closed_jobs = CompanyJob.objects.filter(company=company, status='closed').count()
+        draft_jobs = CompanyJob.objects.filter(company=company, status='draft').count()
+
+        # Count total applicants across all jobs
+        total_applicants = CompanyApplication.objects.filter(job__company=company).count()
+
+        return JsonResponse({
+            'success': True,
+            'company': {
+                'id': company.id,
+                'company_name': company.company_name,
+                'email': company.email,
+                'phone_number': company.phone_number,
+                'company_type': company.company_type,
+                'is_verified': company.is_verified,
+                'logo_url': profile.logo.url if profile.logo else '/static/default-company-logo.png',
+                'description': profile.description or 'Welcome to our company profile!',
+            },
+            'stats': {
+                'total_jobs': total_jobs,
+                'active_jobs': active_jobs,
+                'pending_jobs': pending_jobs,
+                'closed_jobs': closed_jobs,
+                'draft_jobs': draft_jobs,
+                'total_applicants': total_applicants,
+            }
+        })
+    except Company.DoesNotExist:
+        return JsonResponse({'error': 'Company not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+# Add to views.py - Admin Profile Section
+
+def admin_profile_page(request):
+    """Admin profile page"""
+    if 'admin_id' not in request.session:
+        return redirect('adminlog')
+    return render(request, 'myapp/adminprofile.html')
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+
+@require_http_methods(["GET"])
+def get_admin_profile_api(request):
+    """API endpoint to get complete admin profile data for the profile page"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        admin = Administrator.objects.get(id=request.session['admin_id'])
+
+        # Get admin stats for activity overview
+        total_jobs_reviewed = Job.objects.filter(status__in=['active', 'rejected']).count()
+        total_companies_reviewed = Company.objects.filter(is_verified=True).count()
+        total_accounts_managed = (
+                Student.objects.count() +
+                Alumni.objects.count() +
+                Faculty.objects.count() +
+                Company.objects.count()
+        )
+
+        # Count total issues resolved (you might need to implement this)
+        total_issues_resolved = ActivityLog.objects.filter(
+            admin=admin,
+            action_type__in=['approval', 'rejection']
+        ).count() if hasattr(admin, 'activitylog_set') else 42
+
+        # Get recent activities
+        recent_activities = []
+        if hasattr(admin, 'activitylog_set'):
+            activities = admin.activitylog_set.all().order_by('-created_at')[:5]
+            for activity in activities:
+                recent_activities.append({
+                    'title': activity.action,
+                    'description': activity.details,
+                    'time': activity.created_at.strftime('%H hours ago') if activity.created_at else 'Recently'
+                })
+        else:
+            # Fallback mock data
+            recent_activities = [
+                {
+                    'title': 'Approved Job Posting',
+                    'description': 'Lab Assistant at University Campus',
+                    'time': '5 hours ago'
+                },
+                {
+                    'title': 'Verified Company Account',
+                    'description': 'TechInnovate',
+                    'time': '3 hours ago'
+                }
+            ]
+
+        return JsonResponse({
+            'success': True,
+            'admin': {
+                'first_name': admin.first_name,
+                'last_name': admin.last_name,
+                'email': admin.email,
+                'phone_number': admin.phone_number or '+880 1827-483267',
+                'work_hours': admin.work_hours or 'Saturday-Thursday, 8.00 am to 7.00 pm',
+                'bio': admin.bio or 'CSE Job Portal Administrator responsible for reviewing job postings, verifying company accounts, and ensuring the platform provides a safe and valuable experience for all users.',
+                'profile_picture_url': admin.profile_picture.url if admin.profile_picture else '',
+                'cover_photo_url': admin.cover_photo.url if admin.cover_photo else '',
+            },
+            'stats': {
+                'jobs_reviewed': total_jobs_reviewed,
+                'companies_reviewed': total_companies_reviewed,
+                'accounts_managed': total_accounts_managed,
+                'issues_resolved': total_issues_resolved,
+            },
+            'activities': recent_activities,
+            'system_health': {
+                'server_status': 100,
+                'database_health': 91,
+                'storage_usage': 72
+            }
+        })
+    except Administrator.DoesNotExist:
+        return JsonResponse({'error': 'Admin not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_admin_profile_api(request):
+    """API endpoint to update admin profile basic info"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        admin = Administrator.objects.get(id=request.session['admin_id'])
+
+        # Update basic profile fields
+        if 'first_name' in data:
+            admin.first_name = data['first_name']
+        if 'last_name' in data:
+            admin.last_name = data['last_name']
+        if 'email' in data:
+            admin.email = data['email']
+        if 'phone_number' in data:
+            admin.phone_number = data['phone_number']
+        if 'work_hours' in data:
+            admin.work_hours = data['work_hours']
+        if 'bio' in data:
+            admin.bio = data['bio']
+
+        admin.save()
+
+        # Log the activity
+        ActivityLog.objects.create(
+            admin=admin,
+            action='Updated Profile',
+            action_type='user_management',
+            details=f'{admin.first_name} updated their profile information',
+            ip_address=get_client_ip(request)
+        )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile updated successfully'
+        })
+
+    except Administrator.DoesNotExist:
+        return JsonResponse({'error': 'Admin not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_admin_profile_picture_api(request):
+    """API endpoint to upload admin profile picture"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        admin = Administrator.objects.get(id=request.session['admin_id'])
+
+        if 'profile_picture' not in request.FILES:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+
+        profile_picture = request.FILES['profile_picture']
+
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+        if profile_picture.content_type not in allowed_types:
+            return JsonResponse({'error': 'Invalid file type'}, status=400)
+
+        # Validate file size (5MB max)
+        if profile_picture.size > 5 * 1024 * 1024:
+            return JsonResponse({'error': 'File size must be less than 5MB'}, status=400)
+
+        # Save the file
+        admin.profile_picture = profile_picture
+        admin.save()
+
+        # Log the activity
+        ActivityLog.objects.create(
+            admin=admin,
+            action='Updated Profile Picture',
+            action_type='user_management',
+            details=f'{admin.first_name} updated their profile picture',
+            ip_address=get_client_ip(request)
+        )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile picture updated successfully',
+            'profile_picture_url': admin.profile_picture.url
+        })
+
+    except Administrator.DoesNotExist:
+        return JsonResponse({'error': 'Admin not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_admin_cover_photo_api(request):
+    """API endpoint to upload admin cover photo"""
+    if 'admin_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    try:
+        admin = Administrator.objects.get(id=request.session['admin_id'])
+
+        if 'cover_photo' not in request.FILES:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+
+        cover_photo = request.FILES['cover_photo']
+
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+        if cover_photo.content_type not in allowed_types:
+            return JsonResponse({'error': 'Invalid file type'}, status=400)
+
+        # Validate file size (5MB max)
+        if cover_photo.size > 5 * 1024 * 1024:
+            return JsonResponse({'error': 'File size must be less than 5MB'}, status=400)
+
+        # Save the file
+        admin.cover_photo = cover_photo
+        admin.save()
+
+        # Log the activity
+        ActivityLog.objects.create(
+            admin=admin,
+            action='Updated Cover Photo',
+            action_type='user_management',
+            details=f'{admin.first_name} updated their cover photo',
+            ip_address=get_client_ip(request)
+        )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Cover photo updated successfully',
+            'cover_photo_url': admin.cover_photo.url
+        })
+
+    except Administrator.DoesNotExist:
+        return JsonResponse({'error': 'Admin not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+# Helper function to get client IP
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+def post_job_page(request):
+    """Dedicated page for posting new jobs"""
+    if 'alumni_id' not in request.session:
+        return redirect('almlog')
+    return render(request, 'myapp/post_job.html')
+
+def post_job(request):
+    if 'alumni_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            alumni = Alumni.objects.get(id=request.session['alumni_id'])
+
+            job = Job.objects.create(
+                title=data['title'],
+                company=data['company'],
+                location=data.get('location', 'Dhaka, Bangladesh'),  # Added location
+                deadline=data['deadline'],
+                job_type=data['job_type'],
+                description=data['description'],
+                salary=data.get('salary', ''),
+                requirements='\n'.join(data.get('requirements', [])),
+                posted_by=alumni,
+                status=data.get('status', 'pending')  # Now accepts status parameter
+            )
+
+            return JsonResponse({'success': True, 'job_id': job.id})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+def post_opportunity_page(request):
+    """Dedicated page for posting new opportunities"""
+    if 'faculty_id' not in request.session:
+        return redirect('fcltlog')
+    return render(request, 'myapp/post_opportunity.html')
+
+def post_company_job_page(request):
+    """Dedicated page for posting new company jobs"""
+    if 'company_id' not in request.session:
+        return redirect('comlog')
+    return render(request, 'myapp/post_company_job.html')
